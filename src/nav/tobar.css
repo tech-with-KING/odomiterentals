@@ -5,8 +5,6 @@
 }
 .top_bar{
   display: flex;
-  position: fixed;
-  top: 0px;
   height: 150px;
   width: 100%;
   border: none;

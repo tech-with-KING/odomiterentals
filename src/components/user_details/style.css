@@ -1,117 +1,111 @@
-.addTodo{
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    width: 70vh;
-    background-color: white;
+.addTodo
+{
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    min-width: 250px;
-    max-width: 90vw;
-    height: 500px;
     border-radius: 10px;
     text-align: center;
-    position: fixed;
+    align-items: center;
+
 
   }
-
- .button {
-      margin-top: 5px;
-      border-radius: 4px;
-      border: none;
-      height: 25px;
-      text-align: center;
-      padding: 3px;
-      text-justify: center;
-      display: inline-block;
-      color: white;
-      background-color: #000;
-      text-align: center;
-      cursor: pointer;
-      width: 120px;
-      font-size: 18px;
+.content_head
+{
+    width: 100vw;
+    height: 50px;
+    display: flex;
+    background-color: #053674;
+    color: white;
+    align-items: center;
+    padding-left: 30px;
+}
+ .form
+ {
+     height: inherit;
+     padding: 10px;
+     width: 60%;
+     margin-top: 40px;
+     margin-bottom: 40px;
  }
- .add_btn{
+.login_form, .input_form{
      width: 90%;
      display: flex;
-     align-items: center;
-     justify-content:flex-end;
-     margin-top: 25px;
+     align-items: flex-start;
+     flex-direction: column;
  }
- .add_btn button{
-     width: 120px;
-     height: 30px;
-     border-radius: 5px;
-     margin-right: 50px;
+.input_form p{
+     color:  #031B3A;
+     line-height: 30px;
+     margin-left: 5px;
  }
- .todo_form_container{
+ .input_form .input_box
+ {
+     display: flex;
+flex-direction: row;
+align-items: center;
+width: 100%;
+height: 45px;
+background: #FFFFFF;
+color: #053674;
+border: 1px solid #545559;
+border-radius: 4px;
+padding-left: 20px;
+ }
+ .input_form .input_box input{
+     border: none;
+     
+ }
+ .account_button
+ {
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+width: 90%;
+height: 45px;
+background: #FFFFFF;
+color: #053674;
+border: 3px solid #053674;
+border-radius: 4px;
+ }
+ /*or*/
+
+ .login_button{
+     display: flex;
+     font-weight: normal;
+     font-size: 16px;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+width: 100%;
+height: 45px;
+background: #053674;
+color: white;
+border: 3px solid #053674;
+border-radius: 4px;
+ }
+ .login_form p {
+     font-size: 12px;
+     margin-left: 50px;
+ }
+ .login_form div{
      width: 100%;
      display: flex;
-     flex-direction: column;
+     flex-direction: row;
      align-items: center;
-
+     justify-content: space-evenly;
  }
- .todo_form{
-     width: 90%;
-     margin: 3px;
-
+ .login_form div div{
+     height: 2px;
+     width: 40%;
+     background-color: black;
+     border-radius: 2px;
  }
-.todo_form  input{
-      width: 60%;
-      height: 27px;
-      border-radius: 5px;
-      background-color: #f5f5f5;
-      border: none;
-  }
-  .notes{
-      width: 80%;
-      border-radius: 5px;
-      background-color: #f5f5f5;
-      margin-top: 6px;
-      display: flex;
-      height: 150px;
-      padding: 0;
-  }
-  .notes input{
-      margin: 0;
-      width: 60%;
-      height: 27px;
-      border: none;
-      background-color: transparent;
-      text-decoration: none;
-      border-radius: 5px;
-  }
-  .notes button{
-      border-radius: 4px;
-      border: none;
-      height: 25px;
-      text-align: center;
-      padding: 3px;
-      text-justify: center;
-      outline: 0;
-      color: white;
-      background-color: #000;
-      text-align: center;
-      cursor: pointer;
-      width: 120px;
-      font-size: 18px;
-      margin-top: 0;
-  }
-  .ba{
-      display: flex;
-      width: 100%;
-      margin-top: 20px;
-    align-items: center;
-    justify-content: space-evenly;
-
-  }
-  .div {
-    text-decoration: none;
-    font-size: 40px;
-    width: 40px;
-    color: black;
-    margin: 4px;
-  }
-  
-  button:hover, a:hover {
-    opacity: 0.7;
-  }
+ .login_form{
+     height: 150px;
+     justify-content: space-evenly;
+ }
+ .login_form div h3{
+     color: #F6CC5C;
+     font-weight: bold;
+ }

@@ -8,7 +8,7 @@ import Slide_Bar from './components/slidder/slidebar'
 import Top_Bar from './nav/topbar'
 import DownBar from './root/bottom_bar';
 import Projects from "./projects_page/index"
-import Menue_Bar from './nav/menue'
+import User from './components/user_details/index'
 import { BrowserRouter as Router, Routes, Route,Outlet } from "react-router-dom"
 
 
@@ -35,19 +35,19 @@ class App extends Component {
 	    )
 	}
 	return (
-			<>
+			<div className='app'>
 		<Router>
 		<Top_Bar toggle={toggle} set_toggle={set_toggle} />
 		<Routes>
-		<Route path="/" element={<Body />} />
-		<Route path="/login" element={<></>} />
+		<Route path="/" element={<Body/>} />
+		<Route path="/login" element={<><User content_head ={'singn in'}/></>} />
 		<Route path="/register" element={<></>} />
 		<Route path="/articles/one" element={<></>} />
 		</Routes>
 		<DownBar />
 		</Router>
 
-	    </>
+	    </div>
 
 
 		);

@@ -1,6 +1,8 @@
-
-.App {
-  text-align: center;
+.app {
+    height: inherit;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 
