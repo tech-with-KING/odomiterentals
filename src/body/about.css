@@ -1,0 +1,31 @@
+.content{
+    padding: 10px;
+    width: 90vw;
+    background-color: black;
+}
+.left-side {
+    width: 200px;
+    float: right;
+    margin: 0px;
+    shape-margin: 0px;
+    /* shape-outside: url(''); */
+
+}
+
+
+.content img {
+  max-width: 100%;
+}
+.content p{
+    font-size: 14px;
+    font-weight: normal;
+    font-family: serif;
+    letter-spacing:1.5px;
+    color: aquamarine;
+}
+
+.about_heading{
+    color:grey;
+    font-size: 20px;
+    font-weight: bold;
+}

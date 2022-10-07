@@ -1,0 +1,133 @@
+
+.header{
+    min-height: 70vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.about{
+    height: 499px;
+    margin: 10px;
+    width: 400px;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px;
+    box-shadow: 2px 6px 10px rgba(0,0,0,0.2) ;
+}
+
+.circle{
+    height: 40px;
+    width: 40px;
+    background-color:white;
+    position: relative;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: -20px;
+    font-size: 20px;
+    box-shadow: 2px 6px 10px rgba(0,0,0,0.2) ;
+    
+}
+
+.storymode{
+    height: inherit;
+    display: flex;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex-direction: column;
+    background-color:#000020;
+    transition: 1s ease-in linear;
+}
+.menuebar .li:hover {
+    font-weight: bolder;
+    background-color: white;
+} 
+ 
+ .menuebar .li{
+    min-width: 200px;
+    transition: 0.4s ease;
+    text-decoration: none;
+    color: #000020;
+    border-bottom: 2px solid #000020;
+    display:flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 20px;
+}
+
+
+.menuebar{
+    transition: 0.5s linear;
+    background:white;
+    width: 100vw;
+    line-height: 60px;
+    list-style: none;
+    z-index: 99999999999999;
+    overflow-y: scroll;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    justify-content: center;
+    overflow-x: hidden;
+    cursor: pointer; 
+}  
+.circ{
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    right: 10px;
+    margin-right: 10px;
+    position: absolute;
+    background-color: aqua;
+}
+.tol{
+    color: #000020;
+    font-size: 14px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-weight: lighter;
+}
+@media (min-width: 650px){
+
+.menuebar .li:hover {
+    font-weight: bolder;
+    color:white;
+    
+}
+
+.menuebar .li{
+    min-width: 200px;
+    transition: 0.4s ease;
+    text-decoration: none;
+    color:white;
+    border-bottom: 1.5px solid white;
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 20px;
+}
+
+
+ .menuebar{
+    transition: 0.5s linear;
+    background:#000020;
+    width: 100vw;
+    line-height: 60px;
+    list-style: none;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    justify-content: center;
+    overflow-x: hidden;
+    cursor: pointer; 
+}  
+}

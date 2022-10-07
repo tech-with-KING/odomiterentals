@@ -1,0 +1,69 @@
+[09:52:58.079] Global cache location '/home/cosmic/.cache/typescript/4.6', safe file path '/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/typingSafeList.json', types map path /home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/typesMap.json
+[09:52:58.110] Processing cache location '/home/cosmic/.cache/typescript/4.6'
+[09:52:58.111] Trying to find '/home/cosmic/.cache/typescript/4.6/package.json'...
+[09:52:58.222] Loaded content of '/home/cosmic/.cache/typescript/4.6/package.json': {"private":true,"dependencies":{"types-registry":"^0.1.594"},"devDependencies":{"@types/body-parser":"^1.19.2","@types/bootstrap":"^5.1.11","@types/content-disposition":"^0.5.5","@types/content-type":"^1.1.5","@types/cookie":"^0.5.1","@types/cookie-signature":"^1.0.4","@types/debug":"^4.1.7","@types/depd":"^1.1.32","@types/destroy":"^1.0.0","@types/ee-first":"^1.1.0","@types/encodeurl":"^1.0.0","@types/escape-html":"^1.0.2","@types/etag":"^1.8.1","@types/express":"^4.17.13","@types/fresh":"^0.5.0","@types/http-errors":"^1.8.2","@types/mathjax":"^0.0.37","@types/merge-descriptors":"^1.0.1","@types/ms":"^0.7.31","@types/nodemon":"^1.19.1","@types/on-finished":"^2.3.1","@types/proxy-addr":"^2.0.0","@types/react":"^18.0.9","@types/react-dom":"^18.0.4","@types/react-router-dom":"^5.3.3","@types/send":"^0.17.1","@types/serve-static":"^1.13.10","@types/statuses":"^2.0.0","@types/testing-library__jest-dom":"^5.14.3","@types/timelinejs":"^0.0.28","@types/utils-merge":"^0.0.28","@types/vary":"^1.1.0"}}
+[09:52:58.223] Loaded content of '/home/cosmic/.cache/typescript/4.6/package-lock.json'
+[09:52:58.298] Adding entry into typings cache: 'body-parser' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/body-parser/index.d.ts'
+[09:52:58.363] Adding entry into typings cache: 'bootstrap' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/bootstrap/index.d.ts'
+[09:52:58.419] Adding entry into typings cache: 'content-disposition' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/content-disposition/index.d.ts'
+[09:52:58.422] Adding entry into typings cache: 'content-type' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/content-type/index.d.ts'
+[09:52:58.451] Adding entry into typings cache: 'cookie' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/cookie/index.d.ts'
+[09:52:58.454] Adding entry into typings cache: 'cookie-signature' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/cookie-signature/index.d.ts'
+[09:52:58.457] Adding entry into typings cache: 'debug' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/debug/index.d.ts'
+[09:52:58.474] Adding entry into typings cache: 'depd' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/depd/index.d.ts'
+[09:52:58.476] Adding entry into typings cache: 'destroy' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/destroy/index.d.ts'
+[09:52:58.479] Adding entry into typings cache: 'ee-first' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/ee-first/index.d.ts'
+[09:52:58.481] Adding entry into typings cache: 'encodeurl' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/encodeurl/index.d.ts'
+[09:52:58.515] Adding entry into typings cache: 'escape-html' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/escape-html/index.d.ts'
+[09:52:58.528] Adding entry into typings cache: 'etag' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/etag/index.d.ts'
+[09:52:58.531] Adding entry into typings cache: 'express' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/express/index.d.ts'
+[09:52:58.533] Adding entry into typings cache: 'fresh' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/fresh/index.d.ts'
+[09:52:58.537] Adding entry into typings cache: 'http-errors' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/http-errors/index.d.ts'
+[09:52:58.564] Adding entry into typings cache: 'mathjax' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/mathjax/index.d.ts'
+[09:52:58.565] Adding entry into typings cache: 'merge-descriptors' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/merge-descriptors/index.d.ts'
+[09:52:58.603] Adding entry into typings cache: 'ms' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/ms/index.d.ts'
+[09:52:58.605] Adding entry into typings cache: 'nodemon' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/nodemon/index.d.ts'
+[09:52:58.607] Adding entry into typings cache: 'on-finished' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/on-finished/index.d.ts'
+[09:52:58.610] Adding entry into typings cache: 'proxy-addr' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/proxy-addr/index.d.ts'
+[09:52:58.656] Adding entry into typings cache: 'react' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/react/index.d.ts'
+[09:52:58.695] Adding entry into typings cache: 'react-dom' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/react-dom/index.d.ts'
+[09:52:58.785] Adding entry into typings cache: 'react-router-dom' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/react-router-dom/index.d.ts'
+[09:52:58.786] Adding entry into typings cache: 'send' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/send/index.d.ts'
+[09:52:58.808] Adding entry into typings cache: 'serve-static' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/serve-static/index.d.ts'
+[09:52:58.811] Adding entry into typings cache: 'statuses' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/statuses/index.d.ts'
+[09:52:58.863] Adding entry into typings cache: 'testing-library__jest-dom' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/testing-library__jest-dom/index.d.ts'
+[09:52:58.907] Adding entry into typings cache: 'timelinejs' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/timelinejs/index.d.ts'
+[09:52:58.908] Adding entry into typings cache: 'utils-merge' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/utils-merge/index.d.ts'
+[09:52:58.909] Adding entry into typings cache: 'vary' => '/home/cosmic/.cache/typescript/4.6/node_modules/@types/vary/index.d.ts'
+[09:52:58.910] Finished processing cache location '/home/cosmic/.cache/typescript/4.6'
+[09:52:58.910] Process id: 3179
+[09:52:58.910] NPM location: /snap/node/6275/bin/npm (explicit '--npmLocation' not  provided)
+[09:52:58.910] validateDefaultNpmLocation: false
+[09:52:58.910] Npm config file: /home/cosmic/.cache/typescript/4.6/package.json
+[09:52:58.910] Updating types-registry npm package...
+[09:52:58.910] Exec: /snap/node/6275/bin/npm install --ignore-scripts types-registry@latest
+[10:57:57.148]     Succeeded. stdout:
+[10:57:57.148] Updated types-registry npm package
+[10:57:57.230] Got install request {"projectName":"/dev/null/inferredProject1*","fileNames":["/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.es5.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.es2015.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.es2016.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.dom.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.dom.iterable.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.webworker.importscripts.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.scripthost.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.es2015.core.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.es2015.collection.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.es2015.generator.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.es2015.iterable.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.es2015.promise.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.es2015.proxy.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.es2015.reflect.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.es2015.symbol.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.es2016.array.include.d.ts","/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/lib.es2016.full.d.ts","/home/cosmic/Documents/projects/my_blog/src/components/blogcard/bob.js","/home/cosmic/Documents/projects/my_blog/src/components/blogcard/bob2.js","/home/cosmic/Documents/projects/my_blog/src/body/body.js"],"compilerOptions":{"module":1,"target":3,"jsx":1,"allowJs":true,"allowSyntheticDefaultImports":true,"allowNonTsExtensions":true,"noEmitForJsFiles":true,"maxNodeModuleJsDepth":2},"typeAcquisition":{"enable":true,"include":[],"exclude":[]},"unresolvedImports":[],"projectRootPath":"/home/cosmic/Documents/projects/my_blog/src/body","kind":"discover"}
+[10:57:57.244] Loaded safelist from types map file '/home/cosmic/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/typesMap.json'
+[10:57:57.244] Explicitly included types: []
+[10:57:57.245] Inferred typings from unresolved imports: []
+[10:57:57.245] Result: {"cachedTypingPaths":[],"newTypingNames":[],"filesToWatch":["/home/cosmic/Documents/projects/my_blog/src/components/blogcard/bower_components","/home/cosmic/Documents/projects/my_blog/src/components/blogcard/node_modules","/home/cosmic/Documents/projects/my_blog/src/body/bower_components","/home/cosmic/Documents/projects/my_blog/src/body/node_modules"]}
+[10:57:57.245] Finished typings discovery: {"cachedTypingPaths":[],"newTypingNames":[],"filesToWatch":["/home/cosmic/Documents/projects/my_blog/src/components/blogcard/bower_components","/home/cosmic/Documents/projects/my_blog/src/components/blogcard/node_modules","/home/cosmic/Documents/projects/my_blog/src/body/bower_components","/home/cosmic/Documents/projects/my_blog/src/body/node_modules"]}
+[10:57:57.245] DirectoryWatcher:: Added:: WatchInfo: /home/cosmic/Documents/projects/my_blog/src/components/blogcard/bower_components
+[10:57:57.246] DirectoryWatcher:: Added:: WatchInfo: /home/cosmic/Documents/projects/my_blog/src/components/blogcard/bower_components 1 undefined Project: /dev/null/inferredProject1* watcher already invoked: false
+[10:57:57.247] Elapsed:: 1.219133999897167ms DirectoryWatcher:: Added:: WatchInfo: /home/cosmic/Documents/projects/my_blog/src/components/blogcard/bower_components 1 undefined Project: /dev/null/inferredProject1* watcher already invoked: false
+[10:57:57.247] DirectoryWatcher:: Added:: WatchInfo: /home/cosmic/Documents/projects/my_blog/src/components/blogcard/node_modules
+[10:57:57.247] DirectoryWatcher:: Added:: WatchInfo: /home/cosmic/Documents/projects/my_blog/src/components/blogcard/node_modules 1 undefined Project: /dev/null/inferredProject1* watcher already invoked: false
+[10:57:57.247] Elapsed:: 0.09469800000078976ms DirectoryWatcher:: Added:: WatchInfo: /home/cosmic/Documents/projects/my_blog/src/components/blogcard/node_modules 1 undefined Project: /dev/null/inferredProject1* watcher already invoked: false
+[10:57:57.247] DirectoryWatcher:: Added:: WatchInfo: /home/cosmic/Documents/projects/my_blog/src/body/bower_components
+[10:57:57.247] DirectoryWatcher:: Added:: WatchInfo: /home/cosmic/Documents/projects/my_blog/src/body/bower_components 1 undefined Project: /dev/null/inferredProject1* watcher already invoked: false
+[10:57:57.247] Elapsed:: 0.087483000010252ms DirectoryWatcher:: Added:: WatchInfo: /home/cosmic/Documents/projects/my_blog/src/body/bower_components 1 undefined Project: /dev/null/inferredProject1* watcher already invoked: false
+[10:57:57.247] DirectoryWatcher:: Added:: WatchInfo: /home/cosmic/Documents/projects/my_blog/src/body/node_modules
+[10:57:57.248] DirectoryWatcher:: Added:: WatchInfo: /home/cosmic/Documents/projects/my_blog/src/body/node_modules 1 undefined Project: /dev/null/inferredProject1* watcher already invoked: false
+[10:57:57.248] Elapsed:: 0.08099799999035895ms DirectoryWatcher:: Added:: WatchInfo: /home/cosmic/Documents/projects/my_blog/src/body/node_modules 1 undefined Project: /dev/null/inferredProject1* watcher already invoked: false
+[10:57:57.248] Sending response:
+    {"projectName":"/dev/null/inferredProject1*","typeAcquisition":{"enable":true,"include":[],"exclude":[]},"compilerOptions":{"module":1,"target":3,"jsx":1,"allowJs":true,"allowSyntheticDefaultImports":true,"allowNonTsExtensions":true,"noEmitForJsFiles":true,"maxNodeModuleJsDepth":2},"typings":[],"unresolvedImports":[],"kind":"action::set"}
+[10:57:57.248] Response has been sent.
+[10:57:57.248] No new typings were requested as a result of typings discovery
+[13:01:20.995] Parent process has exited, shutting down...

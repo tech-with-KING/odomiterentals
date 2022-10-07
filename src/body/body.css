@@ -1,0 +1,187 @@
+.article{
+    height: 400px;
+    margin: 10px;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    min-width: 400px;
+    flex-direction: column;
+    background-color: white;
+    border-radius:10px;
+    border: 1px;
+    box-shadow: 2px 6px 10px rgba(0,0,0,0.3) ;
+}
+.tech_stacks{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    width: 100vw;
+}
+.tech_stacks .t_s{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    width: 90vw;
+}
+.body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+ .square p {
+      text-align: justify;
+      font-size: 20px;
+    }
+
+
+.tech_stacks .t_s div .t_c{
+    width: 40px;
+    background-position: center;
+    background-size: cover;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 0px;
+}
+
+.tech_stacks .t_s div .t_line{
+    width: 70px;
+    background-position: center;
+    background-size: cover;
+    height: 5px;
+    border-radius: 5px;
+    margin-left: 0px;
+    color: gray;
+}
+.tech_stacks .t_s div {
+    color: gray;
+    font-size: 12px;
+    font-weight: lighter;
+    width: unset;
+    margin: 0px;
+    margin-left: 5px;
+    margin-right: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: inherit;
+    padding: 0px;
+}
+.img{
+    border-radius: 10px  10px 0px 0px;
+    height: 55%;
+    width: 100%;
+}
+
+.body{
+    height: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    overflow-x: hidden;
+    flex-direction:column;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.tech_articles{
+    height: inherit;
+    display: flex;
+    align-items: space-e;
+    justify-content: center;
+    width: 100vw;
+    flex-direction:column;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.line{
+    width: 95%;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    border: 1px solid black;
+}
+ .my_projects{
+    height: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.hots{
+    height: 50vh;
+    width: 100vw;
+    background-image: url('./sc/undraw_programmer_re_owql.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-bottom: 50px;
+    background-size: contain;
+
+}
+.h_one, .hot h1{
+  color: gray;
+}
+.hot{
+    height: 50vh;
+    width: 100vw;
+    background-image: url('./sc/app_development_SVG.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+}
+.p_div{
+    display: flex;
+    flex-direction: column;
+}
+@media (min-width: 850px){
+    .tech_stacks{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    width: 100vw;
+}
+.tech_stacks .t_s{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    width: 100vw;
+}
+.tech_stacks .t_s div div{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-left: 20px;
+}
+.tech_stacks .t_s div {
+    width: unset;
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: inherit;
+    padding: 5px;
+}
+    .p_div{	
+display: flex;
+	flex-direction: row;
+    }
+    .eop{
+        display: flex;
+        flex-direction: row;
+    }
+
+
+}

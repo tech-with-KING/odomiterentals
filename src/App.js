@@ -1,25 +1,57 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import Body from './body/body';
+import Modal from './components/modalbox/modalbox'
+import Articles from "./article_page/index"
+import Article from "./article_page/article_list"
+import Slide_Bar from './components/slidder/slidebar'
+import Top_Bar from './nav/topbar'
+import DownBar from './root/bottom_bar';
+import Projects from "./projects_page/index"
+import Menue_Bar from './nav/menue'
+import { BrowserRouter as Router, Routes, Route,Outlet } from "react-router-dom"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component {
+    state = {
+	toggle: false
+    }
+    componentDidMount() {
+	const api = async () => {
+	    const ret = await fetch('http://localhost:5500/articles')
+	    const bar = await ret.json()
+	    console.log(bar)
+	}
+	api()
+    }
+
+    render() {
+	const { toggle } = this.state
+	const set_toggle = () => { toggle ? this.setState({ toggle: false }) : this.setState({ toggle: true }) }
+	const home = () => {
+	    return (
+		    <>
+		    </>
+	    )
+	}
+	return (
+			<>
+		<Router>
+		<Top_Bar toggle={toggle} set_toggle={set_toggle} />
+		<Routes>
+		<Route path="/" element={<Body />} />
+		<Route path="/login" element={<></>} />
+		<Route path="/register" element={<></>} />
+		<Route path="/articles/one" element={<></>} />
+		</Routes>
+		<DownBar />
+		</Router>
+
+	    </>
+
+
+		);
+	}
 }
 
 export default App;
