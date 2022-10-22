@@ -9,8 +9,7 @@ class Slide_Bar extends Component {
         super(props);
     }
     state = { index:0 }
-    componentDidMount()
-    {
+    componentDidMount(){
 	 setInterval(()=>{
      if(this.state.index == 3){
  	 this.setState({index:0})
@@ -19,7 +18,7 @@ class Slide_Bar extends Component {
  	 this.setState({index:this.state.index+1})
      }
      	console.log(this.state.index)
- },2000) 
+ },8000) 
     }
     render() {
 	        const animae=[
@@ -63,28 +62,29 @@ class Slide_Bar extends Component {
  }
 	}
         return (  
-          <div class="slideshow-container">   
-                <div class="mySlides">
+		<div className="slideshow-container">
+		<div className='nom'>
+                <div className="mySlides">
+		<div className='see'>
+		</div>
+		<div className='love'>
+		<h2>Apple iphone 12</h2>
+		<h3>Apple iphone 12</h3>
+		</div>
 		<AnimatePresence exitBeforeEnter>
-                            <motion.div 
-            key={index}
-	    	    exitBeforeEntry={true}
-            initial={{opacity:1, translateX:"-100vw"}}
-	    
-                            animate={{opacity:1.5, translateX:"0vw"}}
-            transition={{duration:1,ease:'easeOut'}}
-	    exit={{translateX:"100vw", transition:{duration:0.5}}}
-                            ></motion.div>
 		</AnimatePresence>
-                 </div>
+                </div>
+		</div>
                 <div className='dot-container'>
-	        <span className='dot' ></span>
-                <span className='dot' ></span>
+		{
+		    animae.map((data)=>{
+			return(
+			     	<span className='dot' ></span>
+			)
+		    })
+		}
 
-                <span className='dot'></span>
-	
-
-		
+  
                 </div>
 
             </div>
