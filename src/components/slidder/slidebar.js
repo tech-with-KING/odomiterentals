@@ -9,6 +9,18 @@ class Slide_Bar extends Component {
         super(props);
     }
     state = { index:0 }
+    componentDidMount()
+    {
+	 setInterval(()=>{
+     if(this.state.index == 3){
+ 	 this.setState({index:0})
+     }
+     else{
+ 	 this.setState({index:this.state.index+1})
+     }
+     	console.log(this.state.index)
+ },2000) 
+    }
     render() {
 	        const animae=[
             {
@@ -29,15 +41,7 @@ class Slide_Bar extends Component {
         }
 		]
 	const{index}=this.state
- // setInterval(()=>{
- //     if(this.state.index == 3){
- // 	 this.setState({index:0})
- //     }
- //     else{
- // 	 this.setState({index:this.state.index+1})
- //     }
- //     	console.log(this.state.index)
- // },2000)
+
 	const back_animate= ()=>{
 	      if(this.state.index == 3){
 	 this.setState({index:0})
@@ -70,16 +74,15 @@ class Slide_Bar extends Component {
                             animate={{opacity:1.5, translateX:"0vw"}}
             transition={{duration:1,ease:'easeOut'}}
 	    exit={{translateX:"100vw", transition:{duration:0.5}}}
-                            >{animae[index].item }</motion.div>
+                            ></motion.div>
 		</AnimatePresence>
                  </div>
                 <div className='dot-container'>
-		<ChevronLeft className='chevron_left' onClick={()=>{back_animate()}} style={{color:'grey',fontSize:'30px',fontWeight:'bold'}}/>
-                <span className='dot' ></span>
+	        <span className='dot' ></span>
                 <span className='dot' ></span>
 
                 <span className='dot'></span>
-		<ChevronRight className='chevron_left' onClick={()=>{forward_animate()}} style={{color:'grey',fontSize:'30px',fontWeight:'bold'}} />
+	
 
 		
                 </div>

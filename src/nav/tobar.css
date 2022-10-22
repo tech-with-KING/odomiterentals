@@ -9,6 +9,7 @@
   width: 100%;
   border: none;
   background-color: white;
+  border-bottom: 1px solid black;
   flex-direction: row;
 }
 
