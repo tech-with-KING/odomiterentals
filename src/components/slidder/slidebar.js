@@ -63,31 +63,26 @@ class Slide_Bar extends Component {
 	}
         return (  
 		<div className="slideshow-container">
-		<div className='nom'>
-                <div className="mySlides">
-		<div className='see'>
-		</div>
-		<div className='love'>
-		<h2>Apple iphone 12</h2>
-		<h3>Apple iphone 12</h3>
-		</div>
-		<AnimatePresence exitBeforeEnter>
-		</AnimatePresence>
+    		<div className='display_device'>
+                <div className="device_image">
+                    
+                </div>         
+                <div className='display_text'>
+                        <h2>Apple iphone 12</h2>
+                        <h3>Apple iphone 12</h3>
                 </div>
-		</div>
-                <div className='dot-container'>
-		{
-		    animae.map((data)=>{
-			return(
-			     	<span className='dot' ></span>
-			)
-		    })
-		}
-
-  
-                </div>
-
+                    <AnimatePresence exitBeforeEnter>
+                    </AnimatePresence>
+               
             </div>
+            <div className='dot-container'>
+                {
+                    animae.map((data)=>{
+                    return(<span className='dot' ></span>)})
+                }
+            </div>  
+
+    </div>
         
  );
     }

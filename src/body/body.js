@@ -1,7 +1,10 @@
 import React from 'react';
 import './body.css'
+
 import { useState,useEffect } from 'react';
 import Slide_Bar from "../components/slidder/slidebar"
+import { BarChart } from '@mui/icons-material';
+import Sample from './shopsmart/sample';
 const Body=(props)=>{
     const [dark,setdark]=useState(false)
    
@@ -34,24 +37,33 @@ const Body=(props)=>{
   ]
 
     return(
-            <div className='hero'>
-	    <HeroImage />
-        </div>    
+    <div className='hero'>
+	      <HeroImage />
+        <Sample />
+        <Brands />
+    </div>    
      )
 }
 
 const HeroImage = (props)=>{
     return(
 	    <div className="hero_img">
-	    <div className="hero_shop_name">
-	    <h1>SHOP SMART</h1>
-	    <p>Shop at the <br/>right price</p>
-	    <button>COMPARE PRICES</button>
-	    </div>
+	      <div className="hero_shop_name">
+          <h1>SHOP SMART</h1>
+	        <p>Shop at the <br/>right price</p>
+	        <button>COMPARE PRICES</button>
+	      </div>
 	    <div className="hero_shop_slidder">
-	    <Slide_Bar />
+	     <Slide_Bar />
 	    </div>
 	    </div>
     )
+}
+const Brands = (props)=>{
+  return(
+    <div className="brands_">
+      
+    </div>
+  )
 }
 export default Body;

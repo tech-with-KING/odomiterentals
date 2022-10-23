@@ -7,39 +7,14 @@
     height: inherit;
     padding: 10px;
   }
-.menu_cancel_icon_container{
-    position: absolute;
-    top: 0;
-    width: 100%;
-    padding-left: 10px;
-    height: 8%;
-}  
-  /* Slides */
-  .mySlides {
-    padding: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-
-  /* Next & previous buttons */
-  .prev, .next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    margin-top: -30px;
-    padding: 16px;
-    color:black;
-    font-weight: bold;
-    font-size: 20px;
-    user-select: none;
-  }
-  
-  /* Position the "next button" to the right */
-
-  /* The dot/bullet/indicator container */
-  .dot-container {
+.display_text{
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: baseline;
+  flex-direction: column;
+}
+.dot-container {
     text-align: center;
     padding: 20px;
     background:transparent;
@@ -48,12 +23,14 @@
     align-items: center;
     justify-content: center;
   }
-  .nom{
+  .display_device{
       height: 90%;
       width: 100;
       display: flex;
-      background-color: blue;
-  }
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
   
   /* The dots/bullets/indicators */
   .dot {
@@ -71,9 +48,9 @@
   .active, .dot:hover {
     background-color: #717171;
   }
-.see{
-    width: 100%;
-    height: 400px;
+.device_image{
+    width: 50%;
+    height: 100%;
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
