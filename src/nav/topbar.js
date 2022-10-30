@@ -2,9 +2,6 @@ import React from 'react';
 import "./tobar.css"
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import Menue_Bar from './menue';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { Search } from '@mui/icons-material';
 const Top_bar=(props)=>{
@@ -44,10 +41,8 @@ const Top_bar=(props)=>{
 	    <p>Shop smart at the right price </p>
 	    </div>
 	    </div>
-	    			{/*head*/}
 			<div className='menu_list'>
 	
-				{/*copyright ul*/}
 	    <div className=' header_section'>
 	    <ul className='menu_options'>
 					{
@@ -55,11 +50,10 @@ const Top_bar=(props)=>{
 							return (<li key={list.id}>{list.heading}</li>)
 						}))
 					}
-	</ul>
+	  </ul>
 	    <div className='john_doe'>
 	    <PersonOutlinedIcon />
 	    <p>John Doe</p>
-
 	    </div>
 	    </div>
 	    <div className='input_container'>
