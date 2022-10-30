@@ -3,7 +3,7 @@ import Card_componnt,{Carded} from '../cardbar/cardbar';
 import {motion ,AnimatePresence} from 'framer-motion'
 import './slidebar.css'
 import {Link} from 'react-router-dom'
-
+import {device} from "../../deviceinfo"
 class Slide_Bar extends Component {
     constructor(props) {
         super(props);
@@ -11,65 +11,28 @@ class Slide_Bar extends Component {
     state = { index:0 }
     componentDidMount(){
 	 setInterval(()=>{
-     if(this.state.index == 3){
+     if(this.state.index > 5){
  	 this.setState({index:0})
      }
      else{
  	 this.setState({index:this.state.index+1})
      }
-     	console.log(this.state.index)
- },8000) 
+    
+ },4000) 
     }
     render() {
-	        const animae=[
-            {
-                id:1,
-                item:<Card_componnt/>,
-            },
-           {
-               id:2,
-               item: <Carded/>,
-           },
-           {
-            id:3,
-            item:   <Card_componnt/>
-        },
-        {
-            id:4,
-            item:  <Carded/>
-        }
-		]
-	const{index}=this.state
-
-	const back_animate= ()=>{
-	      if(this.state.index == 3){
-	 this.setState({index:0})
-   }
-    else{
-  	 this.setState({index:this.state.index+1})
- }
-	}
-
-
-
-
-		const forward_animate= ()=>{
-	      if(this.state.index == 3){
-	 this.setState({index:0})
-   }
-    else{
-  	 this.setState({index:this.state.index+1})
- }
-	}
+	      
+        const {index} = this.state
+		const setproduct = (id)=>{this.setState({index:id})}
         return (  
 		<div className="slideshow-container">
     		<div className='display_device'>
-                <div className="device_image">
+                <div className="device_image" style={{backgroundImage:`url(/img/${device[index].img})`}}>
                     
                 </div>         
                 <div className='display_text'>
-                        <h2>Apple iphone 12</h2>
-                        <h3>Apple iphone 12</h3>
+                        <h2>{device[index].name}</h2>
+                        <h3></h3>
                 </div>
                     <AnimatePresence exitBeforeEnter>
                     </AnimatePresence>
@@ -77,8 +40,10 @@ class Slide_Bar extends Component {
             </div>
             <div className='dot-container'>
                 {
-                    animae.map((data)=>{
-                    return(<span className='dot' ></span>)})
+
+                    device.map((data)=>{
+                        
+                    return(<span key={data.id} onClick={()=>{setproduct(data.id)}} className={`dot`} style={data.id == device[index].id?{backgroundColor:"blue"}:{}} ></span>)})
                 }
             </div>  
 

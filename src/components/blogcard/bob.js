@@ -1,6 +1,7 @@
 import { Star } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
+import device from '../../deviceinfo'
 import './bob.css'
 class Carded extends Component {
     constructor(props) {
@@ -14,7 +15,7 @@ class Carded extends Component {
         const ratings =[1,2,3,4,5]
         return ( 
             <div class="card" style={{width:'400px'}}>
-                <div className='device_container'>
+                <div className='device_container' style={{backGround:``}}>
                     <div className='like_circle'>
                         
                     </div>                                                                               

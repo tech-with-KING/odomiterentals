@@ -18,7 +18,6 @@ box-sizing: border-box;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  background-image: url("/public/logo192.png");
 }
 .like_circle{
   height: 30px;
