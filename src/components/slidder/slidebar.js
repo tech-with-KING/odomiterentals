@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Card_componnt,{Carded} from '../cardbar/cardbar';
 import {motion ,AnimatePresence} from 'framer-motion'
 import './slidebar.css'
-import { ArrowBack, ArrowForward, ChevronLeft, ChevronRight, GitHub, LinkedIn, MailOutline } from '@mui/icons-material';
+import {Link} from 'react-router-dom'
 
 class Slide_Bar extends Component {
     constructor(props) {

@@ -1,8 +1,8 @@
 import { Star } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
-import './bob.css'
-class Carded extends Component {
+import './style.css'
+class SingleProduct extends Component {
     constructor(props) {
         super(props);
     }
@@ -13,7 +13,7 @@ class Carded extends Component {
     render() { 
         const ratings =[1,2,3,4,5]
         return ( 
-            <div class="card" style={{width:'400px'}}>
+            <div class="product_card" style={{width:'600px'}}>
                 <div className='device_container'>
                     <div className='like_circle'>
                         
@@ -53,4 +53,4 @@ class Carded extends Component {
     }
 }
  
-export default Carded;
+export default SingleProduct;

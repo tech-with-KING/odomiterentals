@@ -46,3 +46,11 @@ border-radius: 10px;
 
 
 /* brands section */
+.brands_{
+    background-color: aqua;
+    height: 40vh;
+}
+.news_letter{
+    background-color:blue;
+    height: 40vh;
+}

@@ -1,136 +1,71 @@
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+.card{
+  display: flex;
+flex-direction: column;
+margin-top: 0px;
+background-position: center;
+background-size: cover;
+background-repeat: no-repeat;
+height: 100%;
+border-radius: 10px;
+border: 2px solid gray;
+box-sizing: border-box;
+}
+/* upper container where the div for device image is  */
+.device_container{
+  height: 55%;
+  width: 100%;
+  border-radius: 10px 10px 0 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url("/public/logo192.png");
+}
+.like_circle{
+  height: 30px;
+  border-radius: 50%;
+  width: 30px;
+  background-color: grey;
+  position:relative;
+  left:88%;
+  margin: 3px;
+}
+/* lower div where the device info is contained */
+.device_info_container
+{
+  height: 45%;
+  width: 100%;
+}
+.device_info_container p{
+  padding-left: 10px;
+  width: 100%;
+  font-weight: bold;
+  padding-top: 0;
+  padding-bottom: 0px;
+}
+.device_info_container div{
+  display: flex;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: lighter;
+  }
+/*  */
+.device_rating{
   padding: 0;
   margin: 0;
+  height: unset;
+  
 }
-
-.card_ {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 .1rem 1rem rgba(0, 0, 0, 0.1);
-  border-radius: 1em;
-  background: #ECE9E6;
-  margin-bottom: 40px;
-  width: 85%;
-  max-width: 700px;
-  min-width: 250px;
-  margin-top: 0px;
-  background-position: center;
-  background-size: cover;
-
-}
-
-
-
-.card__body_ {
-  padding: 1rem;
-  width: 100%;
-  display: flex;
+.device_price{
+  font-size: 24px;
   font-weight: bold;
-  align-items: center;
-  flex-direction: column;
-
+  color: #053674;
 }
-
-
-.tag {
-  align-self: flex-start;
-  padding: .25em .75em;
-  border-radius: 1em;
-  font-size: .75rem;
+.compare{
+  font-size: 12px;
 }
-
-.tag + .tag {
-  margin-left: .5em;
-}
-
-
-
-.tag-red {
-  background-color: #000020;
-  color: white;
-}
-
-.card__body h4 {
-  font-size: 1.5rem;
-  text-transform: capitalize;
-}
-
-.card__footer {
-  display: flex;
-  padding: 1rem;
-  margin-top: auto;
-}
-
-.user {
-  display: flex;
-  gap: .5rem;
-}
-
-.user__image {
-  border-radius: 50%;
-  height: 40px;
-  width: 40px;
-
-}
-
-.user__info {
-  color: #666;
-}
-.project_img{
-    background-image: url("../../img/cforme.jpeg");
-  height: 300px;
-  background-position: center;
-  background-size: cover;
-  color: white;
-  background-repeat: no-repeat;
-  width: 100%;
-
-}
-
-.container_ {
-  display: flex;
-  margin-bottom: 10px;
-  width: 32%;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  background-color: transparent;
-  padding: 0;
-  margin-top: 10px;
-}
-@media (min-width: 450px){
-
-  .container_ {
-    display: flex;
-    margin-bottom: 10px;
-    width: 32%;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    background-color: transparent;
-    padding: 0;
-    margin-top: 10px;
-  }
-  .card_ {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    box-shadow: 0 .1rem 1rem rgba(0, 0, 0, 0.1);
-    border-radius: 1em;
-    background: #ECE9E6;
-    width: inherit;
-    width: 95%;
-    max-width: 700px;
-    min-width: 250px;
-    background-position: center;
-    background-size: cover;
-
-  }
-
+.device_name
+, .device_spec{
+  line-height: 0;
+  font-size: 15px;
+  color: black;
 }

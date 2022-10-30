@@ -1,0 +1,23 @@
+
+  .popular_produts{
+    max-width: 100vw;
+    margin-top: 50px;
+    overflow: hidden;
+     display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-gap: 1.7rem;
+    width: 100vw;
+    height: inherit;
+    margin: 40px auto;
+    padding: 0 40px;
+   
+}
+.product_container{
+    max-width: 32
+    0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+
+}

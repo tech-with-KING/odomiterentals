@@ -1,8 +1,19 @@
+*{
+    box-sizing: border-box;
+    overflow-x: hidden;
+    
+}
 .app {
     height: inherit;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+}
+Link {
+    height: inherit;
+    width: inherit;
+    text-decoration: none;
+    
 }
 
 
