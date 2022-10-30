@@ -1,6 +1,5 @@
 .product_card{
     display: flex;
-    width: 80vw;
   flex-direction: row;
   margin-top: 0px;
   background-position: center;
@@ -12,7 +11,7 @@
   box-sizing: border-box;
   }
   /* upper container where the div for device image is  */
-  .Image_container{
+  /* .Image_container{
     height: 100%;
     width: 100%;
     border-radius: 10px 10px 0 0;
@@ -29,9 +28,9 @@
     position:relative;
     left:88%;
     margin: 3px;
-  }
+  } */
   /* lower div where the device info is contained */
-  .device_info_container
+  /* .device_info_container
   {
     height: 100%;
     width: 50%;
@@ -50,7 +49,7 @@
     font-weight: lighter;
     }
   /*  */
-  .device_rating{
+  /* .device_rating{
     padding: 0;
     margin: 0;
     height: unset;
@@ -69,4 +68,4 @@
     line-height: 0;
     font-size: 15px;
     color: black;
-  }
+  } */ 

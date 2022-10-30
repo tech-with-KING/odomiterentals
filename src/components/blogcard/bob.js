@@ -1,4 +1,4 @@
-import { Star } from '@mui/icons-material';
+import { Favorite, Star } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import device from '../../deviceinfo'
@@ -15,9 +15,9 @@ class Carded extends Component {
         const ratings =[1,2,3,4,5]
         return ( 
             <div class="card" style={{width:'400px'}}>
-                <div className='device_container' style={{backGround:``}}>
+                <div className='device_container' style={{backgroundImage:`url(/img/${this.props.img})`}}>
                     <div className='like_circle'>
-                        
+                        <Favorite style={{color:'white',fontSize:'25px'}}/> 
                     </div>                                                                               
                     
                 </div>
@@ -31,7 +31,7 @@ class Carded extends Component {
                         -this is the spec
                     </p>                                                                               
                     <p className='device_price'>
-                        this is the device
+                        {this.props.price}
                     </p>                     
                     <div className='device_rating'>
                         {

@@ -20,6 +20,9 @@ box-sizing: border-box;
   background-position: center;
 }
 .like_circle{
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 30px;
   border-radius: 50%;
   width: 30px;

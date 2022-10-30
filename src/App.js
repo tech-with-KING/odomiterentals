@@ -6,6 +6,7 @@
 	import User from './components/user_details/index'
 	import { BrowserRouter as Router, Routes, Route,Outlet } from "react-router-dom"
 	import SingleProduct from './components/Item';
+import { PageNotFound } from './components/notfound';
 
 	class App extends Component {
 		state = {
@@ -30,8 +31,8 @@
 			<Route path="/" element={<Body/>} />
 			<Route path="/login" element={<><User content_head ={'singn in'}/></>} />
 			<Route path="/register" element={<></>} />
-			<Route path="/:productId" element={<SingleProduct />} />
-			<Route path="/*" element={<h1>Not Found</h1>} />
+			<Route path="/produts/:productId" element={<SingleProduct />} />
+			<Route path="/*" element={<PageNotFound />} />
 			</Routes>
 			<DownBar />
 			</Router>
