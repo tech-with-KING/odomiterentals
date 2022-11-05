@@ -1,7 +1,8 @@
 import React from 'react';
-import Carded from '../../components/blogcard/bob';
-import './style.css'
-const Sample=(props)=>{
+import Product from './singleproduct';
+import './shop.css'
+import {device} from '../../deviceinfo'
+const Shop=(props)=>{
     const {toggle}=props
     const coloring={
       darkbg:'black',
@@ -13,17 +14,16 @@ const Sample=(props)=>{
     const tab = [1,2,3,4,5,6,7,8,9]
     return(
 	   
-<div className="popular_produts">
-	    {
-		tab.map((index)=>{
+<div className="shop_products">
+<div className='search_term'></div>
+	 <div className ='catalogue'>{
+		device.map((index)=>{
 		    return(
-
-			<div className ='product_container'>
-                <Carded />
-            </div>
+                <Product key={index.device_nam} price={index.price} img ={index.img} name ={index.device_name} prince={index.price} spec={index.spec} />
 		    )
 		})
 		}
+        </div> 
 
 
     
@@ -31,4 +31,4 @@ const Sample=(props)=>{
  
     )
 }
-export default Sample;
+export default Shop;

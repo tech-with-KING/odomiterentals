@@ -8,6 +8,7 @@
   height: 400px;
   border-radius: 10px;
   border: 2px solid gray;
+  flex-direction: column;
   box-sizing: border-box;
   }
   /* upper container where the div for device image is  */

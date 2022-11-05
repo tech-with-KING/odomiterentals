@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Card_componnt,{Carded} from '../cardbar/cardbar';
+
 import {motion ,AnimatePresence} from 'framer-motion'
 import './slidebar.css'
 import {Link} from 'react-router-dom'

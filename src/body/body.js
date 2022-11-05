@@ -4,36 +4,6 @@ import { useState,useEffect } from 'react';
 import Slide_Bar from "../components/slidder/slidebar"
 import Sample from './shopsmart/sample';
 const Body=(props)=>{
-    const [dark,setdark]=useState(false)
-   
-  const datas =[
-      {
-          id:1,
-          text:"this is going to be some of the best articles yuo will ever get to read",
-          img:'/img/pythondev1.jpeg',
-	  name:'python'
-	  
-      },
-      {
-        id:2,
-        text:"this is going to be some of the best articles yuo will ever get to read",
-          img:'/img/bn.png',
-	  name:'Reac/js'
-    },
-    {
-        id:3,
-        text:"this is going to be some of the best articles yuo will ever get to read",
-        img:'/img/cforme.jpeg',
-	name:'C'
-    },
-      {
-        id:4,
-        text:"this is going to be some of the best articles yuo will ever get to read",
-        img:'/img/git.png',
-	name:'git'
-    }
-  ]
-
     return(
     <div className='hero'>
 	      <HeroImage />
