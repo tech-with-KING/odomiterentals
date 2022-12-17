@@ -23,9 +23,7 @@ class Carded extends Component {
                 </div>
                 <div className='device_info_container'>
                 <Link to={`/${this.props.Link}`} >
-                      <p className='device_name'>
-                        This is the device name _
-                    </p> 
+                      <p>{this.props.name}</p>
                 </Link>
                     <p className='device_spec'>
                         -this is the spec

@@ -28,12 +28,8 @@ class SingleProduct extends Component {
         const {device_array, phone}= this.state
         const ratings =[1,2,3,4,5]
         return ( 
-            <div class="product_card" style={{width:'80%'}}>
+            <div class="product_card" style={{width:'50%'}}>
                 <div className='device_container' style={{backgroundImage:`url(/img/${phone.img})`}}>
-                    <div className='like_circle'>
-                        
-                    </div>                                                                               
-                    
                 </div>
                 <div className='device_info_container'>
                 <Link to={`/${this.props.Link}`} >
@@ -41,11 +37,9 @@ class SingleProduct extends Component {
                         {phone.name}
                     </p> 
                 </Link>
-                    <p className='device_spec'>
-                        -this is the spec
-                    </p>                                                                               
+                    <p className="device_name_">{phone.name}</p>                                                        
                     <p className='device_price'>
-                        this is the device
+                        {phone.price}
                     </p>                     
                     <div className='device_rating'>
                         {
@@ -55,11 +49,12 @@ class SingleProduct extends Component {
                                 )
                             })
                         }
-                        <p>[no reviews yet]</p>
+                        <p>[no reviews]</p>
                     </div>                     
-                    <p className='compare'>
-                        
-                    </p>                       
+                    <p className='compare'>Lorem ipsum dolor sit amet    </p>       
+
+                    <div><input type={"search"} placeholder='enter price here '/></div>                
+                    <button className='price_alert'>Set price alert</button>
                 </div>
             
             </div>

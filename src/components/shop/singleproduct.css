@@ -18,8 +18,9 @@
  
   /* upper container where the div for device image is  */
    .tile{
+    margin-left: 10px;
     height: 100%;
-    width: 30%;
+    width: 40%;
     margin-right: 10px;
     border-radius: 10px 10px 0 0;
     background-size: contain;
@@ -33,8 +34,12 @@
   {
     padding: 10px;
     font-size: 0.1rem;
-    height: 60%;
-    width: 100%;
+    height: 100%;
+    width: 60%;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column ;
+    justify-content: center;
   }
   .device_info_container p{
     padding-left: 10px;
@@ -49,27 +54,24 @@
     font-size: 10px;
     font-weight: lighter;
     }
-  /*  */
-  /* .device_rating{
-    padding: 0;
-    margin: 0;
-    height: unset;
-    
-  }
-  .device_price{
-    font-size: 24px;
-    font-weight: bold;
-    color: #053674;
-  }
-  .compare{
-    font-size: 12px;
-  }
-  .device_name
-  , .device_spec{
-    line-height: 0;
-    font-size: 15px;
-    color: black;
-  } */ 
+.shop_compare{
+  height: unset;
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  
+}
+.shop_compare button{
+  background-color:#053674;
+  font-size: 18px;
+  border-radius: 5px;
+  color: white;
+  height: 30px;
+  min-width: 80px;
+  width: 60%;
+  border: none;
+  margin: 5px;
+}
   @media  (max-width:600px) {
     .shop_template{
         display: flex;

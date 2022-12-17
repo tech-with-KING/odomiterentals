@@ -1,6 +1,8 @@
 *{
     box-sizing: border-box;
     overflow-x: hidden;
+    margin: 0;
+    padding: 0;
     
 }
 .app {
@@ -14,8 +16,16 @@ Link {
     height: inherit;
     width: inherit;
     text-decoration: none;
-    
+    border: none;
 }
 
-
-
+.single_product{
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+button{
+    border: none;
+}

@@ -28,7 +28,7 @@ const DownBar=()=>{
         ]
     return(
             <div className='bottom_navbar'>
-	    {/* menue_contents*/}
+
 	    <div className='menue_contents'>
 	    {
 		menue_objects.map((menue=>{

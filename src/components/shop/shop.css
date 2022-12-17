@@ -15,7 +15,8 @@
   box-sizing: border-box;
 }
 .search_term{
-  background-color: brown;
+  /* background-color; */
+  background-color: #053674;
   height: 300px;
   width: 20%;
 }

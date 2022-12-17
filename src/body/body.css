@@ -4,6 +4,9 @@
     height: inherit;
     overflow: hidden;
     background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .hero_img{
     overflow: hidden;
@@ -49,12 +52,97 @@ border-radius: 10px;
 
 /* brands section */
 .brands_{
-    background-color: aqua;
     height: 40vh;
 }
+/* news letter section */
 .news_letter{
-    background-color:#053674;
+    background-color:#ebcbbc;
     height: 40vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center ;
+    flex-direction: column;
+}
+.news_letter .input_container{
+    width: 100%;
+    height: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.news_letter .input_container input{
+    outline: none;
+    padding-left: 10px;
+    border-radius: 5px;
+    border: none;
+    width: 40%;
+    min-width: 190px;
+    height: 35px;
+}
+.news_letter .input_container button{
+    width: 10%;
+    height: 35px;
+    background-color:#053674;
+    color: white;
+    font-size: 20px;
+    min-width: 100px;
+    padding: 5px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+}
+.news_letter h1{
+    color: #053674;
+    font-size: 25px;
+    font-weight: normal;
+
+}
+.news_letter p{
+    margin: 10px;
+}
+
+/* brands this part contains the logos and the names */
+.brands_{
+    background-color:rgb(195, 215, 238);
+    height: 40vh;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    overflow: hidden;
+}
+.fav_brands{
+    width: 50%;
+}
+.logos{
+    width: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+.fav_brands h1{
+    color: #053674;
+    font-size: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-weight: normal;
+
+}
+.circle_brand{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: white;
+    color: #053674;
+    display: flex;
+    margin: 20px;
+    align-items: center;
+    justify-content: center;
+    
 }
 @media (min-width:500px) {
     .news_letter{
@@ -104,12 +192,9 @@ border-radius: 10px;
     
     
     /* brands section */
-    .brands_{
-        background-color: aqua;
-        height: 40vh;
-    }
+    
     .news_letter{
-        background-color:#053674;
+        
         height: 40vh;
     }
 }

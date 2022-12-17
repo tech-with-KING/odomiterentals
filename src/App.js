@@ -33,7 +33,7 @@ import Shop from './components/shop/shop';
 			<Route path="/login" element={<><User content_head ={'singn in'}/></>} />
 			<Route path="/register" element={<></>} />
 			<Route path="/shop" element={<Shop />} />
-			<Route path="/products/:productId" element={<SingleProduct />} />
+			<Route path="/products/:productId" element={<div className='single_product'><SingleProduct /></div>} />
 			<Route path="/*" element={<PageNotFound />} />
 			</Routes>
 			<DownBar />

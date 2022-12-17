@@ -1,5 +1,6 @@
 .product_card{
     display: flex;
+    padding-bottom: 20px;
   flex-direction: row;
   margin-top: 0px;
   background-position: center;
@@ -10,63 +11,43 @@
   border: 2px solid gray;
   flex-direction: column;
   box-sizing: border-box;
+  min-width: 300px;
   }
-  /* upper container where the div for device image is  */
-  /* .Image_container{
-    height: 100%;
-    width: 100%;
-    border-radius: 10px 10px 0 0;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-image: url("/public/logo192.png");
-  }
-  .like_circle{
-    height: 30px;
-    border-radius: 50%;
-    width: 30px;
-    background-color: grey;
-    position:relative;
-    left:88%;
-    margin: 3px;
-  } */
-  /* lower div where the device info is contained */
-  /* .device_info_container
-  {
-    height: 100%;
-    width: 50%;
-  }
-  .device_info_container p{
-    padding-left: 10px;
-    width: 100%;
-    font-weight: bold;
-    padding-top: 0;
-    padding-bottom: 0px;
-  }
-  .device_info_container div{
-    display: flex;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: lighter;
-    }
-  /*  */
-  /* .device_rating{
-    padding: 0;
-    margin: 0;
-    height: unset;
-    
-  }
-  .device_price{
-    font-size: 24px;
-    font-weight: bold;
-    color: #053674;
-  }
-  .compare{
-    font-size: 12px;
-  }
-  .device_name
-  , .device_spec{
-    line-height: 0;
-    font-size: 15px;
+  .device_spec{
     color: black;
-  } */ 
+  }
+  .device_info_container{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+  }
+  .price_alert{
+    display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+width: 50%;
+margin: 10px;
+height: 35px;
+background: #053674;
+border: none;
+color: #ffffff;
+border-radius: 4px;
+font-size: 18px;
+  }
+.device_price{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.compare{
+  color: gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.device_name{
+  color: black;
+  font-size: 20px;
+}
