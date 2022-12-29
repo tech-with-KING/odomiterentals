@@ -19,7 +19,7 @@ const Shop=(props)=>{
 	 <div className ='catalogue'>{
 		device.map((index)=>{
 		    return(
-                <Product key={index.device_nam} price={index.price} img ={index.img} name ={index.device_name} prince={index.price} spec={index.spec} />
+                <Product key={index.device_nam} price={index.price} img ={index.img} name ={index.device_name} prince={index.price} id={index.id} spec={index.spec} />
 		    )
 		})
 		}

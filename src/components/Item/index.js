@@ -3,6 +3,12 @@ import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import './style.css'
 import {device} from '../../deviceinfo'  
+
+import { useParams } from "react-router-dom";
+
+function withRouter(Component) {
+  return props => <Component {...props} params={useParams()} />;
+}
 class SingleProduct extends Component {
     constructor(props) {
         super(props);
@@ -13,11 +19,12 @@ class SingleProduct extends Component {
     }
     
     componentDidMount(){
+        const id = this.props.params;
+        console.log(id.productId)
         const {device_array, phone}= this.state
         this.setState({device_array:device})
-        console.log(device_array)
         device.find((dev)=>{
-            if(dev.id == 1){
+            if(dev.id == id.productId){
                 console.log(dev)
                 this.setState({phone:dev})
             }
@@ -32,7 +39,7 @@ class SingleProduct extends Component {
                 <div className='device_container' style={{backgroundImage:`url(/img/${phone.img})`}}>
                 </div>
                 <div className='device_info_container'>
-                <Link to={`/${this.props.Link}`} >
+                <Link to={`/products/`} >
                       <p className='device_name'>
                         {phone.name}
                     </p> 
@@ -63,4 +70,4 @@ class SingleProduct extends Component {
     }
 }
  
-export default SingleProduct;
+export default withRouter(SingleProduct);

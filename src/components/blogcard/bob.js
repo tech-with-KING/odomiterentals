@@ -22,7 +22,7 @@ class Carded extends Component {
                     
                 </div>
                 <div className='device_info_container'>
-                <Link to={`/${this.props.Link}`} >
+                <Link to={`/products/${this.props.id}`} >
                       <p>{this.props.name}</p>
                 </Link>
                     <p className='device_spec'>
@@ -39,7 +39,7 @@ class Carded extends Component {
                                 )
                             })
                         }
-                        <p>[no reviews yet]</p>
+                        <p>[no reviews yet ]</p>
                     </div>                     
                     <p className='compare'>
                         compare with 2 online shops 

@@ -1,5 +1,5 @@
 import { Star } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import React, { Component } from 'react';
 import './singleproduct.css'
 class Product extends Component {
@@ -17,7 +17,7 @@ class Product extends Component {
                 <div className='tile' style={{backgroundImage:`url(/img/${this.props.img})`}}>                    
                 </div>
                 <div className='tile_info'>
-                <Link to={`/${this.props.Link}`} >
+                <Link to={`/${this.props.id}`} >
                       <p className='device_name'>
                         {this.props.name}
                     </p> 
