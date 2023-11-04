@@ -9,9 +9,12 @@
  }
  .catalogue{
    width: 80%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+   height: inherit;
+    margin: 40px auto;
+    padding: 0 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 1.4rem;
   box-sizing: border-box;
 }
 .search_term{

@@ -1,65 +1,61 @@
 .shop_template{
-    display: flex;
-    box-sizing: border-box;
-    overflow: hidden;
-  flex-direction: row;
+  display: flex;
+  box-sizing: border-box;
+  overflow: hidden;
+  flex-direction: column;
   margin-top: 0px;
+  padding: 0;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  height: 250px;
+  height: 300px;
   border-radius: 10px;
   border: 2px solid gray;
-  margin-top: 10px;
-  margin-bottom: 10px;
   min-width: 250px;
   box-sizing: border-box;
-  }
- 
-  /* upper container where the div for device image is  */
-   .tile{
-    margin-left: 10px;
-    height: 100%;
-    width: 40%;
-    margin-right: 10px;
-    border-radius: 10px 10px 0 0;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    
-  }
-  
-  /* lower div where the device info is contained */
-  .tile_info
-  {
-    padding: 10px;
-    font-size: 0.1rem;
-    height: 100%;
-    width: 60%;
-    display: flex;
-    align-items: flex-start;
-    flex-direction: column ;
-    justify-content: center;
-  }
-  .device_info_container p{
-    padding-left: 10px;
-    width: 100%;
-    font-weight: bold;
-    padding-top: 0;
-    padding-bottom: 0px;
-  }
-  .device_info_container div{
-    display: flex;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: lighter;
-    }
+}
+
+/* upper container where the div for device image is  */
+.tile{
+  height: 70%;
+  width: 100%;
+  margin-right: 10px;
+  border-radius: 10px 10px 0 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* lower div where the device info is contained */
+.tile_info
+{
+  padding: 10px;
+  font-size: 0.1rem;
+  height: 30%;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column ;
+  justify-content: center;
+}
+.device_info_container p{
+  padding-left: 10px;
+  width: 100%;
+  font-weight: bold;
+  padding-top: 0;
+  padding-bottom: 0px;
+}
+.device_info_container div{
+  display: flex;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: lighter;
+}
 .shop_compare{
   height: unset;
   display: flex;
   flex-direction: column;
   width: 60%;
-  
 }
 .shop_compare button{
   background-color:#053674;
@@ -72,11 +68,11 @@
   border: none;
   margin: 5px;
 }
-  @media  (max-width:600px) {
-    .shop_template{
-        display: flex;
-      box-sizing: border-box;
-      overflow: hidden;
+@media  (max-width:600px) {
+  .shop_template{
+    display: flex;
+    box-sizing: border-box;
+    overflow: hidden;
     flex-direction: row;
     margin-top: 0px;
     background-position: center;
@@ -91,45 +87,44 @@
     min-width: 250px;
     box-sizing: border-box;
     flex-direction: column;
-    }
-   
-    /* upper container where the div for device image is  */
-     .tile{
-      height: 40%;
-      width: 100%;      
-      border-radius: 10px 10px 0 0;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      
-    }
-    .like_circle{
-      height: 30px;
-      border-radius: 50%;
-      width: 30px;
-      background-color: grey;
-      position:relative;
-      left:88%;
-      margin: 3px;
-    } */
+  }
+  
+  /* upper container where the div for device image is  */
+  .tile{
+    width: 100%;      
+    border-radius: 10px 10px 0 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+  }
+  .like_circle{
+    height: 30px;
+    border-radius: 50%;
+    width: 30px;
+    background-color: grey;
+    position:relative;
+    left:88%;
+    margin: 3px;
+  } */
     /* lower div where the device info is contained */
     .product_info_container
-    {
-      height: 100%;
-      width: 60%;
-    }
-    .device_info_container p{
-      padding-left: 10px;
-      width: 100%;
-      font-weight: bold;
-      padding-top: 0;
-      padding-bottom: 0px;
-    }
-    .device_info_container div{
-      display: flex;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: lighter;
-      }
-    /*  */ 
+  {
+    height: 100%;
+    width: 60%;
   }
+  .device_info_container p{
+    padding-left: 10px;
+    width: 100%;
+    font-weight: bold;
+    padding-top: 0;
+    padding-bottom: 0px;
+  }
+  .device_info_container div{
+    display: flex;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: lighter;
+  }
+  /*  */ 
+}

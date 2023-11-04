@@ -15,11 +15,20 @@ const Shop=(props)=>{
     return(
 	   
 <div className="shop_products">
-<div className='search_term'></div>
+<ul className='search_term'>
+    <li>Tables</li>
+    <li>Chairs</li>
+    <li>10x10 folding tables</li>
+    <li>Tables</li>
+    <li>Chairs</li>
+    <li>10x10 folding tables</li>
+</ul>
 	 <div className ='catalogue'>{
 		device.map((index)=>{
 		    return(
-                <Product key={index.device_nam} price={index.price} img ={index.img} name ={index.device_name} prince={index.price} id={index.id} spec={index.spec} />
+                <Product key={index.device_nam} price={index.price} img ={index.img} 
+                name ={index.device_name} prince={index.price} id={index.id} 
+                spec={index.spec} />
 		    )
 		})
 		}

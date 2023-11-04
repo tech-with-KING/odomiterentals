@@ -6,6 +6,9 @@
     flex-direction: column;
     height: inherit;
     padding: 10px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
 .display_text{
   width: 50%;

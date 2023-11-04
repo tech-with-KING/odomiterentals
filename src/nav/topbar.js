@@ -1,11 +1,13 @@
 import React from 'react';
 import "./tobar.css"
+import "../globalstyle.css"
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
-import { Search } from '@mui/icons-material';
+import { Home, Search, Storefront, Warehouse } from '@mui/icons-material';
+import { Button } from '@mui/material';
 const Top_bar=(props)=>{
-        const menue_list=[
+    const menue_list=[
         {
             id:1,
 	    heading:'Home',
@@ -31,39 +33,25 @@ const Top_bar=(props)=>{
 	    heading:'Price Trackers',
             items:['Contact us','Help center','Documentation','Reviews','Privacy and policy']
         },
-        ]
+    ]
     return(
-		<div className='top_bar'>
-	    <div className='logo'>
-	    <div className='logo_icons'>
-	    <div><LocalOfferIcon className='local_offer' style={{color:'#F6CC5C',fontSize:'60px'}} /><ShoppingCartOutlinedIcon className='shopping_cart' style={{color:'#053674',fontSize:'60px'}} /></div>
-	    <h3>SHOP SMART</h3>
-	    <p>Shop smart at the right price </p>
+	<div className="top_bar">
+	    <div id='heading'>
+		    <h2 className='products-heading'>ODOMITE RENTALS</h2>
+		    <p>A rental service you can trust</p>
 	    </div>
-	    </div>
-			<div className='menu_list'>
-	
-	    <div className=' header_section'>
-	    <ul className='menu_options'>
-					{
-						menue_list.map((list => {
-							return (<li key={list.id}>{list.heading}</li>)
-						}))
-					}
-	  </ul>
-	    <div className='john_doe'>
-	    <PersonOutlinedIcon />
-	    <p>John Doe</p>
-	    </div>
-	    </div>
-	    <div className='input_container'>
-	    <div >
-	    <input type='email' placeholder='what are you shopping for ...'/>
-	    <div><p>Search</p><Search /></div></div>
-
-				</div>
-			</div>
-		</div>     
+		 <div className=' header_section'>
+		    <ul className='menu_options'>
+				<li id = "btn">Home <Home /></li>
+				<button id = "btn"><Storefront /> CATALOGUE </button>
+				<li>ABOUT US</li>
+		    </ul>
+		    <div className='john_doe'>
+				<PersonOutlinedIcon />
+				<p>Your Account</p>
+		    </div>
+		</div>
+	</div>     
     )
 }
 export default Top_bar;

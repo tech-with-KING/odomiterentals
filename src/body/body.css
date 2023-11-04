@@ -3,16 +3,16 @@
     width: 100vw;
     height: inherit;
     overflow: hidden;
-    background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 .hero_img{
     overflow: hidden;
-    height: 80vh;
+    height: 50vh;
     width:100vw;
     display: flex;
+    background-color: rgb(185, 205, 227);
     flex-direction: column;
 }
 /* hero shop area  */
@@ -27,7 +27,7 @@
 .hero_shop_name button{
     width: 180px;
 height: 36px;
-background: #053674;
+background: white;
 border-radius: 10px;
 }
 .hero_shop_name h1{
@@ -150,7 +150,7 @@ border-radius: 10px;
     }
     .hero_img{
         overflow: hidden;
-        height: 50vh;
+        height: 78vh;
         width:100vw;
         display: flex;
         flex-direction: row;

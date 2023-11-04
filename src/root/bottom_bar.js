@@ -7,24 +7,7 @@ const DownBar=()=>{
             id:1,
 	    heading:'Categories',
             items:['Mobiles','Laptops','Tablets','Accessories','Appliances']
-        },
-	{
-            id:2,
-	    heading:'Brands',
-            items:['Apple','Samsung','Tecno','Infinix','Nokia','Hp','Lenovo']
-        },
-	{
-            id:3,
-	    heading:'Sites',
-            items:['About us','How to use shopsmart','Merchant signup','User guide']
-        },
-	{
-            id:4,
-	    heading:'Support',
-            items:['Contact us','Help center','Documentation','Reviews','Privacy and policy']
-        },
-	
-
+        }
         ]
     return(
             <div className='bottom_navbar'>

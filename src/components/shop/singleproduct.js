@@ -1,33 +1,34 @@
 import { Star } from '@mui/icons-material';
 import { Link, withRouter } from 'react-router-dom';
+import '../../globalstyle.css'
 import React, { Component } from 'react';
 import './singleproduct.css'
 class Product extends Component {
     constructor(props) {
         super(props);
     }
-    state = { 
-        
+    state = {
+
     }
-    
-    render() { 
+
+    render() {
         const ratings =[1,2,3,4,5]
-        return ( 
-            <div class="shop_template" style={{width:'80%'}}>
-                <div className='tile' style={{backgroundImage:`url(/img/${this.props.img})`}}>                    
+        return (
+            <div class="shop_template" style={{width:'100%'}}>
+                <div className='tile product-card' style={{backgroundImage:`url(/img/${this.props.img})`}}>
                 </div>
                 <div className='tile_info'>
-                <Link to={`/${this.props.id}`} >
-                      <p className='device_name'>
-                        {this.props.name}
-                    </p> 
-                </Link>
+                    <Link to={`/${this.props.id}`} >
+			<p className='device_name product-name'>
+                            {/* {this.props.name} */}Name
+			</p>
+                    </Link>
                     <p className='device_spec'>
                         -this is the spec
-                    </p>                                                                               
-                    <p className='device_price'>
-                        {this.props.price}
-                    </p>                     
+                    </p>
+                    <p className='device_price product-price'>
+                        {/* {this.props.price} */}$Price
+                    </p>
                     <div className='device_rating'>
                         {
                             ratings.map((rating)=>{
@@ -37,19 +38,12 @@ class Product extends Component {
                             })
                         }
                         <p>[no reviews yet]</p>
-                    </div>                     
-                    <p className='compare'>
-                        compare with 2 online shops 
-                    </p>                   
-                    <div className='shop_compare'>
-                        <button>Jumia</button>    
-                        <button>Slot</button>
                     </div>
                 </div>
-            </div>
+		</div>
 
-         );
-    }
-}
- 
-export default Product;
+		);
+		}
+		}
+
+		export default Product;
