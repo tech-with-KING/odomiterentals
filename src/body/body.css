@@ -9,7 +9,7 @@
 }
 .hero_img{
     overflow: hidden;
-    height: 50vh;
+    height: 28vh;
     width:100vw;
     display: flex;
     background-color: rgb(185, 205, 227);
@@ -51,20 +51,18 @@ border-radius: 10px;
 
 
 /* brands section */
-.brands_{
-    height: 40vh;
-}
 /* news letter section */
 .news_letter{
-    background-color:#ebcbbc;
-    height: 40vh;
+    background-color:transparent;
+    height: 10vh;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center ;
     flex-direction: column;
 }
-.news_letter .input_container{
+.news_letter 		
+.input_container{
     width: 100%;
     height: unset;
     display: flex;
@@ -94,7 +92,7 @@ border-radius: 10px;
 }
 .news_letter h1{
     color: #053674;
-    font-size: 25px;
+    font-size: 15px;
     font-weight: normal;
 
 }
@@ -105,7 +103,7 @@ border-radius: 10px;
 /* brands this part contains the logos and the names */
 .brands_{
     background-color:rgb(195, 215, 238);
-    height: 40vh;
+    height: 20vh;
     display: flex;
     width: 100%;
     justify-content: center;
@@ -124,22 +122,22 @@ border-radius: 10px;
 }
 .fav_brands h1{
     color: #053674;
-    font-size: 35px;
+    font-size: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 0px;
     font-weight: normal;
 
 }
 .circle_brand{
-    width: 100px;
-    height: 100px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background-color: white;
     color: #053674;
     display: flex;
-    margin: 20px;
+    margin: 2.5px 5px;
     align-items: center;
     justify-content: center;
     
@@ -195,6 +193,6 @@ border-radius: 10px;
     
     .news_letter{
         
-        height: 40vh;
+        height: 20vh;
     }
 }

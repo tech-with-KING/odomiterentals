@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route,Outlet } from "react-router-dom"
 import SingleProduct from './components/Item';
 import { PageNotFound } from './components/notfound';
 import Shop from './components/shop/shop';
+import BlogComponent from './components/newsletters';
 
 class App extends Component {
     state = {
@@ -32,6 +33,7 @@ class App extends Component {
 			<Route path="/login" element={<><User content_head ={'singn in'}/></>} />
 			<Route path="/register" element={<></>} />
 			<Route path="/shop" element={<Shop />} />
+			<Route path="/aboutus" element={<BlogComponent />} />
 			<Route path="/products/:productId" element={<div className='single_product'><SingleProduct /></div>} />
 			<Route path="/*" element={<PageNotFound />} />
 		    </Routes>

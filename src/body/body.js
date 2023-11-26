@@ -7,6 +7,7 @@ import Products from './shopsmart/sample'
 import { device } from '../deviceinfo';
 import FooterBanner from '../components/footer';
 import HeaderBanner from '../components/bonus_products';
+import { Facebook, Instagram, Mail, Twitter, WhatsApp } from '@mui/icons-material';
 
 const Body=(props)=>{
     return(
@@ -31,7 +32,7 @@ const HeroImage = (props)=>{
 }
 const Brands = (props)=>{
     const brands = [
-	'Instagram','Facebook','Google','Our Website'
+	<Mail/>,<Twitter/>,<WhatsApp/>,<Facebook/>
     ]
     return(
 	<div className="brands_">
@@ -44,7 +45,8 @@ const Brands = (props)=>{
 		{brands.map((brand)=>{
 		    return(
 			<div className='circle_brand'>
-			    {brand}
+				{brand}
+			    
 			</div>
 		    )
 		})}
@@ -58,8 +60,7 @@ const Brands = (props)=>{
 const GetNewsLetter = (props)=>{
     return(
 	<div className="news_letter">
-	    <h1>Get Updates On Deals And Prices </h1>
-	    <p>Exclusive updates on prices that you'll love </p>
+	    <p>Get On our mailing list for great offers before your next event</p>
 	    <div className='input_container'>
 		<input placeholder='your email '/><button>Suscribe</button>
 	    </div>

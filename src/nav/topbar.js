@@ -42,7 +42,7 @@ const Top_bar=(props)=>{
 	    </div>
 		 <div className=' header_section'>
 		    <ul className='menu_options'>
-				<li id = "btn">Home <Home /></li>
+				<li id = "btn"><Home />Home </li>
 				<button id = "btn"><Storefront /> CATALOGUE </button>
 				<li>ABOUT US</li>
 		    </ul>

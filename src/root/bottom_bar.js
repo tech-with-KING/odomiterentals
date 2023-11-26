@@ -5,8 +5,8 @@ const DownBar=()=>{
     const menue_objects=[
         {
             id:1,
-	    heading:'Categories',
-            items:['Mobiles','Laptops','Tablets','Accessories','Appliances']
+	    	heading:'Our Products',
+            items:['Tables','Chairs','Tents','Sashes','Table Clothes'	]
         }
         ]
     return(
@@ -36,7 +36,7 @@ const DownBar=()=>{
 	</div>
 	    {/*copyright paragraph*/}
 	    <div className='shopsmart_rights'>
-&#169; 2022 shopsmart.com. All rights reserved
+&#169; 2024 odomiterentals.com. All rights reserved
 	    </div>
         </div>
     )
