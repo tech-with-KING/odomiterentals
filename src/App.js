@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import './App.css';
 import Body from './body/body';
-import Top_Bar from './nav/topbar'
-import DownBar from './root/bottom_bar';
+import DownBar from './footer/bottom_bar';
 import User from './components/user_details/index'
 import { BrowserRouter as Router, Routes, Route,Outlet } from "react-router-dom"
 import SingleProduct from './components/Item';
 import { PageNotFound } from './components/notfound';
 import Shop from './components/shop/shop';
 import BlogComponent from './components/newsletters';
+import Menu from './components/menu/menu';
+import Footer from './footer/footer';
+import ProductCard from './components/shoppingCard/card';
 
 class App extends Component {
     state = {
@@ -27,7 +29,7 @@ class App extends Component {
 	return (
 	    <div className='app'>
 		<Router>
-		    <Top_Bar toggle={toggle} set_toggle={set_toggle} />
+			<Menu />
 		    <Routes>
 			<Route path="/" element={<Body/>} />
 			<Route path="/login" element={<><User content_head ={'singn in'}/></>} />
@@ -37,7 +39,8 @@ class App extends Component {
 			<Route path="/products/:productId" element={<div className='single_product'><SingleProduct /></div>} />
 			<Route path="/*" element={<PageNotFound />} />
 		    </Routes>
-		    <DownBar />
+			<ProductCard />
+		    <Footer />
 		</Router>
 
 	    </div>
