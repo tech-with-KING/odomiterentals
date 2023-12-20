@@ -8,14 +8,15 @@ import { device } from '../deviceinfo';
 import FooterBanner from '../components/footer';
 import HeaderBanner from '../components/bonus_products';
 import { Facebook, Instagram, Mail, Twitter, WhatsApp } from '@mui/icons-material';
+import ProductCard from '../components/shoppingCard/card';
 
 const Body=(props)=>{
     return(
 	<div className='hero'>
 	    <HeroImage />
-	    <Products data={[...device]} h1={"Products"} desc={"get the best deasls on our products"} />
+		<ProductCard />
 		<HeaderBanner />
-		<Products data={[...device]} h1={"Products"} desc={"get the best deasls on our products"} />
+		<ProductCard />
 		<FooterBanner />
     	<Brands  />
         <GetNewsLetter />
