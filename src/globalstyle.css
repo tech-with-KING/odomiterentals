@@ -25,7 +25,7 @@
 }
 
 .hero-banner-container h3 {
-  font-size: 4rem;
+  font-size: 2rem;
   margin-top: 4px;
 }
 
@@ -81,7 +81,7 @@
     font-size: 50px;
   }
   .hero-banner-container h3 {
-    font-size: 40px;
+    font-size: 20px;
   }
   .hero-banner-container button {
     margin-top: 90px;

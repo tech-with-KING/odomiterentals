@@ -9,7 +9,7 @@ const ProductCard = () => {
   return (
     <>
       <div className="wrapper">
-        <div>
+        <div className='div'>
             <h3 className='heading'>ALL PRODUCTS </h3>
             <ul className='shop_list'>
                 <li className='menu_child'><Home /><button>Chairs</button></li>

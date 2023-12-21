@@ -2,7 +2,9 @@
 .wrapper{
   padding-top: 2.5rem; 
   padding-bottom: 2.5rem; 
-  background-color:white; 
+  margin-top: 20px;
+  background-color:#cce0ff; 
+  border-radius: 10px;
 }
 .shop_list {
   display: flex;
@@ -15,12 +17,22 @@
   background-color: #fff; /* Use your desired background color */
   color: #2d3748; /* Use your desired text color */
   width: fit-content;
+  justify-content: center;
 }
+.wrapper .div{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.wrapper .div ul{
+  background-color: transparent;
+}
+.wrapper .div ul li button{background-color: transparent;}
 .menu_child {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  padding-left: 1.25rem; /* Adjust the left padding as needed (5 multiplied by 0.25rem) */
   padding-right: 1.25rem; /* Adjust the right padding as needed (5 multiplied by 0.25rem) */
   padding-top: 0.5rem; /* Adjust the top padding as needed (3 multiplied by 0.25rem) */
   padding-bottom: 0.5rem; /* Adjust the bottom padding as needed (3 multiplied by 0.25rem) */
@@ -48,7 +60,7 @@
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 0.8rem;
   padding: 1.5rem;
-  background-color: #f3f4f6;
+  background-color:#cce0ff;
   border-radius: 15px;
 }
 

@@ -13,7 +13,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: rgb(94, 42, 213);
+    background-color: #f3f4f6;
     overflow-y: scroll;
 }
 Link {
