@@ -4,7 +4,10 @@
   position: relative;
   height: 250px;
   line-height: 0.9;
-  width: 80%;
+  width: 95%;
+  padding: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .hero-banner-container .beats-solo {

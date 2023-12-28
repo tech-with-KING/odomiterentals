@@ -11,62 +11,61 @@ import { Facebook, Instagram, Mail, Twitter, WhatsApp } from '@mui/icons-materia
 import ProductCard from '../components/shoppingCard/card';
 
 const Body=(props)=>{
-    return(
+  return(
 	<div className='hero'>
-	    <HeroImage />
-		<ProductCard />
-		<HeaderBanner />
-		<ProductCard />
-		<FooterBanner />
-    	<Brands  />
-        <GetNewsLetter />
+	  <HeroImage />
+	  <ProductCard />
+	  <HeaderBanner />
+	  <ProductCard />
+	  <FooterBanner />
+      <Brands  />
+      <GetNewsLetter />
 	</div>
-    )
+  )
 }
 
 const HeroImage = (props)=>{
-    return(
+  return(
 	<div className="hero_img">
-		<Slide_Bar />
+	  <Slide_Bar />
 	</div>
-    )
+  )
 }
 const Brands = (props)=>{
-    const brands = [
+  const brands = [
 	<Mail/>,<Twitter/>,<WhatsApp/>,<Facebook/>
-    ]
-    return(
+  ]
+  return(
 	<div className="brands_">
-	    <div className='fav_brands'>
+	  <div className='fav_brands'>
 		<h1>
-			REACH US ON THESE PLATFORMS
+		  REACH US ON THESE PLATFORMS
 		</h1>
-	    </div>
-	    <div className='logos'>
+	  </div>
+	  <div className='logos'>
 		{brands.map((brand)=>{
-		    return(
+		  return(
 			<div className='circle_brand'>
-				{brand}
-			    
+			  {brand}
 			</div>
-		    )
+		  )
 		})}
-	    </div>
-	    <div>
+	  </div>
+	  <div>
 
-	    </div>
+	  </div>
 	</div>
-    )
+  )
 }
 const GetNewsLetter = (props)=>{
-    return(
+  return(
 	<div className="news_letter">
-	    <p>Get On our mailing list for great offers before your next event</p>
-	    <div className='input_container'>
+	  <p>Get On our mailing list for great offers before your next event</p>
+	  <div className='input_container'>
 		<input placeholder='your email '/><button>Suscribe</button>
-	    </div>
+	  </div>
 	</div>
-    )
+  )
 }
 
 export default Body;
