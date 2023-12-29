@@ -6,7 +6,6 @@ import HeaderBanner from '../components/bonus_products';
 import { Facebook, Instagram, Mail, Twitter, WhatsApp } from '@mui/icons-material';
 import ProductCard from '../components/shoppingCard/card';
 import "./header_contents.css"
-
 const Body=(props)=>{
   return(
 	<div className='hero'>
