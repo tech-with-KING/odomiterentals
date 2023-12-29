@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-
 import {motion ,AnimatePresence} from 'framer-motion'
 import './slidebar.css'
-import {Link} from 'react-router-dom'
 import {device} from "../../deviceinfo"
 class HeaderSlideBar extends Component {
     constructor(props) {

@@ -3,7 +3,7 @@ import './body.css'
 import './style.module.css'
 import Slide_Bar from "../components/slidder/slidebar"
 import HeaderBanner from '../components/bonus_products';
-import { Facebook, Instagram, Mail, Twitter, WhatsApp } from '@mui/icons-material';
+import { Facebook, Mail, Twitter, WhatsApp } from '@mui/icons-material';
 import ProductCard from '../components/shoppingCard/card';
 import "./header_contents.css"
 const Body=(props)=>{

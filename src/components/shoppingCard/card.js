@@ -1,6 +1,5 @@
 import React from 'react';
 import './card.css'
-import img from './assets/forest-resized.jpg'
 import { Chair, Home, Search } from '@mui/icons-material';
 import { Table } from '@mui/material';
 import ItemCard from './test';
