@@ -1,23 +1,21 @@
 import React from 'react';
 import './body.css'
 import './style.module.css'
-import { useState,useEffect } from 'react';
 import Slide_Bar from "../components/slidder/slidebar"
-import Products from './shopsmart/sample'
-import { device } from '../deviceinfo';
-import FooterBanner from '../components/footer';
 import HeaderBanner from '../components/bonus_products';
 import { Facebook, Instagram, Mail, Twitter, WhatsApp } from '@mui/icons-material';
 import ProductCard from '../components/shoppingCard/card';
+import "./header_contents.css"
 
 const Body=(props)=>{
   return(
 	<div className='hero'>
 	  <HeroImage />
+	  
 	  <ProductCard />
 	  <HeaderBanner />
 	  <ProductCard />
-	  <FooterBanner />
+	  <HeaderBanner />
       <Brands  />
       <GetNewsLetter />
 	</div>
@@ -67,5 +65,18 @@ const GetNewsLetter = (props)=>{
 	</div>
   )
 }
-
+const BannerContent = (props)=>{
+    return(
+	    <div className="hero_img">
+	      <div className="hero_shop_name">
+          <h1>SHOP SMART</h1>
+	        <p>Shop at the <br/>right price</p>
+	        <button>COMPARE PRICES</button>
+	      </div>
+	    <div className="hero_shop_slidder">
+	     
+	    </div>
+	    </div>
+    )
+}
 export default Body;
