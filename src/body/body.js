@@ -6,10 +6,15 @@ import HeaderBanner from '../components/bonus_products';
 import { Facebook, Mail, Twitter, WhatsApp } from '@mui/icons-material';
 import ProductCard from '../components/shoppingCard/card';
 import "./header_contents.css"
+import Header from './header';
 const Body=(props)=>{
   return(
 	<div className='hero'>
 	  <HeroImage />
+	   <Header
+        heading="Chairs"
+        paragraph="Our Chairs Comes in great variations"
+      />
 	  
 	  <ProductCard />
 	  <HeaderBanner />
