@@ -4,17 +4,24 @@ import { Chair, Home, Search } from '@mui/icons-material';
 import { Table } from '@mui/material';
 import ItemCard from './test';
 
-const ProductCard = () => {
+const ProductCard = ({devices}) => {
   return (
       <div className='container_wrapper'>
       <ul className="container">
-        <li><ItemCard /> </li>
-        <li><ItemCard /></li>
-        <li><ItemCard /></li>
-        <li><ItemCard /></li>
-        <li><ItemCard /></li>
+      {devices.map((device) => (
+        <li >
+        <ItemCard
+          key={device.id}
+          name={device.name}
+          deviceName={device.device_name}
+          spec={device.spec}
+          price={device.price}
+          img={device.img}
+        />
+        </li>
+      ))}
       </ul>
-    </div>
+    </div>  
       
   );
 };
