@@ -1,9 +1,7 @@
 /* Your CSS file */
 .wrapper{
-  padding-top: 2.5rem; 
-  padding-bottom: 2.5rem; 
-  margin-top: 20px;
-  background-color:#cce0ff; 
+  margin-top: 70px;
+  background-color:#d5e5fd; 
   border-radius: 10px;
 }
 .shop_list {
@@ -108,4 +106,53 @@
     transition-delay: .3s;
     width: 250px;
     height: 330px;
+}
+
+/* news letter section */
+.search_letter{
+  background-color:transparent;
+  height: 80px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center ;
+  flex-direction: column;
+}
+.search_letter 		
+.input_container{
+  width: 100%;
+  height: unset;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.search_letter .input_container input{
+  outline: none;
+  padding-left: 10px;
+  border-radius: 5px;
+  border: none;
+  width: 40%;
+  min-width: 190px;
+  height: 35px;
+}
+.search_letter .input_container button{
+  width: 10%;
+  height: 35px;
+  background-color:#053674;
+  color: white;
+  font-size: 20px;
+  min-width: 100px;
+  padding: 5px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+}
+.search_letter h1{
+  color: #053674;
+  font-size: 15px;
+  font-weight: normal;
+
+}
+.news_letter p{
+  margin: 10px;
 }

@@ -9,7 +9,7 @@ import BlogComponent from './components/newsletters';
 import Menu from './components/menu/menu';
 import Footer from './footer/footer';
 import ProductCard, { ProductHeader } from './components/shoppingCard/card';
-
+import { device } from './deviceinfo';
 
 class App extends Component {
     state = {
@@ -33,7 +33,7 @@ class App extends Component {
 			<Route path="/" element={<Body/>} />
 			<Route path="/login" element={<><User content_head ={'singn in'}/></>} />
 			<Route path="/register" element={<></>} />
-			<Route path="/shop" element={<><ProductHeader/> <ProductCard /></>} />
+			<Route path="/shop" element={<><ProductHeader/> <ProductCard devices={device}/></>} />
 			<Route path="/aboutus" element={<BlogComponent />} />
 			<Route path="/products/:productId" element={<div className='single_product'><SingleProduct /></div>} />
 			<Route path="/*" element={<PageNotFound />} />

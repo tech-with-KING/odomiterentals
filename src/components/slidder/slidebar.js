@@ -8,7 +8,7 @@
         
           useEffect(() => {
             const interval = setInterval(() => {
-              if (index > 7) {
+              if (index >= device.length - 1) {
                 setIndex(0);
               } else {
                 setIndex(index + 1);

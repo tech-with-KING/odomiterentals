@@ -38,11 +38,20 @@ const ProductHeader = () =>
                 <li className='menu_child'><Home /><button>Tents</button></li>
                 <li className='menu_child'><Chair /><button>Chairs</button></li>
             </ul>
-            <div className='search'><Search /> <input type='email'></input></div>
+            <SearchPrduct />
         </div>
     </div>
       )
 };
+const SearchPrduct = (props)=>{
+  return(
+	<div className="search_letter">
+	  <div className='input_container'>
+		<input placeholder='enter text ... '/><button>Search</button>
+	  </div>
+	</div>
+  )
+}
 export {ProductHeader};
       
     
