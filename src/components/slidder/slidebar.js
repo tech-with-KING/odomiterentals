@@ -1,60 +1,56 @@
-        import React, { Component } from 'react';
-        import {motion ,AnimatePresence} from 'framer-motion'
-        import './slidebar.css'
-        import {device} from "../../deviceinfo"
-        class Slide_Bar extends Component {
-            constructor(props) {
-                super(props);
-            }
-            state = { index:0 }
-            componentDidMount(){
-            setInterval(()=>{
-            if(this.state.index > 8){
-            this.setState({index:0})
-            }
-            else{
-            this.setState({index:this.state.index+1})
-            }
-            
-        },10000) 
-            }
-            render() {
-                
-                const {index} = this.state
-                const setproduct = (id)=>{this.setState({index:id})}
-                return (  
-                    <AnimatePresence >
-                <motion.div className="slideshow-container" style={{backgroundImage:`url(/img/${device[index].img})`}}
+        import React, { useState, useEffect } from 'react';
+        import { motion, AnimatePresence } from 'framer-motion';
+        import './slidebar.css';
+        import { device } from '../../deviceinfo';
+        
+        const SlideBar = () => {
+          const [index, setIndex] = useState(0);
+        
+          useEffect(() => {
+            const interval = setInterval(() => {
+              if (index > 7) {
+                setIndex(0);
+              } else {
+                setIndex(index + 1);
+              }
+            }, 5000);
+        
+            return () => clearInterval(interval);
+          }, [index]);
+        
+          const setProduct = (id) => {
+            setIndex(id);
+          };
+        
+          return (
+            <AnimatePresence>
+              <motion.div
+                className="slideshow-container"
+                style={{ backgroundImage: `url(/img/${device[index].img})` }}
                 key={index}
-                >
-                
-            
-                <div className='display_device' 
-                
-                >
-                <div className="device_image" >
-                            
-                            </div>         
-                            <div className='display_text'>
-                                    <h2>{device[index].name}</h2>
-                                    <h3></h3>
-                            </div>
-                            
+              >
+                <div className="display_device">
+                  <div className="device_image"></div>
+                  <div className="display_text">
+                    <h2>{device[index].name}</h2>
+                    <h3></h3>
+                  </div>
                 </div>
         
-                    <div className='dot-container'>
-                        {
-
-                            device.map((data)=>{
-                                
-                            return(<span key={data.id} onClick={()=>{setproduct(data.id)}} className={`dot`} style={data.id == device[index].id?{backgroundColor:"blue"}:{}} ></span>)})
-                        }
-                    </div>  
-
-            </motion.div>
+                <div className="dot-container">
+                  {device.map((data) => (
+                    <span
+                      key={data.id}
+                      onClick={() => setProduct(data.id)}
+                      className={`dot`}
+                      style={data.id === device[index].id ? { backgroundColor: 'blue' } : {}}
+                    ></span>
+                  ))}
+                </div>
+              </motion.div>
             </AnimatePresence>
-        );
-            }
-        }
+          );
+        };
         
-        export default Slide_Bar;
+        export default SlideBar;
+        

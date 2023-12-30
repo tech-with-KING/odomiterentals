@@ -4,7 +4,8 @@
 .card_item {
     border-radius: 0.75rem;
     background-color: #fff; /* Use your desired background color */
-    padding: 0.75rem; /* Adjust the padding as needed */
+    padding-top: 0; /* Adjust the padding as needed */
+    padding-bottom: 0.75rem; /* Adjust the padding as needed */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition-property: box-shadow, transform;
     height: 100%;
@@ -15,11 +16,16 @@
     align-items: center;
     justify-content: space-between;
         background-color: #8bb7d4; /* Use your desired blue color code */
-    border-radius: 0.75rem;
+    border-radius: 0.75rem 0.75rem 0 0;
+    padding: 0;
     color: #fff; /* White text color */
     transition-duration: 0.1s;
+    height: 70%;
   }
-  
+  .child_div img{
+    height: 100%;
+    object-fit: cover;
+  }
   .child_div:hover {
     background-color: #2980b9; /* Use your desired darker blue color code on hover */
   }
