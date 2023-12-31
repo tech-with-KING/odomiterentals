@@ -8,6 +8,7 @@ import ProductCard from '../components/shoppingCard/card';
 import "./header_contents.css"
 import Header from './header';
 import { device } from '../deviceinfo';
+import CustomerReviews from '../components/reviews';
 
 const Body=(props)=>{
   return(
@@ -24,7 +25,7 @@ const Body=(props)=>{
 	  <HeaderBanner />
 	  <ProductCard devices={device}/>
 	  <HeaderBanner />
-      
+      <CustomerReviews />
       <GetNewsLetter />
 	</div>
   )

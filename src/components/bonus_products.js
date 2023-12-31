@@ -11,8 +11,7 @@ const HeaderBanner = () => {
             <Link href={`/shop`}>
             <button type="button">Visit Store</button>
           </Link>
-        </div>
-        
+        </div>  
       <HeaderSlideBar />
     </div>
   )

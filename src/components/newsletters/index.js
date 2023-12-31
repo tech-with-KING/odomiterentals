@@ -1,95 +1,51 @@
-        import React from 'react';
-        import "./index.css"
-        import {device} from "../../deviceinfo"
-        const BlogComponent = () => {
-        const paragraphs = [
+import { useEffect, useState } from 'react';
+import React from 'react';
+import "./index.css"
+import Header from '../../body/header';
+
+
+
+        const ScrollProgress = () => {
+          const paragraphs = [
             {
-            heading: 'Our Story',
-            content: 'Odomite Rentals began its journey with a simple idea: to provide high-quality chair and table rentals for events across the United States. Our commitment to excellence and customer satisfaction sets us apart in the industry.',
-            image: device[0].img, // Replace with the actual URL of the image
+              title: 'Lorem ipsum dolor sit amet',
+              content:
+                'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Etiam neque. Curabitur bibendum justo non orci. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.',
+              imageSrc: '/lavender-field.jpg',
             },
             {
-            heading: 'Exceptional Quality',
-            content: 'At Odomite Rentals, we take pride in offering top-notch rental furniture. Our chairs and tables are not just functional; they also add a touch of elegance to any event. We believe that quality matters, and it reflects in every piece we provide.',
-            image: device[1].img, // Replace with the actual URL of the image
+              title: 'Place 1',
+              content:
+                'Nullam at arcu a est sollicitudin euismod. Nam quis nulla. In enim a arcu imperdiet malesuada. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In laoreet, magna id viverra tincidunt, sem odio bibendum justo, vel imperdiet sapien wisi sed libero. Morbi imperdiet, mauris ac auctor dictum, nisl ligula egestas nulla, et sollicitudin sem purus in lacus.',
+              imageSrc: '/autumn.jpg',
             },
-            // Add more paragraphs as needed
-        ];
+            {
+              title: 'Place 2',
+              content:
+                'Fusce suscipit libero eget elit. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Phasellus rhoncus. Integer vulputate sem a nibh rutrum consequat. Maecenas fermentum, sem in pharetra pellentesque, velit turpis volutpat ante, in pharetra metus odio a lectus. Phasellus et lorem id felis nonummy placerat. Pellentesque sapien. Praesent in mauris eu tortor porttitor accumsan. Mauris tincidunt sem sed arcu. Aliquam ante. Nulla quis diam. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Fusce tellus odio, dapibus id fermentum quis, suscipit id erat. Phasellus et lorem id felis nonummy placerat.',
+              imageSrc: '/summer.jpg',
+            },
+            {
+              title: 'Place 3',
+              content:
+                'Aenean vel massa quis mauris vehicula lacinia. Phasellus enim erat, vestibulum vel, aliquam a, posuere eu, velit. Integer rutrum, orci vestibulum ullamcorper ultricies, lacus quam ultricies odio, vitae placerat pede sem sit amet enim. Curabitur vitae diam non enim vestibulum interdum. Pellentesque pretium lectus id turpis. Mauris tincidunt sem sed arcu. In rutrum. Nulla quis diam. Duis sapien nunc, commodo et, interdum suscipit, sollicitudin et, dolor. Nullam sapien sem, ornare ac, nonummy non, lobortis a enim. Maecenas fermentum, sem in pharetra pellentesque, velit turpis volutpat ante, in pharetra metus odio a lectus. Nam sed tellus id magna elementum tincidunt.',
+              imageSrc: '/forest.jpg',
+            },
+          ];
 
-        //   return (
-        //     <div id="blog_page">
-        //       <header>
-        //         <h1>About Us - Odomite Rentals</h1>
-        //         <img sr={paragraphs[0].image} alt="Odomite Rentals" />
-        //       </header>
-        //       <main>
-        //         {paragraphs.map((paragraph, index) => (
-        //           <div key={index} className="paragraph-container">
-        //             <h3>{paragraph.heading}</h3>
-        //             <p>{paragraph.content}</p>
-        //             <img src={paragraphs[0].image} alt={`Image ${index + 1}`} />
-        //           </div>
-        //         ))}
-        //       </main>
-        //     </div>
-        //   );
-        return (
-        <div className="become-travel-pro">
-            
-              <h1>Become a Travel Pro in One Easy Lesson</h1>
-              <TravelProImage />
-              <TravelProParagraph />
-              <Paragraph />
-        </div>
-        );
-
-        };
-        const TravelProImage = () => {
-            return (
-            <img src="https://i.imgur.com/example.png" alt="Become a travel pro" />
-
-            );
-        };
-        const Paragraph = ()=>{
-            const paragraphs = [
-                {
-                  heading: 'Our Story',
-                  content: 'Odomite Rentals began its journey with a simple idea: to provide high-quality chair and table rentals for events across the United States. Our commitment to excellence and customer satisfaction sets us apart in the industry.',
-                  image: 'url_to_image_1.jpg', // Replace with the actual URL of the image
-                },
-                {
-                  heading: 'Exceptional Quality',
-                  content: 'At Odomite Rentals, we take pride in offering top-notch rental furniture. Our chairs and tables are not just functional; they also add a touch of elegance to any event. We believe that quality matters, and it reflects in every piece we provide.',
-                  image: 'url_to_image_2.jpg', // Replace with the actual URL of the image
-                },
-                // Add more paragraphs as needed
-              ];
-            return(
-                <main>
-                {paragraphs.map((paragraph, index) => (
-                  <div key={index} className="paragraph-container">
-                    <h3>{paragraph.heading}</h3>
-                    <p>{paragraph.content}</p>
-                    <img src={paragraph.image} alt={`Image ${index + 1}`} />
-                  </div>
-                ))}
-              </main>
-            )
-        }
-        const TravelProParagraph = () => {
-            return (
-            <p id='blog'>
-                Welcome to Odomite Rentals, your premier destination for exceptional party rentals! 
-                With a passion for creating unforgettable events, Odomite Rentals takes pride in offering 
-                high-quality chair and table rentals for all your celebration needs. Our journey began with a 
-                simple yet powerful idea: to enhance the ambiance of events across the United States. Committed to 
-                excellence, we bring a touch of elegance to every occasion. Whether you're planning a wedding, 
-                corporate event, or a casual gathering, our top-notch rental furniture ensures both style and 
-                comfort. At Odomite Rentals, we believe in the magic of memorable celebrations, and our commitment 
-                to quality reflects in every piece we provide.
-                Elevate your events with Odomite Rentals—where every moment becomes extraordinary.
-            </p>
-            );
+          return (
+            <div>
+              <Header heading='ABOUT US' paragraph='Who we are - OdomiteRentals' />
+              {paragraphs.map((paragraph, index) => (
+                <div key={index} className="article__content" itemscope="" itemtype="https://schema.org/Article">
+                  <h1>{paragraph.title}</h1>
+                  <p>{paragraph.content}</p>
+                  <img src={paragraph.imageSrc} alt={`Image ${index + 1}`} />
+                </div>
+              ))}
+            </div>
+          );
         };
         
-        export default BlogComponent;
+        export  {ScrollProgress};
+        

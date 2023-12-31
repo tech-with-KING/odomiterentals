@@ -5,11 +5,12 @@ import User from './components/user_details/index'
 import { BrowserRouter as Router, Routes, Route,Outlet } from "react-router-dom"
 import SingleProduct from './components/Item';
 import { PageNotFound } from './components/notfound';
-import BlogComponent from './components/newsletters';
+import BlogComponent, { ScrollProgress } from './components/newsletters';
 import Menu from './components/menu/menu';
 import Footer from './footer/footer';
 import ProductCard, { ProductHeader } from './components/shoppingCard/card';
 import { device } from './deviceinfo';
+import DownBar from './footer/bottom_bar';
 
 class App extends Component {
     state = {
@@ -34,12 +35,11 @@ class App extends Component {
 			<Route path="/login" element={<><User content_head ={'singn in'}/></>} />
 			<Route path="/register" element={<></>} />
 			<Route path="/shop" element={<><ProductHeader/> <ProductCard devices={device}/></>} />
-			<Route path="/aboutus" element={<BlogComponent />} />
+			<Route path="/aboutus" element={<ScrollProgress />} />
 			<Route path="/products/:productId" element={<div className='single_product'><SingleProduct /></div>} />
 			<Route path="/*" element={<PageNotFound />} />
 		    </Routes>
-			
-		    <Footer />
+			<DownBar />
 		</Router>
 
 	    </div>

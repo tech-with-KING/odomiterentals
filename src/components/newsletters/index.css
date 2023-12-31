@@ -1,9 +1,39 @@
-#blog{
-    font-family: Open Sans, sans-serif;
-    font-size: 16px;
-    line-height: 1.5;
-    font-weight: 400;
-    font-style: normal;
-    color: #000;
-    padding: 20px;
+@import url('https://fonts.googleapis.com/css2?family=Mulish&display=swap');
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+:root {
+    --background: white;
+	--primary-blue: #625BFE;
+	--secondary-blue: #4bd7e3;
+	--text-color: #4d5b7c;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+
+
+.article__content {
+    max-width: 80vw;
+    margin: auto;
+    display: flex;
+    gap: 32px;
+    flex-direction: column;
+}
+
+.article__content p {
+	line-height: 1.5;
+}
+
+.article__content h1 {
+	font-weight: 700;
+    margin: 0;
+	
+    font-size: 38px;
 }

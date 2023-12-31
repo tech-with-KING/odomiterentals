@@ -1,11 +1,10 @@
 .bottom_navbar{
     height: inherit;
     width: 100vw;
-    background-color:#E5EBF3;
+    background-color:#121a29;
     display: flex;
     overflow: hidden;
     height: inherit;
-    margin: 40px auto;
     padding: 0 10px;
     box-sizing: border-box;
 }
@@ -55,11 +54,10 @@
     .bottom_navbar{
         height: inherit;
         width: 100vw;
-        background-color:#E5EBF3;
+        background-color:#121a29;
         display: flex;
         overflow: hidden;
         height: inherit;
-        margin: 40px auto;
         padding: 0 10px;
         box-sizing: border-box;
     }

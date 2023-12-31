@@ -53,12 +53,13 @@ border-radius: 10px;
 /* brands section */
 /* news letter section */
 .news_letter{
-    background-color:transparent;
+    background-color:#121a29;
     height: 10vh;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center ;
+    margin: 0;
     flex-direction: column;
 }
 .news_letter 		
