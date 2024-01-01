@@ -6,13 +6,14 @@ const Header = ({ heading, paragraph }) => {
     fontFamily: 'Open Sans, sans-serif',
     textAlign: 'center',
     width: '100%',
-    backgroundColor: '#f0f0f0', // Add your preferred background color
-    padding: '20px',
+    backgroundColor:'rgba(0, 0, 0, 0.1);', // Add your preferred background color
+    padding: '0px',
   };
 
   const headingStyle = {
     fontSize: '2.5em',
-    marginBottom: '10px',
+    marginBottom: '0px',
+    color:'#053674;'
   };
 
   const paragraphStyle = {

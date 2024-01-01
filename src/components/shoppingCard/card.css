@@ -1,7 +1,7 @@
 /* Your CSS file */
 .wrapper{
   margin-top: 70px;
-  background-color:#d5e5fd; 
+  background-color: rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
 .shop_list {
@@ -58,7 +58,7 @@
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 0.8rem;
   padding: 1.5rem;
-  background-color:#cce0ff;
+  background-color: rgba(0, 0, 0, 0.1);
   border-radius: 15px;
 }
 

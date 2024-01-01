@@ -1,15 +1,12 @@
-import React from 'react';
 import './body.css'
-import './style.module.css'
 import Slide_Bar from "../components/slidder/slidebar"
 import HeaderBanner from '../components/bonus_products';
-import { Facebook, Mail, Twitter, WhatsApp } from '@mui/icons-material';
+import { Email, Facebook, Google, Instagram, Mail, Phone, Twitter, WhatsApp } from '@mui/icons-material';
 import ProductCard from '../components/shoppingCard/card';
-import "./header_contents.css"
 import Header from './header';
 import { device } from '../deviceinfo';
 import CustomerReviews from '../components/reviews';
-
+import { motion } from 'framer-motion'
 const Body=(props)=>{
   return(
 	<div className='hero'>
@@ -39,9 +36,35 @@ const HeroImage = (props)=>{
   )
 }
 const Brands = (props)=>{
-  const brands = [
-	<Mail/>,<Twitter/>,<WhatsApp/>,<Facebook/>
-  ]
+  const animae = [
+	{
+		id: 1,
+		color: 'about_heading',
+		item: <Phone style={{ color: '#00ACEE' }}/>
+	},
+	{
+		id: 2,
+		color: 'about_heading',
+		item: <WhatsApp style={{ color: '#00ACEE' }} />,
+	},
+	{
+		id: 3,
+		color: 'about_heading',
+		item: <Google style={{ color: '#DB4437' }} />
+
+	},
+
+	{
+		id: 4,
+		color: 'about_heading',
+		item: <Email style={{ color: '#0072b1' }} />
+	},
+	{
+		id: 5,
+			   color: 'about_heading',
+		item: <Instagram style={{ color: '#FF0000' }} />
+	}
+]
   return(
 	<div className="brands_">
 	  <div className='fav_brands'>
@@ -50,13 +73,18 @@ const Brands = (props)=>{
 		</h1>
 	  </div>
 	  <div className='logos'>
-		{brands.map((brand)=>{
-		  return(
-			<div className='circle_brand'>
-			  {brand}
-			</div>
-		  )
-		})}
+			{
+				animae.map((anim, i) => {
+					return (
+						<motion.div href="#" className='circle_brand'
+							key={anim.id}
+							initial={{ opacity: 0, translateX: -40 }}
+							animate={{ opacity: 1, translateX: 0 }}
+							transition={{ duration: 0.5, delay: i * 0.5 }}
+						>{anim.item}</motion.div>
+					)
+				})
+			}
 	  </div>
 	  <div>
 
@@ -73,19 +101,5 @@ const GetNewsLetter = (props)=>{
 	  </div>
 	</div>
   )
-}
-const BannerContent = (props)=>{
-    return(
-	    <div className="hero_img">
-	      <div className="hero_shop_name">
-          <h1>SHOP SMART</h1>
-	        <p>Shop at the <br/>right price</p>
-	        <button>COMPARE PRICES</button>
-	      </div>
-	    <div className="hero_shop_slidder">
-	     
-	    </div>
-	    </div>
-    )
 }
 export default Body;
