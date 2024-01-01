@@ -20,7 +20,7 @@ const Body=(props)=>{
 	  
 	  <ProductCard devices={device}/>
 	  <HeaderBanner />
-	  <ProductCard devices={device}/>
+	  	<ProductCard devices={device}/>
 	  <HeaderBanner />
       <CustomerReviews />
       <GetNewsLetter />
