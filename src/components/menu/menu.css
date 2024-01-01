@@ -84,7 +84,7 @@
     background-position: 0;
 }
 
-.navigation li .a:hover::before {
+.navigation li .a:hover{
     color: var(--primary);
     width: 100%;
 }

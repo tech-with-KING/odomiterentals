@@ -3,7 +3,17 @@ import "./index.css"
 const CustomerReviews = () => {
   return (
     <div className="gallery">
-      <article className="card">
+      <ReviewCard />
+      <ReviewCard />
+      <ReviewCard />
+      <ReviewCard />
+      <ReviewCard />
+      <ReviewCard />
+      <ReviewCard />
+      <ReviewCard />
+      <ReviewCard />
+      <ReviewCard />
+      {/* <article className="card">
         <figure>
           <img
             src="images/forest.jpg"
@@ -35,10 +45,31 @@ const CustomerReviews = () => {
             <h3>Wooden Bridge</h3>
           </figcaption>
         </figure>
-      </article>
+      </article> */}
       {/* Pictures from Freepik */}
     </div>
   );
 };
+
+
+const ReviewCard = ()=>{
+  return(
+    <div className="review_container">
+    <div className="left-container">
+        <img src="https://flowbite.com/docs/images/people/profile-picture-2.jpg" className="profile-image" alt=""></img>
+        <div className="text-container">
+            <span className="bold-text">Lesine</span>
+            <span class="small-text">Lorem ipsum dolor sit amet consectetur adipisicing e
+             in this times when things are so very hard it
+           </span>
+        </div>
+    </div>
+    <div class="right-container">
+        50m ago
+    </div>
+</div>
+
+  )
+}
 
 export default CustomerReviews;

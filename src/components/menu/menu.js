@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './menu.css';
 import { Link } from 'react-router-dom';
-import { Cancel, CancelOutlined, Close, Home, MenuBookOutlined, MenuOpen } from '@mui/icons-material';
+import { Cancel, CancelOutlined, Close, Home, MenuBookOutlined, MenuOpen, Phone } from '@mui/icons-material';
 
 const Menu = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -31,23 +31,28 @@ const Menu = () => {
       </div>
       <ul className={`navigation ${isMobileMenuOpen ? 'navigation--mobile' : ''}`}>
         <li>
-          <Link className='a' to="/" title="Services">
+          <Link className='a' to="/" title="home">
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link  className='a' to="/products" title="products">
+            Products
+          </Link>
+        </li>
+        <li>
+          <Link  className='a' to="/services" title="services">
             Services
           </Link>
         </li>
         <li>
-          <Link  className='a' to="/shop" title="Blog">
-            Blog
-          </Link>
-        </li>
-        <li>
-          <Link className='a'  to="/Services" title="About">
+          <Link className='a'  to="/aboutus" title="About">
             About
           </Link>
         </li>
         <li>
-          <Link className='a' to="/About Us" title="Contact Us">
-            Contact Us
+          <Link className='a' to="/contact" title="Contact Us" style={{display: "flex", alignItems: 'center'}}>
+            <Phone style={{color: 'blue'}}/> Contact Us
           </Link>
         </li>
       </ul>

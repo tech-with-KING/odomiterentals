@@ -16,8 +16,7 @@ const Body=(props)=>{
 	   <Header
         heading="Chairs"
         paragraph="Our Chairs Comes in great variations"
-      />
-	  
+      />	  
 	  <ProductCard devices={device}/>
 	  <HeaderBanner />
 	  	<ProductCard devices={device}/>

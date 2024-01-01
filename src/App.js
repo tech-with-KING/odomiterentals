@@ -36,7 +36,7 @@ class App extends Component {
 			<Route path="/" element={<Body/>} />
 			<Route path="/login" element={<><User content_head ={'singn in'}/></>} />
 			<Route path="/register" element={<></>} />
-			<Route path="/shop" element={<><ProductHeader/> <ProductCard devices={device}/></>} />
+			<Route path="/products" element={<><ProductHeader/> <ProductCard devices={device}/></>} />
 			<Route path="/aboutus" element={<ScrollProgress />} />
 			<Route path="/products/:productId" element={<div className='single_product'><ProductPage /></div>} />
 			<Route path="/*" element={<PageNotFound />} />
