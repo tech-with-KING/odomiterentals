@@ -11,6 +11,8 @@ import Footer from './footer/footer';
 import ProductCard, { ProductHeader } from './components/shoppingCard/card';
 import { device } from './deviceinfo';
 import DownBar from './footer/bottom_bar';
+import SingleItem from './components/single_product';
+import ProductPage from './components/single_product';
 
 class App extends Component {
     state = {
@@ -36,9 +38,10 @@ class App extends Component {
 			<Route path="/register" element={<></>} />
 			<Route path="/shop" element={<><ProductHeader/> <ProductCard devices={device}/></>} />
 			<Route path="/aboutus" element={<ScrollProgress />} />
-			<Route path="/products/:productId" element={<div className='single_product'><SingleProduct /></div>} />
+			<Route path="/products/:productId" element={<div className='single_product'><ProductPage /></div>} />
 			<Route path="/*" element={<PageNotFound />} />
 		    </Routes>
+			<ProductPage />
 			<DownBar />
 		</Router>
 
