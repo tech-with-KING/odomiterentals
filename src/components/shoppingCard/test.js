@@ -1,11 +1,15 @@
   import React from 'react';
   import './test.css'
-  import { Chair, Home, ShoppingCart } from '@mui/icons-material';
+  import { Chair, Home, ShoppingCart, Star } from '@mui/icons-material';
   const ItemCard = ({ name, deviceName, spec, price, img }) => {
     return (
       <article className="card_item">
         <div className="child_div">
           <img src={`/img/${img}`} alt={name} />
+          <div className="rating">
+            <Star style={{color:"#ffca3a"}}/>
+            <span class="rating_count">4.9</span>
+          </div>
         </div>
   
         <div className="prod_desc">
