@@ -52,7 +52,7 @@ const Menu = () => {
         </li>
         <li>
           <Link className='a' to="/contact" title="Contact Us" style={{display: "flex", alignItems: 'center'}}>
-            <Phone style={{color: 'blue'}}/> Contact Us
+            <Phone style={{color: 'blue', fontWeight: "bolder", fontSize: "30px", margin: '5px'}}/>
           </Link>
         </li>
       </ul>

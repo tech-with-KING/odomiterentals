@@ -30,11 +30,6 @@
                 key={index}
               >
                 <div className="display_device">
-                  <div className="device_image"></div>
-                  <div className="display_text">
-                    <h2>{device[index].name}</h2>
-                    <h3></h3>
-                  </div>
                 </div>
         
                 <div className="dot-container">
@@ -43,7 +38,7 @@
                       key={data.id}
                       onClick={() => setProduct(data.id)}
                       className={`dot`}
-                      style={data.id === device[index].id ? { backgroundColor: 'blue' } : {}}
+                      style={data.id === device[index].id ? { backgroundColor: 'rgba(250, 250, 250, 1)'} : {}}
                     ></span>
                   ))}
                 </div>
