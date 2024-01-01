@@ -10,10 +10,10 @@
         height: fit-content;
         padding: 10px;
         gap: 16px;
-        width: fit-content;
         overflow-x: auto; /* Enable horizontal scrolling */
         align-items: center;
         justify-content: center;
+        width: 100vw;
     
 }
 

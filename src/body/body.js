@@ -18,6 +18,16 @@ const Body=(props)=>{
         paragraph="Our Chairs Comes in great variations"
       />	  
 	  <ProductCard devices={device}/>
+	  <Header
+        heading="Tents	"
+        paragraph="10X10 20X20 and more"
+      />	  
+	  <ProductCard devices={device}/>
+	  <Header
+        heading="Chairs"
+        paragraph="Tables in all sizes for any number of guest"
+      />	  
+	  <ProductCard devices={device}/>
 	  <HeaderBanner />
 	  	<ProductCard devices={device}/>
 	  <HeaderBanner />

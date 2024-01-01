@@ -6,13 +6,8 @@ const CustomerReviews = () => {
       <ReviewCard />
       <ReviewCard />
       <ReviewCard />
-      <ReviewCard />
-      <ReviewCard />
-      <ReviewCard />
-      <ReviewCard />
-      <ReviewCard />
-      <ReviewCard />
-      <ReviewCard />
+  
+
       {/* <article className="card">
         <figure>
           <img

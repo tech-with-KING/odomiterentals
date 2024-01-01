@@ -54,12 +54,14 @@
   margin-left: auto;
   margin-right: auto;
   display: grid;
-  max-width: 72rem;
+  max-width: 88rem;
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 0.8rem;
   padding: 1.5rem;
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 15px;
+  min-height: 380px;
+  width: 80vw;
 }
 
 @media (min-width: 500px) {

@@ -1,6 +1,10 @@
 /* card.css */
 /* Your CSS file */
-
+.container_wrapper{
+  min-height: 400px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
 .card_item {
     border-radius: 0.75rem;
     background-color: #fff; /* Use your desired background color */
