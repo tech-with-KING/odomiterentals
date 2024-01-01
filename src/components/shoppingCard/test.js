@@ -16,8 +16,7 @@
             <p className="">{price}</p>
   
             <div className="shopping_cart">
-              <ShoppingCart />
-              <button className="text-small cart_btn">Add to cart</button>
+              <button className="text-small cart_btn">Product desc</button>
             </div>
           </div>
         </div>

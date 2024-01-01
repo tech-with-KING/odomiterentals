@@ -2,36 +2,36 @@ export const device =
 [
     {
         id:"0",
-        name:'',
-        device_name:'https://www.1733900.html',
+        name:'Chair',
+        device_name:'',
         spec: '6.5-Inch Super Retina (Gold',
-        price:"₦2,300,000",
+        price:"$10",
         img:'first.jpg'
     },
 
     {
         id:"1",
-        name:'',
-        device_nam:'https',
+        name:'Table',
+        device_nam:'',
         spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
-        price:"₦450,000",
+        price:"$45",
         img:'second.jpg'
     },
     {
         id:"2",
-        name:'',
-        device_nam:'https://ww',
+        name:'Chair',
+        device_nam:'',
         spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
-        price:"₦892,000",
+        price:"$40",
         img:'fifth.jpg'
 
     },
     {
         id:"3",
         name:'',
-        device_nam:'https://wwwl',
+        device_nam:'Round Table',
         spec:'Pro - Mondrian (Ti56 + 8',
-        price:"₦202,990",
+        price:"$30",
         img:'fourth.jpg'
     }
   
