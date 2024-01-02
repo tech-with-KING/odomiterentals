@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Header = ({ heading, paragraph }) => {
+const   Header = ({ heading, paragraph }) => {
   const headerStyle = {
     fontFamily: 'Open Sans, sans-serif',
     textAlign: 'center',
     width: '100%',
     padding: '0px',
+    color:"rgb(255, 140, 26)"
   };
 
   const headingStyle = {

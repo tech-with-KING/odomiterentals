@@ -1,6 +1,6 @@
 :root {
-    --primary: #617eb6;
-    --background: #f3f4f6;
+    --primary: rgb(77, 38, 0);
+    --background: rgb(255, 242, 230);
     --navbar-height: 62px;
 }
 

@@ -7,7 +7,7 @@
         <div className="child_div">
           <img src={`/img/${img}`} alt={name} />
           <div className="rating">
-            <Star style={{color:"#ffca3a"}}/>
+            <Star style={{color:"#ff8c1a"}}/>
             <span class="rating_count">4.9</span>
           </div>
         </div>

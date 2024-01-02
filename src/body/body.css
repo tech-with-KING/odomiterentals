@@ -52,7 +52,7 @@ border-radius: 10px;
 /* brands section */
 /* news letter section */
 .news_letter{
-    background-color:#121a29;
+    background-color:#331900;
     height: 10vh;
     width: 100%;
     display: flex;
@@ -81,7 +81,7 @@ border-radius: 10px;
 .news_letter .input_container button{
     width: 10%;
     height: 35px;
-    background-color:#053674;
+    background-color:#ff8c1a;
     color: white;
     font-size: 20px;
     min-width: 100px;
@@ -125,7 +125,7 @@ border-radius: 10px;
     flex-direction: row;
 }
 .fav_brands h1{
-    color: #053674;
+    color: #331a00;
     font-size: 1.5rem;
     display: flex;
     font-weight: bold;
@@ -168,7 +168,7 @@ border-radius: 10px;
     .hero_shop_name button{
         width: 180px;
     height: 36px;
-    background: #053674;
+    background: #331900;
     border-radius: 10px;
     }
     .hero_shop_name h1{

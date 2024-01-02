@@ -1,10 +1,6 @@
 /* card.css */
 /* Your CSS file */
-.container_wrapper{
-  min-height: 400px;
-  margin-bottom: 15px;
-  margin-top: 15px;
-}
+
 .card_item {
     border-radius: 0.75rem;
     background-color: #fff; /* Use your desired background color */
@@ -66,7 +62,7 @@
   align-items: center;
   gap: 0.375rem; /* Adjust the space between items as needed (1.5 multiplied by 0.25rem) */
   border-radius: 0.75rem;
-  background-color: #3b82f6; /* Use your desired background color (corresponding to bg-blue-500) */
+  background-color: #ff8000; /* Use your desired background color (corresponding to bg-blue-500) */
   padding-left: 1rem; /* Adjust the left padding as needed (4 multiplied by 0.25rem) */
   padding-right: 1rem; /* Adjust the right padding as needed (4 multiplied by 0.25rem) */
   padding-top: 0.375rem; /* Adjust the top padding as needed (1.5 multiplied by 0.25rem) */
@@ -99,10 +95,11 @@
 .star {
   height: 1.25rem; /* Equivalent to h-5 in Tailwind */
   width: 1.25rem; /* Equivalent to w-5 in Tailwind */
-  fill: #ffca3a; /* Equivalent to text-yellow-400 in Tailwind */
+  fill: #ff8c1a; /* Equivalent to text-yellow-400 in Tailwind */
 }
 .rating_count {
   margin-left: 0.25rem; /* Equivalent to ml-1 in Tailwind */
   font-size: 0.875rem; /* Equivalent to text-sm in Tailwind */
   color: #718096; /* Equivalent to text-slate-400 in Tailwind */
 }
+.cart_btn {}
