@@ -8,20 +8,25 @@ class User extends Component {
     render() {
         return (
 		<>
-		
-				<div className="addTodo" style={{ minHeight: '400px' }}>
-					<div className='content_head' >
-						<h2>{this.props.content_head}</h2>
-		</div>
-		{/* main login*/}
-	    <div className='form'>
-		<div><InputContainer /></div>
-		{/* login alternatives*/}
-	     <div> <LoginContainer /></div>
-	    	<div><LoginAlternatives /></div>
-		{/****/}
-	    </div>
-		</div>
+			<form>
+				<div>
+					<input type='text' placeholder='first name'></input>
+					<input type='text' placeholder='other names'></input>
+				</div>
+				<div>
+					<input type='text' placeholder='full name'></input>
+					<input type='submit' placeholder='submit'></input>
+				</div>
+				<div>
+					<input type='text' placeholder='type here'></input>
+					<input type='submit' placeholder='submit'></input>
+				</div>
+				<div>
+					<h3>How would you like us to reach out to you</h3>
+					<input type='text' placeholder='full name'></input>
+					<input type='submit' placeholder='submit'></input>
+				</div>
+			</form>
 		
 		</>
 		
