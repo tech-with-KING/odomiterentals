@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 import Body from './body/body';
-import User from './components/user_details/index'
 import { BrowserRouter as Router, Routes, Route,Outlet } from "react-router-dom"
-import SingleProduct from './components/Item';
 import { PageNotFound } from './components/notfound';
-import BlogComponent, { ScrollProgress } from './components/newsletters';
+import { About } from './components/newsletters';
 import Menu from './components/menu/menu';
 import Footer from './footer/footer';
 import ProductCard, { ProductHeader } from './components/shoppingCard/card';
@@ -13,6 +11,7 @@ import { device } from './deviceinfo';
 import DownBar from './footer/bottom_bar';
 import SingleItem from './components/single_product';
 import ProductPage from './components/single_product';
+import MessageForm from './components/user_details/index';
 
 class App extends Component {
     state = {
@@ -34,10 +33,9 @@ class App extends Component {
 			<Menu />
 		    <Routes>
 			<Route path="/" element={<Body/>} />
-			<Route path="/login" element={<><User content_head ={'singn in'}/></>} />
-			<Route path="/register" element={<></>} />
+			<Route path="/contactpage" element={<><MessageForm content_head ={'singn in'}/></>} />
 			<Route path="/products" element={<><ProductHeader/> <ProductCard devices={device}/></>} />
-			<Route path="/aboutus" element={<ScrollProgress />} />
+			<Route path="/aboutpage" element={<About />} />
 			<Route path="/products/:productId" element={<div className='single_product'><ProductPage /></div>} />
 			<Route path="/*" element={<PageNotFound />} />
 		    </Routes>

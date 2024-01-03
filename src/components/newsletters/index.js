@@ -5,7 +5,7 @@ import Header from '../../body/header';
 
 
 
-        const ScrollProgress = () => {
+        const About = () => {
           const paragraphs = [
             {
               title: 'Lorem ipsum dolor sit amet',
@@ -47,5 +47,5 @@ import Header from '../../body/header';
           );
         };
         
-        export  {ScrollProgress};
+        export  {About};
         

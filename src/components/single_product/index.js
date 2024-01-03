@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import "./single_product.css"
 import { useParams } from "react-router-dom";
 import { device } from '../../deviceinfo';
-import Header from '../../body/header';
 import ProductCard from '../shoppingCard/card';
 function ProductPage() {
   const { productId } = useParams();

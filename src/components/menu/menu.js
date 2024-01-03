@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './menu.css';
 import { Link } from 'react-router-dom';
-import { Cancel, CancelOutlined, Close, Home, MenuBookOutlined, MenuOpen, Phone } from '@mui/icons-material';
+import { Close, MenuOpen, Phone } from '@mui/icons-material';
 
 const Menu = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -14,7 +14,7 @@ const Menu = () => {
     <div className="menu__wrapper">
     <div className="menu__bar">
       <div to="/" title="Logo" className="logo">
-        <h1>ODOMITE RENTALS</h1>
+        <h1 className='Heading'>ODOMITE RENTALS</h1>
         <p>A party rental You can trust always</p>
       </div>
       <div
@@ -46,12 +46,12 @@ const Menu = () => {
           </Link>
         </li>
         <li>
-          <Link className='a'  to="/aboutus" title="About">
+          <Link className='a'  to="/aboutpage" title="About">
             About
           </Link>
         </li>
         <li>
-          <Link className='a' to="/contact" title="Contact Us" style={{display: "flex", alignItems: 'center'}}>
+          <Link className='a' to="/contactpage" title="Contact Us" style={{display: "flex", alignItems: 'center'}}>
             <Phone style={{color: 'blue', fontWeight: "bolder", fontSize: "30px", margin: '5px'}}/>
           </Link>
         </li>
