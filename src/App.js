@@ -12,6 +12,7 @@ import DownBar from './footer/bottom_bar';
 import SingleItem from './components/single_product';
 import ProductPage from './components/single_product';
 import MessageForm from './components/user_details/index';
+import BankAccounts from './components/slidder_downbar';
 
 class App extends Component {
     state = {

@@ -7,6 +7,7 @@ import Header from './header';
 import { device } from '../deviceinfo';
 import CustomerReviews from '../components/reviews';
 import { motion } from 'framer-motion'
+import BankAccounts from '../components/slidder_downbar';
 const Body=(props)=>{
   return(
 	<div className='hero'>
@@ -31,7 +32,7 @@ const Body=(props)=>{
 	  <HeaderBanner />
 	  	<ProductCard devices={device}/>
 	  <HeaderBanner />
-      <CustomerReviews />
+      <BankAccounts />
       <GetNewsLetter />
 	</div>
   )
