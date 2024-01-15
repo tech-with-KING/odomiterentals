@@ -1,7 +1,7 @@
 .bottom_navbar{
     height: inherit;
     width: 100vw;
-    background-color:#4d2600;
+    background-color:#331900;
     display: flex;
     overflow: hidden;
     height: inherit;
@@ -34,12 +34,10 @@
     line-height: 30px;
 }
 .shopsmart_rights{
-    border-top: 1px solid black;
     margin-top: 15px;
     margin-bottom: 10px;
     padding: 10px;
     width: 100%;
-    background-color:#e6eeff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -48,13 +46,13 @@
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;
-    
+    color: white;
 }
 @media only screen and (min-width: 800px) {
     .bottom_navbar{
         height: inherit;
         width: 100vw;
-        background-color:#4d2600;
+        background-color:#331900;
         display: flex;
         overflow: hidden;
         height: inherit;
@@ -80,20 +78,18 @@
     }
     .menue_container ul li{
         line-height: 26px;
-        color: #545559;
+        color: white;
         margin: 10px;
     }
     .menue_container h3{
-        color: #053674;
+        color: #ff8c1a;
         line-height: 30px;
     }
     .shopsmart_rights{
-        border-top: 1px solid black;
         margin-top: 15px;
         margin-bottom: 10px;
         padding: 10px;
         width: 100%;
-        background-color:#e6eeff;
         display: flex;
         align-items: center;
         justify-content: center;

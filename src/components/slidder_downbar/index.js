@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './style.css'; // Import your CSS file
 import { ReviewCard } from '../reviews';
+import { ArrowBack, ArrowForward } from '@mui/icons-material';
 
 const BankAccounts = () => {
   const bankAccountsRef = useRef(null);
@@ -83,10 +84,12 @@ const BankAccounts = () => {
     <div className="container_bank">
       {/* ... Your other HTML content ... */}
       <div
+
         id="bank-accounts"
         className="bank-accounts"
         ref={bankAccountsRef}
       >
+        <div className='btn' onClick={()=>{handleScrollLeft()}}><ArrowBack /></div>
                 <ReviewCard />
                 <ReviewCard />
                 <ReviewCard />
@@ -95,6 +98,7 @@ const BankAccounts = () => {
                 <ReviewCard />
                 <ReviewCard />
                 <ReviewCard />
+        <ArrowForward />
       </div>
       {/* ... Your other HTML content ... */}
     </div>

@@ -11,18 +11,8 @@
     --content-primary: #0e0f0c;
 
 }
-
-body {
-    padding: 16px;
-    display: flex;
-    height: 100vh;
-    min-width: 320px;
-    color: var(--content-primary);
-    font-family: "Inter", sans-serif;
-}
-
-* {
-    box-sizing: border-box;
+.container_bank{
+    background-color: red;
 }
 
 .action-buttons {
