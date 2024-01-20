@@ -1,22 +1,25 @@
- .shop_products{
+/* Base styles */
+.shop_products {
   height: inherit;
   width: 100vw;
   display: flex;
   flex-direction: column;
   padding: 10px;
   justify-content: center;
- }
- .catalogue{
-   width: 80%;
-   height: inherit;
-    margin: 40px auto;
-    padding: 0 10px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 2fr));
-    grid-gap: 1.4rem;
-    box-sizing: border-box;
 }
-.search_term{
+
+.catalogue {
+  width: 90%;
+  height: inherit;
+  margin: 40px auto;
+  padding: 0 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 2fr));
+  grid-gap: 1.4rem;
+  box-sizing: border-box;
+}
+
+.search_term {
   font-family: 'Open Sans', Arial, sans-serif;
   height: 150px;
   font-size: 20px;
@@ -25,29 +28,45 @@
   width: 100%;
   justify-content: space-around;
 }
+
+/* Media queries for different screen sizes */
+
+/* Tablets and small desktops */
+@media screen and (min-width: 768px) and (max-width: 1199px) {
+  .catalogue {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 2fr));
+    grid-gap: 1.4rem; /* Add space between items on tablets */
+  }
+}
+
+/* Large desktops */
 @media screen and (min-width: 1200px) {
-  .shop_products{
-    height: inherit;
-    width: 100vw;
-    display: flex;
+  .shop_products {
     flex-direction: row;
-    padding: 10px;
-    justify-content: center;
-   }
-   .catalogue{
-     width: 80%;
-     height: inherit;
-      margin: 40px auto;
-      padding: 0 10px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      grid-gap: 1.4rem;
-    box-sizing: border-box;
   }
-  .search_term{
-    /* background-color; */
-    background-color: white;
-    height: 300px;
+
+  .catalogue {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
-    
+
+  .search_term {
+    height: 200px;
+  }
+}
+
+/* Smaller screens and mobile devices */
+@media screen and (max-width: 767px) {
+  
+  .shop_products {
+    padding: 5px;
+  }
+
+  .catalogue {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-gap: 1rem;
+  }
+
+  .search_term {
+    height: 100px;
+  }
 }

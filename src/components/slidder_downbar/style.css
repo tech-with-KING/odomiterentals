@@ -11,9 +11,7 @@
     --content-primary: #0e0f0c;
 
 }
-.container_bank{
-    background-color: red;
-}
+
 
 .action-buttons {
     position: relative;
@@ -25,18 +23,8 @@
     flex-wrap: wrap;
 }
 
-.flag {
-    object-fit: cover;
-    width: 100%;
-    border-radius: 50%;
-    height: 48px;
-    min-width: 48px;
-    width: 48px;
-    border: 1px solid var(--secondary-hover);
-}
 
-.action-button {
-    color: #163300;
+.action-button_right {
     border-radius: 16px;
     height: 32px;
     gap: 4px;
@@ -50,6 +38,29 @@
     text-decoration: none;
     background-color: var(--secondary);   
     min-width: 32px;
+    justify-content: center;
+    margin: 5px;
+    position:absolute;
+}
+.action-button_left {
+    border-radius: 16px;
+    height: 32px;
+    gap: 4px;
+    left: 200px;
+    cursor: pointer;
+    display: flex;
+    padding: 0 1px;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    white-space: nowrap;
+    align-items: center;
+    text-decoration: none;
+    background-color: var(--secondary);   
+    min-width: 32px;
+    justify-content: center;
+    margin: 5px;
+    position:absolute;
+    top: 90px;
 }
 
 
@@ -124,7 +135,7 @@
 }
 
 #bank-accounts {
-    background:#3C343D; 
+    background-color: rgb(77, 38, 0);
     display: flex;
     gap: 16px;
     padding: 16px 0px;
@@ -138,7 +149,6 @@
     appearance: none;
     text-decoration: none;
     position: relative;
-    
     padding: 16px;
     border-radius: 16px;
     height: 208px;
@@ -178,6 +188,5 @@
     max-width: 800px;
     width: 100%;
     min-width: 300px;
-    margin: 120px auto;
 
 }

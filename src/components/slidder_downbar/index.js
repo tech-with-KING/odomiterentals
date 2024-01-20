@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './style.css'; // Import your CSS file
 import { ReviewCard } from '../reviews';
-import { ArrowBack, ArrowForward } from '@mui/icons-material';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const BankAccounts = () => {
   const bankAccountsRef = useRef(null);
@@ -89,7 +90,7 @@ const BankAccounts = () => {
         className="bank-accounts"
         ref={bankAccountsRef}
       >
-        <div className='action-button' onClick={()=>{handleScrollLeft()}}><ArrowBack /></div>
+        <div className='action-button_left' onClick={()=>{handleScrollLeft()}}><ArrowBackIosIcon/></div>
                 <ReviewCard />
                 <ReviewCard />
                 <ReviewCard />
@@ -98,7 +99,7 @@ const BankAccounts = () => {
                 <ReviewCard />
                 <ReviewCard />
                 <ReviewCard />
-        <div className='action-button' onClick={()=>{handleScrollLeft()}}><ArrowBack /></div>
+        <div className='action-button_right' onClick={()=>{handleScrollRight()}}><ArrowForwardIosIcon/></div>
       </div>
       {/* ... Your other HTML content ... */}
     </div>

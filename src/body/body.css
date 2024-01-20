@@ -13,6 +13,7 @@
     width:100vw;
     display: flex;
     flex-direction: column;
+    max-height: 400px;
 }
 /* hero shop area  */
 .hero_shop_name{
@@ -140,7 +141,6 @@ border-radius: 10px;
     height: 40px;
     border-radius: 50%;
     background-color: white;
-    
     display: flex;
     margin: 2.5px 5px;
     align-items: center;
@@ -191,13 +191,12 @@ border-radius: 10px;
         height: 100%;
         display: flex;
     }
-    
-    
-    
-    /* brands section */
-    
     .news_letter{
         
         height: 20vh;
     }
 }
+
+  
+        
+  
