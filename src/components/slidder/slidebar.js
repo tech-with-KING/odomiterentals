@@ -26,7 +26,7 @@
             <AnimatePresence>
               <motion.div
                 className="slideshow-container"
-                style={{ backgroundImage: `url(/img/${device[index].img})` }}
+                style={{ backgroundImage: `url(${device[index].img})` }}
                 key={index}
               >
                 <div className="display_device">

@@ -6,7 +6,7 @@ export const device =
         device_name:'',
         spec: '6.5-Inch Super Retina (Gold',
         price:"$10",
-        img:'first.jpg'
+        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/f_auto,q_auto/v1/samples/Odomite_Rentals/dfsnxmz89561rpqjzpas'
     },
 
     {
@@ -15,7 +15,7 @@ export const device =
         device_nam:'',
         spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
         price:"$45",
-        img:'second.jpg'
+        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/f_auto,q_auto/v1/samples/Odomite_Rentals/dfsnxmz89561rpqjzpas'
     },
     {
         id:"2",
@@ -23,7 +23,7 @@ export const device =
         device_nam:'',
         spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
         price:"$40",
-        img:'fifth.jpg'
+        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/f_auto,q_auto/v1/samples/Odomite_Rentals/dfsnxmz89561rpqjzpas'
 
     },
     {
@@ -32,7 +32,7 @@ export const device =
         device_nam:'Round Table',
         spec:'Pro - Mondrian (Ti56 + 8',
         price:"$30",
-        img:'fourth.jpg'
+        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/f_auto,q_auto/v1/samples/Odomite_Rentals/dfsnxmz89561rpqjzpas'
     }
   
 ]

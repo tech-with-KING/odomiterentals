@@ -5,7 +5,7 @@
     return (
       <article className="card_item">
         <div className="child_div">
-          <img src={`/img/${img}`} alt={name} />
+          <img src={`${img}`} alt={name} />
           <div className="rating">
             <Star style={{color:"#ff8c1a"}}/>
             <span class="rating_count">4.9</span>

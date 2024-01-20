@@ -81,7 +81,7 @@ border-radius: 10px;
 .news_letter .input_container button{
     width: 10%;
     height: 35px;
-    background-color:#ff8c1a;
+    background-color: #053674;
     color: white;
     font-size: 20px;
     min-width: 100px;
@@ -98,6 +98,7 @@ border-radius: 10px;
 }
 .news_letter p{
     margin: 10px;
+    color: #ff8c1a;
 }
 
 /* brands this part contains the logos and the names */

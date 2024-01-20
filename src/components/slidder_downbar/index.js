@@ -89,7 +89,7 @@ const BankAccounts = () => {
         className="bank-accounts"
         ref={bankAccountsRef}
       >
-        <div className='btn' onClick={()=>{handleScrollLeft()}}><ArrowBack /></div>
+        <div className='action-button' onClick={()=>{handleScrollLeft()}}><ArrowBack /></div>
                 <ReviewCard />
                 <ReviewCard />
                 <ReviewCard />
@@ -98,7 +98,7 @@ const BankAccounts = () => {
                 <ReviewCard />
                 <ReviewCard />
                 <ReviewCard />
-        <ArrowForward />
+        <div className='action-button' onClick={()=>{handleScrollLeft()}}><ArrowBack /></div>
       </div>
       {/* ... Your other HTML content ... */}
     </div>
