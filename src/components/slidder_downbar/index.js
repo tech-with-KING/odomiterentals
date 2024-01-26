@@ -3,6 +3,7 @@ import './style.css'; // Import your CSS file
 import { ReviewCard } from '../reviews';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import Header from '../../body/header';
 
 const BankAccounts = () => {
   const bankAccountsRef = useRef(null);
@@ -83,7 +84,7 @@ const BankAccounts = () => {
 
   return (
     <div className="container_bank">
-      {/* ... Your other HTML content ... */}
+      <Header heading='REVIEWS' paragraph='We Have a perfect 5 Stars Review from ove 100 clients on Google Review'/>
       <div
 
         id="bank-accounts"

@@ -40,7 +40,6 @@
     min-width: 32px;
     justify-content: center;
     margin: 5px;
-    position:absolute;
 }
 .action-button_left {
     border-radius: 16px;
@@ -59,8 +58,6 @@
     min-width: 32px;
     justify-content: center;
     margin: 5px;
-    position:absolute;
-    top: 90px;
 }
 
 
@@ -185,7 +182,6 @@
 }
 
 .container_bank {
-    max-width: 800px;
     width: 100%;
     min-width: 300px;
 
