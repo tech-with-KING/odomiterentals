@@ -33,11 +33,11 @@ function ProductPage() {
       <div className='flex_div'>
       <div className='image_container'>
         <div className='image_container_child'>
-          <img className="product_image" src={`/img/${product.img}`} alt="Nike Air"></img>
+          <img className="product_image" src={`${product.img}`} alt="Nike Air"></img>
         </div>
       </div>
       <div className='Product_detail'>
-        <h3 className='product_name'>Nike Air</h3>
+        <h3 className='product_name'>{product.name}</h3>
         <span className='product_price'>{product.price}</span>
         <hr className='my_3'></hr>
         <div className="custom-container mt-2">

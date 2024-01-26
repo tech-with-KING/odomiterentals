@@ -1,7 +1,8 @@
   import React from 'react';
   import './test.css'
   import { Chair, Home, ShoppingCart, Star } from '@mui/icons-material';
-  const ItemCard = ({ name, deviceName, spec, price, img }) => {
+import { Link } from 'react-router-dom';
+  const ItemCard = ({ id, name, deviceName, spec, price, img}) => {
     return (
       <article className="card_item">
         <div className="child_div">
@@ -20,7 +21,7 @@
             <p className="">{price}</p>
   
             <div className="shopping_cart">
-              <button className="text-small cart_btn">Product desc</button>
+              <Link to={`/products/${id}`} ><button className="text-small cart_btn">View Full Product Details</button></Link>
             </div>
           </div>
         </div>

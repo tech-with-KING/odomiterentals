@@ -7,20 +7,20 @@ import ItemCard from './test';
 const ProductCard = ({devices}) => {
   return (
       <div className='container_wrapper'>
-      <ul className="container">
-      {devices.map((device) => (
-        <li >
-        <ItemCard
-          key={device.id}
-          name={device.name}
-          deviceName={device.device_name}
-          spec={device.spec}
-          price={device.price}
-          img={device.img}
-        />
-        </li>
-      ))}
-      </ul>
+        <ul className="container">
+        {devices.map((device) => (
+          <li >
+          <ItemCard
+            id={device.id}
+            name={device.name}
+            deviceName={device.device_name}
+            spec={device.spec}
+            price={device.price}
+            img={device.img}
+          />
+          </li>
+        ))}
+        </ul>
     </div>  
       
   );

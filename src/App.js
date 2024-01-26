@@ -33,7 +33,7 @@ class App extends Component {
 		<Router>
 			<Menu />
 		    <Routes>
-			<Route path="/" element={<Body/>} />
+			<Route path="/" exact element={<Body/>} />
 			<Route path="/contactpage" element={<><MessageForm content_head ={'singn in'}/></>} />
 			<Route path="/products" element={<><ProductHeader/> <ProductCard devices={device}/></>} />
 			<Route path="/aboutpage" element={<About />} />
