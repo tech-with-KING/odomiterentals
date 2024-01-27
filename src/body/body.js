@@ -50,16 +50,19 @@ const Brands = (props)=>{
 	{
 		id: 1,
 		color: 'about_heading',
+		link: 'https://wa.me/c/18622306639',
 		item: <Phone style={{ color: '#00ACEE' }}/>
 	},
 	{
 		id: 2,
 		color: 'about_heading',
+		link: 'https://wa.me/c/18622306639',
 		item: <WhatsApp style={{ color: '#00ACEE' }} />,
 	},
 	{
 		id: 3,
 		color: 'about_heading',
+		link: 'https://wa.me/c/18622306639',
 		item: <Google style={{ color: '#DB4437' }} />
 
 	},
@@ -67,11 +70,13 @@ const Brands = (props)=>{
 	{
 		id: 4,
 		color: 'about_heading',
+		link: 'https://wa.me/c/18622306639',
 		item: <Email style={{ color: '#0072b1' }} />
 	},
 	{
 		id: 5,
-			   color: 'about_heading',
+		color: 'about_heading',
+		link: 'https://wa.me/c/18622306639',
 		item: <Instagram style={{ color: '#FF0000' }} />
 	}
 ]

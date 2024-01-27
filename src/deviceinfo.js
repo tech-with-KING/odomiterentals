@@ -2,9 +2,9 @@ export const device =
 [
     {
         id:"0",
-        name:'Chair',
-        device_name:'',
-        spec: '6.5-Inch Super Retina (Gold',
+        cartegory:'Chair',
+        Product_name:'',
+        spec: '6',
         price:"$10",
         img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/vddb37jv8bwcjo2k9w6o.jpg'
     },
@@ -69,4 +69,174 @@ export const device =
         img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
     }
   
+]
+
+export const products = [
+        {
+            id:"0",
+            cartegory:'Chair',
+            Product_name:'White Stackable Padded Chairs',
+            spec: '6',
+            price:"$5",
+            desc:"White Padded Chairs Strictly for indoor events",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/vddb37jv8bwcjo2k9w6o.jpg'
+        },
+    
+        {
+            id:"1",
+            name:'Table',
+            product_name:'Cocktail Tables',
+            spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
+            price:"$12",
+            desc:"Elegant Cocktail Tables",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
+        },
+        {
+            id:"2",
+            name:'Chair',
+            Product_name:'Black Folding Chair',
+            spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
+            price:"$2.50",
+            desc:"Black Padded Folding Chairs",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/xpubptglh75mwrsbzrpb.jpg'
+    
+        },
+        {
+            id:"3",
+            cartegory:'Table',
+            product_name:'Damask Table Cover',
+            spec:'Pro - Mondrian (Ti56 + 8',
+            price:"$15.00",
+            desc:"High end esthetic table covering for indoor events",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283744/OdomiteRentals/Hero_Images/tm3iujzssxkcpjgpr6tg.jpg'
+        },
+        {
+            id:"4",
+            name:'Chair',
+            device_name:'Round Table',
+            spec: '6.5-Inch Super Retina (Gold',
+            price:"$15",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283745/OdomiteRentals/Hero_Images/shovnzles3mjavzqwlnt.jpg'
+        },
+    
+        {
+            id:"5",
+            name:'Table',
+            Product_name:'Kids Folding Chair',
+            spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
+            price:"$2.50",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283743/OdomiteRentals/Hero_Images/afkrmy6xyemspz81pjiv.jpg'
+        },
+        {
+            id:"6",
+            cartegory:'Chairs',
+            Product_name:'Dainty Plastic Chair',
+            spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
+            price:"$2.50",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/it2c4vmfwftwt6x9mjij.jpg'
+    
+        },
+        {
+            id:"7",
+            cartegory:'Chairs',
+            product_name:'Tan Fabric Chair',
+            spec:'Pro - Mondrian (Ti56 + 8',
+            price:"$2.50",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
+        },
+        {
+            id:"4",
+            name:'Chair',
+            device_name:'Round Table',
+            spec: '6.5-Inch Super Retina (Gold',
+            price:"$15",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283745/OdomiteRentals/Hero_Images/shovnzles3mjavzqwlnt.jpg'
+        },
+    
+        {
+            id:"5",
+            name:'Table',
+            Product_name:'Kids Folding Chair',
+            spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
+            price:"$2.50",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283743/OdomiteRentals/Hero_Images/afkrmy6xyemspz81pjiv.jpg'
+        },
+        {
+            id:"6",
+            cartegory:'Chairs',
+            Product_name:'Dainty Plastic Chair',
+            spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
+            price:"$2.50",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/it2c4vmfwftwt6x9mjij.jpg'
+    
+        },
+        {
+            id:"7",
+            cartegory:'Chairs',
+            product_name:'Tan Fabric Chair',
+            spec:'Pro - Mondrian (Ti56 + 8',
+            price:"$2.50",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
+        }
+    ]
+    
+export const AboutUs = [
+    {
+        id: 1,
+        heading:"",
+        paragraph:`
+        Welcome to Odomite Rentals, your premier destination for top-quality party rentals in the heart of Newark, 
+        New Jersey! At Odomite Rentals, we specialize in providing a wide range of event essentials, including chairs, 
+        tables, tents, and various other party items, to make your gatherings truly unforgettable. 
+        Whether you're planning a lively birthday party,
+        a romantic wedding, a joyous graduation celebration, or a professional conference, we've got you covered.`,
+        image:''
+    },
+    {
+        id:2,
+        heading:"",
+        paragraph:`Our extensive inventory ensures that we have the perfect pieces to suit any occasion, and we 
+        take pride in offering these rentals at exceptionally reasonable rates. Convenience is key at Odomite Rentals, 
+        and our commitment to customer satisfaction extends to our seamless delivery service. Located at 331 Seymour 
+        Avenue, Newark, we proudly 
+        serve the entire New Jersey area, ensuring that your chosen items arrive promptly and in pristine condition.`,
+        image:''
+    },
+    {
+        id:3,
+        heading:"",
+        paragraph:`
+        Our dedicated team understands the importance of creating memorable events, and we are here to assist you every step
+        of the way. Trust Odomite Rentals to elevate your next party, wedding, graduation, conference, seminar, or any special
+        gathering with our top-notch rental offerings 
+        and reliable service. Let us turn your vision into a reality and make your event truly remarkable.`,
+        image:''
+    },
+]
+export const Services = [
+    {
+        id: 1,
+        heading:"Transportation",
+        paragraph:`
+        Experience hassle-free events with our transportation service. From chairs to tents, we ensure timely delivery to 
+        your venue, covering Newark and beyond. Relax and let Odomite Rentals handle the logistics, so you can focus on celebrating.`,
+        image:''
+    },
+    {
+        id:2,
+        heading:"Setup",
+        paragraph:`
+        Elevate your event without lifting a finger. Our professional setup service ensures every chair, table, and 
+        decoration is perfectly arranged, creating 
+        a seamless and inviting atmosphere. Trust us to bring your vision to life, leaving you free to enjoy the festivities.`,
+        image:''
+    },
+    {
+        id:3,
+        heading:"Decoration",
+        paragraph:`Transform your venue into a captivating space with our decoration service. 
+        From elegant table settings to vibrant tent accents, our curated collection adds the perfect touch. 
+        Let Odomite Rentals infuse style and flair into your event, making it truly unforgettable.`,
+        image:''
+    },
 ]
