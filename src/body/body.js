@@ -20,7 +20,7 @@ const Body=(props)=>{
       />	  
 	  <ProductCard cart="Chair" products={products}/>
 	  <Header
-        heading="Tables"
+        heading="Tables and Table Covers"
         paragraph="Tables Comes in all sizes for any number of Guests"
       />	  
 	  <ProductCard cart="Table" products={products}/>

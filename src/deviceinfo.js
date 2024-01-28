@@ -150,7 +150,7 @@ export const products = [
             Product_name:'10 by 10 Tent',
             spec: '6.5-Inch Super Retina (Gold',
             price:"$125.00",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283745/OdomiteRentals/Hero_Images/shovnzles3mjavzqwlnt.jpg'
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452768/Products/20240126_212027_vgksxo.jpg'
         },
     
         {
@@ -177,7 +177,24 @@ export const products = [
             spec:'Pro - Mondrian (Ti56 + 8',
             price:"$2.50",
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
-        }
+        },
+        {
+            id:"8",
+            cartegory:'Tent',
+            Product_name:'10 by 20 Tent',
+            spec: '6.5-Inch Super Retina (Gold',
+            price:"$175.00",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452767/Products/20240126_211928_yblikn.jpg'
+        },
+        {
+            id:"9",
+            cartegory:'Table',
+            Product_name:'Damask and Sequin Table Cover',
+            spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
+            price:"$15.00",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452761/Products/20240126_212259_wfnxyl.jpg'
+    
+        },
     ]
     
 export const AboutUs = [
