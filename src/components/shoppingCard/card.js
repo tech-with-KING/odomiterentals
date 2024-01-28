@@ -3,29 +3,28 @@ import './card.css'
 import { Chair, Home, Search } from '@mui/icons-material';
 import { Table } from '@mui/material';
 import ItemCard from './test';
-
-const ProductCard = ({devices}) => {
+const ProductCard = ({ products, cart }) => {
+  const chairProducts = products.filter(product => product.cartegory === cart);
+  console.log(cart)
   return (
-      <div className='container_wrapper'>
-        <ul className="container">
-        {devices.map((device) => (
-          <li >
-          <ItemCard
-            id={device.id}
-            name={device.name}
-            deviceName={device.device_name}
-            spec={device.spec}
-            price={device.price}
-            img={device.img}
-          />
+    <div className='container_wrapper'>
+      <ul className="container">
+        {chairProducts.map((product) => (
+          <li key={product.id}>
+            <ItemCard
+              id={product.id}
+              name={product.name}
+              deviceName={product.Product_name}
+              spec={product.spec}
+              price={product.price}
+              img={product.img}
+            />
           </li>
         ))}
-        </ul>
-    </div>  
-      
+      </ul>
+    </div>
   );
 };
-
 const ProductHeader = () => 
 {
   return (

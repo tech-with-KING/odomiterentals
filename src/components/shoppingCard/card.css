@@ -90,8 +90,8 @@
     position: relative;
     vertical-align: middle;
     display: inline-block;
-    width: 230px;
-    height: 300px;
+    width: 88%;
+    height: 330px;
     transition-duration: .3s;
     overflow: hidden;
     background-color: transparent;
@@ -111,7 +111,7 @@
 .container li:hover {
     transition-delay: .3s;
     width: 250px;
-    height: 330px;
+    height: 370px;
 }
 
 /* news letter section */

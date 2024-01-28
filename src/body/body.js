@@ -4,7 +4,7 @@ import HeaderBanner from '../components/bonus_products';
 import { Email, Facebook, Google, Instagram, Mail, Phone, Twitter, WhatsApp } from '@mui/icons-material';
 import ProductCard from '../components/shoppingCard/card';
 import Header from './header';
-import { device } from '../deviceinfo';
+import { device, products } from '../deviceinfo';
 import CustomerReviews from '../components/reviews';
 import { motion } from 'framer-motion'
 import BankAccounts from '../components/slidder_downbar';
@@ -18,19 +18,18 @@ const Body=(props)=>{
         heading="Chairs"
         paragraph="Our Chairs Comes in great variations"
       />	  
-	  <ProductCard devices={device}/>
+	  <ProductCard cart="Chair" products={products}/>
 	  <Header
-        heading="Tents	"
-        paragraph="10X10 20X20 and more"
+        heading="Tables"
+        paragraph="Tables Comes in all sizes for any number of Guests"
       />	  
-	  <ProductCard devices={device}/>
+	  <ProductCard cart="Table" products={products}/>
 	  <Header
-        heading="Chairs"
-        paragraph="Tables in all sizes for any number of guest"
+        heading="Tents"
+        paragraph="10 X 10, 20 X 10 and more"
       />	  
-	  <ProductCard devices={device}/>
+	  <ProductCard cart="Tent" products={products}/>
 	  <HeaderBanner />
-	  	<ProductCard devices={device}/>
 	  <HeaderBanner />
       <BankAccounts />
       <GetNewsLetter />

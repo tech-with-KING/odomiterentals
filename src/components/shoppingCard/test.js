@@ -4,7 +4,7 @@
 import { Link } from 'react-router-dom';
   const ItemCard = ({ id, name, deviceName, spec, price, img}) => {
     return (
-      <article className="card_item">
+      <article className="card_item_cont">
         <div className="child_div">
           <img src={`${img}`} alt={name} />
           <div className="rating">
@@ -14,14 +14,11 @@ import { Link } from 'react-router-dom';
         </div>
   
         <div className="prod_desc">
-          <h2 className="prod">{name}</h2>
           <p className="p">{deviceName}</p>
-  
           <div className="price">
             <p className="">{price}</p>
-  
             <div className="shopping_cart">
-              <Link to={`/products/${id}`} ><button className="text-small cart_btn">View Full Product Details</button></Link>
+              <Link to={`/products/${id}`} ><button className="text-small cart_btn">View Product Detail</button></Link>
             </div>
           </div>
         </div>

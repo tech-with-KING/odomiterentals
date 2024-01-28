@@ -79,7 +79,7 @@ export const products = [
             spec: '6',
             price:"$5",
             desc:"White Padded Chairs Strictly for indoor events",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/vddb37jv8bwcjo2k9w6o.jpg'
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452771/Products/20240126_212436_aq25zk.jpg'
         },
     
         {
@@ -93,39 +93,39 @@ export const products = [
         },
         {
             id:"2",
-            name:'Chair',
+            cartegory:'Chair',
             Product_name:'Black Folding Chair',
             spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
             price:"$2.50",
             desc:"Black Padded Folding Chairs",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/xpubptglh75mwrsbzrpb.jpg'
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452767/Products/20240126_211748_tfbhpk.jpg'
     
         },
         {
             id:"3",
             cartegory:'Table',
-            product_name:'Damask Table Cover',
+            Product_name:'Renctangular Table',
             spec:'Pro - Mondrian (Ti56 + 8',
-            price:"$15.00",
+            price:"$10.00",
             desc:"High end esthetic table covering for indoor events",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283744/OdomiteRentals/Hero_Images/tm3iujzssxkcpjgpr6tg.jpg'
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452760/Products/20240126_212145_awz8yv.jpg'
         },
         {
             id:"4",
-            name:'Chair',
-            device_name:'Round Table',
+            cartegory:'Table',
+            Product_name:'60" diameter Round Table',
             spec: '6.5-Inch Super Retina (Gold',
-            price:"$15",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283745/OdomiteRentals/Hero_Images/shovnzles3mjavzqwlnt.jpg'
+            price:"$15.00",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_212054_obvbzp.jpg'
         },
     
         {
             id:"5",
-            name:'Table',
+            cartegory:'Chair',
             Product_name:'Kids Folding Chair',
             spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
             price:"$2.50",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283743/OdomiteRentals/Hero_Images/afkrmy6xyemspz81pjiv.jpg'
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452762/Products/20240126_211809_coim1m.jpg'
         },
         {
             id:"6",
@@ -138,28 +138,28 @@ export const products = [
         },
         {
             id:"7",
-            cartegory:'Chairs',
-            product_name:'Tan Fabric Chair',
+            cartegory:'Chair',
+            Product_name:'Tan Fabric Chair',
             spec:'Pro - Mondrian (Ti56 + 8',
             price:"$2.50",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_211713_ww0fol.jpg'
         },
         {
             id:"4",
-            name:'Chair',
-            device_name:'Round Table',
+            cartegory:'Tent',
+            Product_name:'10 by 10 Tent',
             spec: '6.5-Inch Super Retina (Gold',
-            price:"$15",
+            price:"$125.00",
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283745/OdomiteRentals/Hero_Images/shovnzles3mjavzqwlnt.jpg'
         },
     
         {
             id:"5",
-            name:'Table',
-            Product_name:'Kids Folding Chair',
+            cartegory:'Table',
+            Product_name:'Cocktail Table',
             spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
-            price:"$2.50",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283743/OdomiteRentals/Hero_Images/afkrmy6xyemspz81pjiv.jpg'
+            price:"$12.00",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_212405_nntett.jpg'
         },
         {
             id:"6",

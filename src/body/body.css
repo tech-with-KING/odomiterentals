@@ -106,10 +106,10 @@ border-radius: 10px;
 .brands_{
     height: fit-content;
     display: flex;
-    max-width: 80%;
+    min-width: 80%;
     justify-content: center;
-    padding: 20px;  
-    width: 80%;
+    padding: 10px;  
+    width: 90%;
     align-items: center;
     flex-direction: row;
     overflow: hidden;
@@ -118,17 +118,18 @@ border-radius: 10px;
     margin: 10px;
 }
 .fav_brands{
-    width: 50%;
+    width: 40%;
 }
 .logos{
-    width: 50%;
+    width: 60%;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
+    padding: 0;
 }
 .fav_brands h1{
     color: #331a00;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     display: flex;
     font-weight: bold;
     align-items: center;
@@ -153,7 +154,7 @@ border-radius: 10px;
     }
     .hero_img{
         overflow: hidden;
-        height: 78vh;
+        height: 70vh;
         width:100vw;
         display: flex;
         flex-direction: row;
@@ -191,8 +192,7 @@ border-radius: 10px;
         height: 100%;
         display: flex;
     }
-    .news_letter{
-        
+    .news_letter{   
         height: 20vh;
     }
 }
