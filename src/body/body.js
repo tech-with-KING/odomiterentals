@@ -4,8 +4,7 @@ import HeaderBanner from '../components/bonus_products';
 import { Email, Facebook, Google, Instagram, Mail, Phone, Twitter, WhatsApp } from '@mui/icons-material';
 import ProductCard from '../components/shoppingCard/card';
 import Header from './header';
-import { device, products } from '../deviceinfo';
-import CustomerReviews from '../components/reviews';
+import { products } from '../deviceinfo';
 import { motion } from 'framer-motion'
 import BankAccounts from '../components/slidder_downbar';
 const Body=(props)=>{

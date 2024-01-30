@@ -4,8 +4,9 @@ import { Chair, Home, Search } from '@mui/icons-material';
 import { Table } from '@mui/material';
 import ItemCard from './test';
 const ProductCard = ({ products, cart }) => {
-  const chairProducts = products.filter(product => product.cartegory === cart);
-  console.log(cart)
+  const chairProducts = products.filter((product) =>
+  cart === 'All' ? true : product.cartegory === cart
+);
   return (
     <div className='container_wrapper'>
       <ul className="container">
@@ -13,9 +14,8 @@ const ProductCard = ({ products, cart }) => {
           <li key={product.id}>
             <ItemCard
               id={product.id}
-              name={product.name}
               deviceName={product.Product_name}
-              spec={product.spec}
+              spec={product.desc}
               price={product.price}
               img={product.img}
             />

@@ -13,7 +13,7 @@ import SingleItem from './components/single_product';
 import ProductPage from './components/single_product';
 import MessageForm from './components/user_details/index';
 import BankAccounts from './components/slidder_downbar';
-import {Services, AboutUs} from './deviceinfo'
+import {Services, AboutUs, products} from './deviceinfo'
 import Header from './body/header';
 class App extends Component {
     state = {
@@ -36,7 +36,7 @@ class App extends Component {
 		    <Routes>
 			<Route path="/" exact element={<Body/>} />
 			<Route path="/contactpage" element={<><MessageForm content_head ={'singn in'}/></>} />
-			<Route path="/products" element={<><ProductHeader/> <ProductCard devices={device}/></>} />
+			<Route path="/products" element={<><ProductHeader/> <ProductCard cart="All" products={products}/></>} />
 			<Route path="/aboutpage" element={<><Header heading='ABOUT US' paragraph='Who we are - OdomiteRentals' /><About services={AboutUs}/></>} />
 			<Route path="/services" element={<><Header heading='Our Services' paragraph='Our Range of Services comes at Affordable Rates' /><About services={Services}/></>} />
 			<Route path="/products/:productId" element={<div className='single_product'><ProductPage /></div>} />
