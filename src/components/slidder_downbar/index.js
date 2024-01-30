@@ -46,8 +46,6 @@ const BankAccounts = () => {
 
     const handleScroll = () => {
       const position = bankAccountsRef.current.scrollLeft;
-      // Update button disabled states based on scroll position
-      // (similar logic to your original code)
     };
 
     bankAccountsRef.current.addEventListener('mousedown', handleMouseDown);
@@ -57,7 +55,6 @@ const BankAccounts = () => {
     bankAccountsRef.current.addEventListener('scroll', handleScroll);
 
     return () => {
-      // Cleanup event listeners on component unmount
       bankAccountsRef.current.removeEventListener('mousedown', handleMouseDown);
       bankAccountsRef.current.removeEventListener('mouseleave', handleMouseLeave);
       bankAccountsRef.current.removeEventListener('mouseup', handleMouseUp);
@@ -86,7 +83,6 @@ const BankAccounts = () => {
     <div className="container_bank">
       <Header heading='REVIEWS' paragraph='We Have a perfect 5 Stars Review from ove 100 clients on Google Review'/>
       <div
-
         id="bank-accounts"
         className="bank-accounts"
         ref={bankAccountsRef}
@@ -102,7 +98,6 @@ const BankAccounts = () => {
                 <ReviewCard />
         <div className='action-button_right' onClick={()=>{handleScrollRight()}}><ArrowForwardIosIcon/></div>
       </div>
-      {/* ... Your other HTML content ... */}
     </div>
   );
 };

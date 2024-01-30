@@ -36,13 +36,12 @@ class App extends Component {
 		    <Routes>
 			<Route path="/" exact element={<Body/>} />
 			<Route path="/contactpage" element={<><MessageForm content_head ={'singn in'}/></>} />
-			<Route path="/products" element={<><ProductHeader/> <ProductCard cart="All" products={products}/></>} />
+			<Route path='/products' element={<div><ProductHeader/> <ProductCard cart="All" products={products}/></div>} />
 			<Route path="/aboutpage" element={<><Header heading='ABOUT US' paragraph='Who we are - OdomiteRentals' /><About services={AboutUs}/></>} />
 			<Route path="/services" element={<><Header heading='Our Services' paragraph='Our Range of Services comes at Affordable Rates' /><About services={Services}/></>} />
 			<Route path="/products/:productId" element={<div className='single_product'><ProductPage /></div>} />
 			<Route path="/*" element={<PageNotFound />} />
 		    </Routes>
-			<ProductPage />
 			<DownBar />
 		</Router>
 

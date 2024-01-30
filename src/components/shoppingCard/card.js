@@ -1,6 +1,6 @@
 import React from 'react';
 import './card.css'
-import { Chair, Home, Search } from '@mui/icons-material';
+import { Chair, Home} from '@mui/icons-material';
 import { Table } from '@mui/material';
 import ItemCard from './test';
 const ProductCard = ({ products, cart }) => {

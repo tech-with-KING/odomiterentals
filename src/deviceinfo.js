@@ -1,75 +1,75 @@
-    export const device = 
-    [
-        {
-            id:"0",
-            cartegory:'Chair',
-            Product_name:'',
-            spec: '6',
-            price:"$10",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/vddb37jv8bwcjo2k9w6o.jpg'
-        },
+export const device = 
+[
+    {
+        id:"0",
+        cartegory:'Chair',
+        Product_name:'',
+        spec: '6',
+        price:"$10",
+        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/vddb37jv8bwcjo2k9w6o.jpg'
+    },
 
-        {
-            id:"1",
-            name:'Table',
-            device_nam:'',
-            spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
-            price:"$45",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
-        },
-        {
-            id:"2",
-            name:'Chair',
-            device_nam:'',
-            spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
-            price:"$40",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/xpubptglh75mwrsbzrpb.jpg'
+    {
+        id:"1",
+        name:'Table',
+        device_nam:'',
+        spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
+        price:"$45",
+        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
+    },
+    {
+        id:"2",
+        name:'Chair',
+        device_nam:'',
+        spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
+        price:"$40",
+        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/xpubptglh75mwrsbzrpb.jpg'
 
-        },
-        {
-            id:"3",
-            name:'',
-            device_nam:'Round Table',
-            spec:'Pro - Mondrian (Ti56 + 8',
-            price:"$30",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283744/OdomiteRentals/Hero_Images/tm3iujzssxkcpjgpr6tg.jpg'
-        },
-        {
-            id:"4",
-            name:'Chair',
-            device_name:'',
-            spec: '6.5-Inch Super Retina (Gold',
-            price:"$10",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283745/OdomiteRentals/Hero_Images/shovnzles3mjavzqwlnt.jpg'
-        },
+    },
+    {
+        id:"3",
+        name:'',
+        device_nam:'Round Table',
+        spec:'Pro - Mondrian (Ti56 + 8',
+        price:"$30",
+        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283744/OdomiteRentals/Hero_Images/tm3iujzssxkcpjgpr6tg.jpg'
+    },
+    {
+        id:"4",
+        name:'Chair',
+        device_name:'',
+        spec: '6.5-Inch Super Retina (Gold',
+        price:"$10",
+        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283745/OdomiteRentals/Hero_Images/shovnzles3mjavzqwlnt.jpg'
+    },
 
-        {
-            id:"5",
-            name:'Table',
-            device_nam:'',
-            spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
-            price:"$45",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283743/OdomiteRentals/Hero_Images/afkrmy6xyemspz81pjiv.jpg'
-        },
-        {
-            id:"6",
-            name:'Chair',
-            device_nam:'',
-            spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
-            price:"$40",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/it2c4vmfwftwt6x9mjij.jpg'
+    {
+        id:"5",
+        name:'Table',
+        device_nam:'',
+        spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
+        price:"$45",
+        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283743/OdomiteRentals/Hero_Images/afkrmy6xyemspz81pjiv.jpg'
+    },
+    {
+        id:"6",
+        name:'Chair',
+        device_nam:'',
+        spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
+        price:"$40",
+        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/it2c4vmfwftwt6x9mjij.jpg'
 
-        },
-        {
-            id:"7",
-            name:'',
-            device_nam:'Round Table',
-            spec:'Pro - Mondrian (Ti56 + 8',
-            price:"$30",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
-        }
-    
-    ]
+    },
+    {
+        id:"7",
+        name:'',
+        device_nam:'Round Table',
+        spec:'Pro - Mondrian (Ti56 + 8',
+        price:"$30",
+        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
+    }
+  
+]
 
 export const products = [
         {
@@ -145,7 +145,7 @@ export const products = [
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_211713_ww0fol.jpg'
         },
         {
-            id:4,
+            id:8,
             cartegory:'Tent',
             Product_name:'10 by 10 Tent',
             price:"$125.00",
@@ -154,7 +154,7 @@ export const products = [
         },
     
         {
-            id:5,
+            id:9,
             cartegory:'Table',
             Product_name:'Cocktail Table',
             price:"$12.00",
@@ -162,7 +162,7 @@ export const products = [
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_212405_nntett.jpg'
         },
         {
-            id:6,
+            id:10,
             cartegory:'Chairs',
             Product_name:'Dainty Plastic Chair',
             price:"$2.50",
@@ -171,7 +171,7 @@ export const products = [
     
         },
         {
-            id:7,
+            id:11,
             cartegory:'Chairs',
             product_name:'Tan Fabric Chair',
             price:"$2.50",
@@ -179,7 +179,7 @@ export const products = [
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
         },
         {
-            id:8,
+            id:12,
             cartegory:'Tent',
             Product_name:'10 by 20 Tent',
             price:"$175.00",
@@ -187,7 +187,7 @@ export const products = [
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452767/Products/20240126_211928_yblikn.jpg'
         },
         {
-            id:9,
+            id:13,
             cartegory:'Table',
             Product_name:'Damask and Sequin Table Cover',
             price:"$15.00",
