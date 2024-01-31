@@ -7,7 +7,7 @@ const About = ({ services }) => {
   return (
     <div>
       {services && services.map((service) => (
-        <div key={service.id} className="article__content" itemscope="" itemtype="https://schema.org/Article">
+        <div key={service.id} className="article__content" >
           <h1>{service.heading}</h1>
           <p>{service.paragraph}</p>
           {service.image && <img src={service.image} alt={`Image ${service.id}`} />}

@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
           <img src={`${img}`} alt={name} />
           <div className="rating">
             <Star style={{color:"#ff8c1a"}}/>
-            <span class="rating_count">4.9</span>
+            <span className="rating_count">4.9</span>
           </div>
         </div>
   

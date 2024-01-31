@@ -89,7 +89,7 @@ export const products = [
             spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
             price:"$12",
             desc:"Elegant Cocktail Tables",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
+            img:''
         },
         {
             id:2,
@@ -130,10 +130,10 @@ export const products = [
         {
             id:6,
             cartegory:'Chairs',
-            Product_name:'Dainty Plastic Chair',
+            Product_name:'Dainty Black Plastic Chair',
             price:"$2.50",
             desc:`60" diameter Round Table Color white`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/it2c4vmfwftwt6x9mjij.jpg'
+            img:''
     
         },
         {
@@ -167,7 +167,7 @@ export const products = [
             Product_name:'Dainty Plastic Chair',
             price:"$2.50",
             desc:`60" diameter Round Table Color white`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/it2c4vmfwftwt6x9mjij.jpg'
+            img:''
     
         },
         {
@@ -176,7 +176,7 @@ export const products = [
             product_name:'Tan Fabric Chair',
             price:"$2.50",
             desc:`60" diameter Round Table Color white`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
+            img:''
         },
         {
             id:12,

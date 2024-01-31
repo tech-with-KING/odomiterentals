@@ -28,9 +28,4 @@ const   Header = ({ heading, paragraph }) => {
   );
 };
 
-Header.propTypes = {
-  heading: PropTypes.string.isRequired,
-  paragraph: PropTypes.string.isRequired,
-};
-
 export default Header;

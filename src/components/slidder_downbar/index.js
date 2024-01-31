@@ -24,13 +24,17 @@ const BankAccounts = () => {
     };
 
     const handleMouseLeave = () => {
-      setIsDragging(false);
-      bankAccountsRef.current.style.cursor = 'grab';
+      if (isDragging) {
+        setIsDragging(false);
+        bankAccountsRef.current.style.cursor = 'grab';
+      }
     };
 
     const handleMouseUp = () => {
-      setIsDragging(false);
-      bankAccountsRef.current.style.cursor = 'grab';
+      if (isDragging) {
+        setIsDragging(false);
+        bankAccountsRef.current.style.cursor = 'grab';
+      }
     };
 
     const handleMouseMove = (e) => {
@@ -44,24 +48,40 @@ const BankAccounts = () => {
       bankAccountsRef.current.scrollTop = scrollTop - walkY;
     };
 
-    const handleScroll = () => {
-      const position = bankAccountsRef.current.scrollLeft;
-    };
-
-    bankAccountsRef.current.addEventListener('mousedown', handleMouseDown);
-    bankAccountsRef.current.addEventListener('mouseleave', handleMouseLeave);
-    bankAccountsRef.current.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('mousemove', handleMouseMove);
-    bankAccountsRef.current.addEventListener('scroll', handleScroll);
+    const currentRef = bankAccountsRef.current;
+    if (currentRef) {
+      currentRef.addEventListener('mousedown', handleMouseDown);
+      currentRef.addEventListener('mouseleave', handleMouseLeave);
+      currentRef.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('mousemove', handleMouseMove);
+    }
 
     return () => {
-      bankAccountsRef.current.removeEventListener('mousedown', handleMouseDown);
-      bankAccountsRef.current.removeEventListener('mouseleave', handleMouseLeave);
-      bankAccountsRef.current.removeEventListener('mouseup', handleMouseUp);
+      const currentRef = bankAccountsRef.current;
+      if (currentRef) {
+        currentRef.removeEventListener('mousedown', handleMouseDown);
+        currentRef.removeEventListener('mouseleave', handleMouseLeave);
+        currentRef.removeEventListener('mouseup', handleMouseUp);
+      }
       document.removeEventListener('mousemove', handleMouseMove);
-      bankAccountsRef.current.removeEventListener('scroll', handleScroll);
     };
   }, [isDragging, startX, startY, scrollLeft, scrollTop]);
+
+  useEffect(() => {
+    const currentRef = bankAccountsRef.current;
+    const handleWheel = (e) => {
+      // Your wheel event logic
+      console.log('Wheel event:', e);
+    };
+
+    if (currentRef) {
+      currentRef.addEventListener('wheel', handleWheel);
+
+      return () => {
+        currentRef.removeEventListener('wheel', handleWheel);
+      };
+    }
+  }, []);
 
   const handleScrollLeft = () => {
     bankAccountsRef.current.scrollBy({
@@ -81,22 +101,18 @@ const BankAccounts = () => {
 
   return (
     <div className="container_bank">
-      <Header heading='REVIEWS' paragraph='We Have a perfect 5 Stars Review from ove 100 clients on Google Review'/>
-      <div
-        id="bank-accounts"
-        className="bank-accounts"
-        ref={bankAccountsRef}
-      >
-        <div className='action-button_left' onClick={()=>{handleScrollLeft()}}><ArrowBackIosIcon/></div>
-                <ReviewCard />
-                <ReviewCard />
-                <ReviewCard />
-                <ReviewCard />
-                <ReviewCard />
-                <ReviewCard />
-                <ReviewCard />
-                <ReviewCard />
-        <div className='action-button_right' onClick={()=>{handleScrollRight()}}><ArrowForwardIosIcon/></div>
+      <Header heading='REVIEWS' paragraph='We have a perfect 5 Stars Review from over 100 clients on Google Review' />
+      <div id="bank-accounts" className="bank-accounts" ref={bankAccountsRef}>
+        <div className='action-button_left' onClick={handleScrollLeft}><ArrowBackIosIcon /></div>
+        <ReviewCard />
+        <ReviewCard />
+        <ReviewCard />
+        <ReviewCard />
+        <ReviewCard />
+        <ReviewCard />
+        <ReviewCard />
+        <ReviewCard />
+        <div className='action-button_right' onClick={handleScrollRight}><ArrowForwardIosIcon /></div>
       </div>
     </div>
   );

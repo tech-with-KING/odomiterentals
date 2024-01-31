@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './slidebar.css';
@@ -27,7 +26,7 @@ class HeaderSlideBar extends Component {
 
     return (
       <div className="slideshow-containerfor"  style={{ backgroundImage: `url(/img/${device[index].img})` }}>
-        <AnimatePresence exitBeforeEnter>
+        <AnimatePresence mode='wait'>
           <motion.div
             key={index}
             className="display_device"

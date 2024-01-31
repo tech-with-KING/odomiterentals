@@ -55,7 +55,7 @@ const Menu = () => {
             <div
               className='a'
               title="products"
-              onClick={() => handleNavigation('/products/')}
+              onClick={() => handleNavigation('/Catalogue')}
             >
               Products
             </div>
