@@ -7,6 +7,7 @@ import Header from './header';
 import { products } from '../deviceinfo';
 import { motion } from 'framer-motion'
 import BankAccounts from '../components/slidder_downbar';
+import PromotionaPage from './promotion';
 const Body=(props)=>{
   return(
 	<div className='hero'>
@@ -18,6 +19,7 @@ const Body=(props)=>{
         paragraph="Our Chairs Comes in great variations"
       />	  
 	  <ProductCard cart="Chair" products={products}/>
+	  <PromotionaPage />
 	  <Header
         heading="Tables and Table Covers"
         paragraph="Tables Comes in all sizes for any number of Guests"
@@ -29,7 +31,7 @@ const Body=(props)=>{
       />	  
 	  <ProductCard cart="Tent" products={products}/>
 	  <HeaderBanner />
-	  <HeaderBanner />
+	  <PromotionaPage />
       <BankAccounts />
       <GetNewsLetter />
 	</div>
