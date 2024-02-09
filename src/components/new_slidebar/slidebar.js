@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './slidebar.css';
-import { device } from '../../deviceinfo';
-import Header from '../../body/header';
+import { Services, device } from '../../deviceinfo';
+import { Link } from 'react-router-dom';
+
 
 class HeaderSlideBar extends Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class HeaderSlideBar extends Component {
 
   componentDidMount() {
     setInterval(() => {
-      if (this.state.index >= device.length - 1) {
+      if (this.state.index >= Services.length - 1) {
         this.setState({ index: 0 });
       } else {
         this.setState((prevState) => ({ index: prevState.index + 1 }));
@@ -25,37 +26,22 @@ class HeaderSlideBar extends Component {
     const { index } = this.state;
 
     return (
-      <div className="slideshow-containerfor"  style={{ backgroundImage: `url(/img/${device[index].img})` }}>
+      <div className="services_slides_container">
         <AnimatePresence mode='wait'>
           <motion.div
+            
+            src={Services[index].image}
             key={index}
-            className="display_device"
+            className=""
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div
-              className="device_image"
-              
-            ></div>
-            <div className="display_text">
-              <Header heading={device[index].name} paragraph={device[index].spec} />
-            </div>
+            <img src={Services[index].image} alt='image'  loading='lazy' className='service_image'></img>
           </motion.div>
         </AnimatePresence>
-
-        <div className="dot-container">
-          {device.map((data) => (
-            <span
-              key={data.id}
-              onClick={() => {
-                this.setState({ index: data.id });
-              }}
-              className={`dot`}
-              style={data.id === device[index].id ? { backgroundColor: 'blue' } : {}}
-            ></span>
-          ))}
-        </div>
+        <h1 className='service_name'>{Services[index].heading}</h1>
+        <Link to={"/services"}><button>Read More</button></Link>
       </div>
     );
   }

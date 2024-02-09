@@ -237,7 +237,7 @@ export const Services = [
         paragraph:`
         Experience hassle-free events with our transportation service. From chairs to tents, we ensure timely delivery to 
         your venue, covering Newark and beyond. Relax and let Odomite Rentals handle the logistics, so you can focus on celebrating.`,
-        image:''
+        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484410/services/movingtruck3_enz8z7.jpg'
     },
     {
         id:2,
@@ -246,7 +246,7 @@ export const Services = [
         Elevate your event without lifting a finger. Our professional setup service ensures every chair, table, and 
         decoration is perfectly arranged, creating 
         a seamless and inviting atmosphere. Trust us to bring your vision to life, leaving you free to enjoy the festivities.`,
-        image:''
+        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484409/services/decoration_qrq7gd.jpg'
     },
     {
         id:3,
@@ -254,6 +254,6 @@ export const Services = [
         paragraph:`Transform your venue into a captivating space with our decoration service. 
         From elegant table settings to vibrant tent accents, our curated collection adds the perfect touch. 
         Let Odomite Rentals infuse style and flair into your event, making it truly unforgettable.`,
-        image:''
+        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484409/services/decoration2_ddhc5a.jpg'
     },
 ]
