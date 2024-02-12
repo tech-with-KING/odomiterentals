@@ -70,8 +70,6 @@ const BankAccounts = () => {
   useEffect(() => {
     const currentRef = bankAccountsRef.current;
     const handleWheel = (e) => {
-      // Your wheel event logic
-      console.log('Wheel event:', e);
     };
 
     if (currentRef) {
@@ -153,8 +151,9 @@ const BankAccounts = () => {
   ];
   return (
     <div className="container_bank">
-      <Header heading='REVIEWS' paragraph='We have a perfect 5 Stars Review from over 100 clients on Google Review' />
-      <div id="bank-accounts" className="bank-accounts" ref={bankAccountsRef}>
+      <Header heading='REVIEWS' paragraph='We have a perfect 5 Stars Review from over 100 clients on Google Review'  textColor="#ff8c1a"
+  backgroundColor="#331900"/>
+      <div id="bank-accounts" className="bank-accounts"  ref={bankAccountsRef}>
         <div className='action-button_left' onClick={handleScrollLeft}><ArrowBackIosIcon /></div>
         {reviews.map((review) => (
         <ReviewCard
@@ -166,9 +165,23 @@ const BankAccounts = () => {
           timeOfReview={review.time_of_review}
         />
       ))}
+      
         <div className='action-button_right' onClick={handleScrollRight}><ArrowForwardIosIcon /></div>
       </div>
+      <div className='review_button_parent'>
+        <ReviewButton />
+      </div>
+      
     </div>
+  );
+};
+const ReviewButton = () => {
+  const googleReviewsUrl = 'https://www.google.com/search?q=odomiterentals&oq=odomiterentals&gs_lcrp=EgZjaHJvbWUqBggAEEUYOzIGCAAQRRg7Mg8IARAuGA0YrwEYxwEYgAQyCQgCEAAYDRiABDIGCAMQRRg8MgYIBBBFGDwyBggFEEUYPDIGCAYQRRg8MgYIBxBFGDzSAQg1MjM1ajBqN6gCALACAA&sourceid=chrome&ie=UTF-8#lrd=0x89c25321906be5d1:0x296bf0f9e6156952,1,,,,'; // Replace with your actual URL
+
+  return (
+    <a href={googleReviewsUrl} className="client-reviews-button">
+      See What Other Clients Are Saying
+    </a>
   );
 };
 

@@ -1,14 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-:root {
-    --accent: #9fe870;
-    --accent-hover: #80e142;
-    --accent-active: #65cf21;
-    --control: #163300;  
-    --secondary: #ECEFEB; 
-    --secondary-hover: #E0E4DE;
-    --secondary-active: #6c6c6b; 
-    --content-primary: #0e0f0c;
-
+*{
+    margin: 0;
+    padding: 0;
 }
 .action-buttons {
     position: relative;
@@ -180,4 +172,28 @@
     width: 100%;
     min-width: 300px;
 
+}
+/* Global styles for common button properties */
+.review_button_parent{
+    width: 100vw;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #331900;
+}
+.client-reviews-button {
+    border: 2px solid #fff; /* Blue border */
+    border-radius: 20px;
+    color: #fff; /* Blue text color */
+    padding: 10px 20px; 
+    cursor: pointer;
+    text-decoration: none;
+    width: fit-content;
+    transition: color 0.3s, border-color 0.3s;
+}
+
+.client-reviews-button:hover {
+    color: gray; /* White text color on hover */
+    border-color: gray; /* White border color on hover */
 }
