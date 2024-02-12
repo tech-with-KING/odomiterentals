@@ -1,88 +1,21 @@
-
-:root {
-    --background: #3C343D;
-    --background-border: #6B626C;
-}
-.gallery {
-        
-        display: flex;
-        gap: 16px;
-        padding: 16px 0px;
-        width: 100%;
-        flex-direction: row;
-        overflow: auto;
-}
-
-.card {
-    position: relative;
-    left: 0px;
-    width: 140px;
-    height: 160px;
-    background-color: var(--background);
-    border-radius: 8px;
-    transition: 1000ms all;
-    transform-origin: center left;
-    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);
-    outline: 1px solid var(--background);
-    overflow: hidden;
-}
-
-.card img {
-    height: 160px;
-    object-fit: cover;
-    border-radius: 4px;
-}
-
-.card:hover {
-    cursor: pointer;
-    transform: scale(1.15);
-}
-
-.card:hover figcaption {
-    font-size: 0.6rem;
-    position: absolute;
-    height: 80px;
-    width: 160px;
-    display: flex;
-    align-items: end;
-    background: linear-gradient(
-        to top, 
-        rgba(0, 0, 0, 0.9) 0%,
-        rgba(0, 0, 0, 0) 100%
-    );
-    color: white;
-    left: 0px;
-    bottom: 0px;
-    padding-left: 12px;
-    padding-bottom: 10px;
-}
-
-.card:hover ~ .card {
-    font-weight: bold;
-    cursor: pointer;
-    transform: translateX(22px);
-}
-
-/*review card*/
-/* Styles for the parent container */
 .review_container {
     display: flex;
     justify-content: space-between;
-    padding: 24px;
+    padding: 10px;
     background-color: rgba(255, 255, 255, 0.3);
     border-radius: 8px;
-    max-width: 400px;
-    min-width: 250px;
+    max-width: 600px;
+    min-width: 300px;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Styles for the left side container */
 .left-container {
     display: flex;
-    justify-content: center;
-    gap: 3px;
+    align-items: center;
 }
 
-/* Styles for the profile image */
 .profile-image {
     border-radius: 50%;
     height: 56px;
@@ -91,33 +24,28 @@
     min-height: 56px;
 }
 
-/* Styles for the text container on the left */
 .text-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0px;
+    flex-grow: 1;
+    max-width: 70%;
 }
 
-/* Styles for the bold text */
 .bold-text {
     font-weight: bold;
+    color: white;
 }
 
-/* Styles for the small text */
 .small-text {
     font-size: 14px;
+    color:white;
+    margin-top: 5px;
 }
 
-/* Styles for the right side container */
 .right-container {
-    padding: 8px 16px;
-    color: #abaaaa;
     font-size: 12px;
+    color: white;
 }
 
-/* Additional styles for medium screens and above */
 @media (min-width: 768px) {
-    /* Adjust text size for medium screens and above */
     .right-container {
         font-size: 14px;
     }

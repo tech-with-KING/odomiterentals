@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-
 :root {
     --accent: #9fe870;
     --accent-hover: #80e142;
@@ -11,8 +10,6 @@
     --content-primary: #0e0f0c;
 
 }
-
-
 .action-buttons {
     position: relative;
     display: inline-flex;
@@ -22,8 +19,6 @@
     width: 100%;
     flex-wrap: wrap;
 }
-
-
 .action-button_right {
     border-radius: 16px;
     height: 32px;
@@ -132,7 +127,7 @@
 }
 
 #bank-accounts {
-    background-color: rgb(77, 38, 0);
+    background: #331900;
     display: flex;
     gap: 16px;
     padding: 16px 0px;
