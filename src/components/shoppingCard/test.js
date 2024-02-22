@@ -6,10 +6,10 @@ import { Link } from 'react-router-dom';
     return (
       <article className="card_item_cont">
         <div className="child_div">
-          <img src={`${img}`} alt={name} />
+          <img src={`${img}`}  alt={name} />
           <div className="rating">
             <Star style={{color:"#ff8c1a"}}/>
-            <span className="rating_count">4.9</span>
+            <span className="rating_count">5.0</span>
           </div>
         </div>
   

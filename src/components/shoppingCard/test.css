@@ -3,7 +3,6 @@
   background-color:white;
   padding-top: 0;
   padding-bottom: 0.75rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition-property: box-shadow, transform;
   height: 100%;
   width: 100%;
@@ -16,13 +15,14 @@
   padding: 0;
   color: #fff;
   transition-duration: 0.1s;
-  height: 70%;
+  height: fit-content;
 }
 .child_div img{
-  height: 240px;
+  height: 230px;
 width: 100%;
   object-fit: cover;
   object-position: center;
+  
 }
 .prod_desc {
   margin-top: 0rem;

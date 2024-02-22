@@ -3,6 +3,7 @@ import "./single_product.css"
 import { useParams } from "react-router-dom";
 import {products} from '../../deviceinfo';
 import ProductCard from '../shoppingCard/card';
+import Header from '../../body/header';
 function ProductPage() {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
@@ -60,6 +61,8 @@ function ProductPage() {
       </div>
       </div>
     </div>
+    <Header heading='Similar Products' paragraph='See similar Products We have in Stock'/>
+    <ProductCard cart={product.cartegory} products={products}/>
     </main>
   );
 }

@@ -85,7 +85,7 @@ export const products = [
         {
             id:1,
             name:'Table',
-            product_name:'Cocktail Tables',
+            Product_name:'Cocktail Table',
             spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
             price:"$12",
             desc:"Elegant Cocktail Tables",

@@ -26,6 +26,11 @@ const Body=(props)=>{
       />	  
 	  <ProductCard cart="Table" products={products}/>
 	  <Header
+        heading="Kids Items"
+        paragraph="Rentals For Children"
+      />	  
+	  <ProductCard cart="Tent" products={products}/>
+	  <Header
         heading="Tents"
         paragraph="10 X 10, 20 X 10 and more"
       />	  
@@ -70,7 +75,7 @@ const Brands = (props)=>{
 	{
 		id: 4,
 		color: 'about_heading',
-		link: 'https://wa.me/c/18622306639',
+		link: 'https://odomietegroupsllc@gmail.com',
 		item: <Email style={{ color: '#0072b1' }} />
 	},
 	{
@@ -91,12 +96,12 @@ const Brands = (props)=>{
 			{
 				animae.map((anim, i) => {
 					return (
-						<motion.div href="#" className='circle_brand'
+						<motion.a href={anim.link} className='circle_brand'
 							key={anim.id}
 							initial={{ opacity: 0, translateX: -40 }}
 							animate={{ opacity: 1, translateX: 0 }}
 							transition={{ duration: 0.5, delay: i * 0.5 }}
-						>{anim.item}</motion.div>
+						>{anim.item}</motion.a>
 					)
 				})
 			}

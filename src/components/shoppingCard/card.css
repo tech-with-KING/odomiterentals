@@ -90,8 +90,8 @@
     position: relative;
     vertical-align: middle;
     display: inline-block;
-    width: 88%;
-    height: 330px;
+    width: 250px;
+    height: 100%;
     transition-duration: .3s;
     overflow: hidden;
     background-color: transparent;
@@ -101,18 +101,11 @@
 }
 
 .container li .card-content {
-    position: absolute;
-    width: 100%;
     height: 100%;
     background-size: cover;
     background-position: center top;
 }
 
-.container li:hover {
-    transition-delay: .3s;
-    width: 250px;
-    height: 370px;
-}
 
 /* news letter section */
 .search_letter{

@@ -8,6 +8,7 @@ const ProductCard = ({ products, cart }) => {
   cart === 'All' ? true : product.cartegory === cart
 );
   return (
+    <>
     <div className='container_wrapper'>
       <ul className="container">
         {chairProducts.map((product) => (
@@ -23,6 +24,8 @@ const ProductCard = ({ products, cart }) => {
         ))}
       </ul>
     </div>
+    
+    </>
   );
 };
 const ProductHeader = () => 
