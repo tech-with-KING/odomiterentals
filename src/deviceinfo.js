@@ -121,7 +121,7 @@ export const products = [
     
         {
             id:5,
-            cartegory:'Chair',
+            cartegory:'Kids',
             Product_name:'Kids Folding Chair',
             price:"$2.50",
             desc:`60" diameter Round Table Color white`,

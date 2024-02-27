@@ -19,22 +19,23 @@ const Body=(props)=>{
         paragraph="Our Chairs Comes in great variations"
       />	  
 	  <ProductCard cart="Chair" products={products}/>
-	  <PromotionaPage />
 	  <Header
         heading="Tables and Table Covers"
         paragraph="Tables Comes in all sizes for any number of Guests"
       />	  
 	  <ProductCard cart="Table" products={products}/>
-	  <Header
-        heading="Kids Items"
-        paragraph="Rentals For Children"
-      />	  
-	  <ProductCard cart="Tent" products={products}/>
+	  <PromotionaPage />
+	  
 	  <Header
         heading="Tents"
         paragraph="10 X 10, 20 X 10 and more"
       />	  
 	  <ProductCard cart="Tent" products={products}/>
+	  <Header
+        heading="Children's Rental"
+        paragraph="10 X 10, 20 X 10 and more"
+      />	  
+	  <ProductCard cart="Kids" products={products}/>
 	  <HeaderBanner />
 	  <PromotionaPage />
       <BankAccounts />
