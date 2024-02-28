@@ -176,7 +176,15 @@ export const products = [
             product_name:'Tan Fabric Chair',
             price:"$2.50",
             desc:`60" diameter Round Table Color white`,
-            img:''
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_211713_ww0fol.jpg'
+        },
+        {
+            id:14,
+            cartegory:'Chairs',
+            product_name:'Tan Fabric Chair',
+            price:"$2.50",
+            desc:`60" diameter Round Table Color white`,
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452771/Products/20240126_212114_zhogg6.jpg'
         },
         {
             id:12,
