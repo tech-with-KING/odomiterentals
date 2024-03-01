@@ -70,12 +70,11 @@ export const device =
     }
   
 ]
-
 export const products = [
         {
             id:0,
-            cartegory:'Chair',
-            Product_name:'White Stackable Padded Chairs',
+            cartegory:'Stackable Chair',
+            Product_name:'White Stackable Chairs',
             spec: '6',
             price:"$5",
             desc:"White Padded Chairs Strictly for indoor events",
@@ -92,6 +91,23 @@ export const products = [
             img:''
         },
         {
+            id:15,
+            Product_name:'Black Padded Chair',
+            cartegory:'Chair',
+            price:"$2.5",
+            desc:"Black Padded chairs",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452764/Products/20240126_212320_rbag6n.jpg'
+        },
+        {
+            id:16,
+            Product_name:'White Plastic Chair',
+            cartegory:'Chair',
+            spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
+            price:"$2.5",
+            desc:"Elegant Cocktail Tables",
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452771/Products/20240126_212114_zhogg6.jpg'
+        },  
+        {
             id:2,
             cartegory:'Chair',
             Product_name:'Black Folding Chair',
@@ -104,7 +120,7 @@ export const products = [
         {
             id:3,
             cartegory:'Table',
-            Product_name:'Renctangular Table',
+            Product_name:'Renctangular 6ft Table',
             spec:'Pro - Mondrian (Ti56 + 8',
             price:"$10.00",
             desc:"High end esthetic table covering for indoor events",
@@ -147,12 +163,19 @@ export const products = [
         {
             id:8,
             cartegory:'Tent',
-            Product_name:'10 by 10 Tent',
+            Product_name:'10 by 10 Tent White',
             price:"$125.00",
             desc:`60" diameter Round Table Color white`,
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452768/Products/20240126_212027_vgksxo.jpg'
         },
-    
+        {
+            id:19,
+            cartegory:'Tent',
+            Product_name:'10 by 10 Tent Black',
+            price:"$125.00",
+            desc:`60" diameter Round Table Color white`,
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1709301085/Products/10x10_dhzc6d.png'
+        },
         {
             id:9,
             cartegory:'Table',
@@ -179,7 +202,7 @@ export const products = [
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_211713_ww0fol.jpg'
         },
         {
-            id:14,
+            id:18,
             cartegory:'Chairs',
             product_name:'Tan Fabric Chair',
             price:"$2.50",
@@ -189,20 +212,65 @@ export const products = [
         {
             id:12,
             cartegory:'Tent',
-            Product_name:'10 by 20 Tent',
+            Product_name:'10 by 20 Tent White',
             price:"$175.00",
             desc:`60" diameter Round Table Color white`,
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452767/Products/20240126_211928_yblikn.jpg'
         },
         {
+            id:20,
+            cartegory:'Tent',
+            Product_name:'10 by 20 Tent Black',
+            price:"$175.00",
+            desc:`60" diameter Round Table Color white`,
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1709301087/Products/10x20_tent_ft7t09.png'
+        },
+        {
             id:13,
             cartegory:'Table',
-            Product_name:'Damask and Sequin Table Cover',
-            price:"$15.00",
+            Product_name:'Rectangular 5ft Table',
+            price:"$10.00",
             desc:`60" diameter Round Table Color white`,
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1709299215/Products/Screenshot_from_2024-03-01_14-19-41_vqtqjk.png'
+    
+        },
+        {
+            id:14,
+            cartegory:'Kids',
+            Product_name:'Kids Table',
+            price:"$8.00",
+            desc:`Adjustable Kiddies Table`,
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1709298081/Products/Screenshot_from_2024-03-01_14-00-25_skz4yf.png'
+    
+        },
+        {
+            id:21,
+            cartegory:'Chair & Table Covers',
+            Product_name:'Gold Damask Table Cover',
+            price:"$8.00",
+            desc:`Adjustable Kiddies Table`,
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452772/Products/20240126_212342_npmxlg.jpg'
+    
+        },
+        {
+            id:22,
+            cartegory:'Chair & Table Covers',
+            Product_name:'Black Damask Table Cover',
+            price:"$8.00",
+            desc:`Adjustable Kiddies Table`,
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452761/Products/20240126_212259_wfnxyl.jpg'
     
         },
+        {
+            id:23,
+            cartegory:'Chair & Table Covers',
+            Product_name:'Sequin Table Cover',
+            price:"$8.00",
+            desc:`Adjustable Kiddies Table`,
+            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452762/Products/20240126_212220_ikksd2.jpg'
+    
+        },
+        
     ]
         
 export const AboutUs = [
@@ -215,7 +283,7 @@ export const AboutUs = [
         tables, tents, and various other party items, to make your gatherings truly unforgettable. 
         Whether you're planning a lively birthday party,
         a romantic wedding, a joyous graduation celebration, or a professional conference, we've got you covered.`,
-        image:''
+        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/xpubptglh75mwrsbzrpb.jpg'
     },
     {
         id:2,
@@ -225,7 +293,7 @@ export const AboutUs = [
         and our commitment to customer satisfaction extends to our seamless delivery service. Located at 331 Seymour 
         Avenue, Newark, we proudly 
         serve the entire New Jersey area, ensuring that your chosen items arrive promptly and in pristine condition.`,
-        image:''
+        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484408/services/decor_ztjzbw.png'
     },
     {
         id:3,
@@ -235,8 +303,10 @@ export const AboutUs = [
         of the way. Trust Odomite Rentals to elevate your next party, wedding, graduation, conference, seminar, or any special
         gathering with our top-notch rental offerings 
         and reliable service. Let us turn your vision into a reality and make your event truly remarkable.`,
-        image:''
+        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484410/services/odomiterentals_itjcft.jpg'
     },
+    
+    
 ]
 export const Services = [
     {

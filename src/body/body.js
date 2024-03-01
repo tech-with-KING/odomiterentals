@@ -15,20 +15,25 @@ const Body=(props)=>{
 	  <HeroImage />
 	  <Brands  />
 	   <Header
-        heading="Chairs"
+        heading="Folding Chairs"
         paragraph="Our Chairs Comes in great variations"
       />	  
 	  <ProductCard cart="Chair" products={products}/>
 	  <Header
-        heading="Tables and Table Covers"
+        heading="Tables"
         paragraph="Tables Comes in all sizes for any number of Guests"
       />	  
 	  <ProductCard cart="Table" products={products}/>
+	  <Header
+        heading="Table & Chair Covers"
+        paragraph="Comes in Silver Sequin, White, Pink, Gold Damask & Black Damask"
+      />	  
+	  <ProductCard cart="Chair & Table Covers" products={products}/>
 	  <PromotionaPage />
 	  
 	  <Header
         heading="Tents"
-        paragraph="10 X 10, 20 X 10 and more"
+        paragraph="10 X 10, 20 X 10 & 12 X 8"
       />	  
 	  <ProductCard cart="Tent" products={products}/>
 	  <Header
