@@ -67,7 +67,7 @@ const Brands = (props)=>{
 	{
 		id: 2,
 		color: 'about_heading',
-		link: 'https://wa.me/c/18622306639',
+		link: 'https://wa.me/p/6709219215829483/18622306639',
 		item: <WhatsApp style={{ color: '#00ACEE' }} />,
 	},
 	{
