@@ -247,7 +247,7 @@ export const products = [
             id:21,
             cartegory:'Chair & Table Covers',
             Product_name:'Gold Damask Table Cover',
-            price:"$8.00",
+            price:"$15.00",
             desc:`Adjustable Kiddies Table`,
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452772/Products/20240126_212342_npmxlg.jpg'
     
@@ -256,7 +256,7 @@ export const products = [
             id:22,
             cartegory:'Chair & Table Covers',
             Product_name:'Black Damask Table Cover',
-            price:"$8.00",
+            price:"$15.00",
             desc:`Adjustable Kiddies Table`,
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452761/Products/20240126_212259_wfnxyl.jpg'
     
