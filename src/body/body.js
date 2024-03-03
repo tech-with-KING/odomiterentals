@@ -81,7 +81,7 @@ const Brands = (props)=>{
 	{
 		id: 4,
 		color: 'about_heading',
-		link: 'https://odomietegroupsllc@gmail.com',
+		link: 'mailto:odomietegroupsllc@gmail.com',
 		item: <Email style={{ color: '#0072b1' }} />
 	},
 	{
