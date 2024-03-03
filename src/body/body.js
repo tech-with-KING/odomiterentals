@@ -87,7 +87,7 @@ const Brands = (props)=>{
 	{
 		id: 5,
 		color: 'about_heading',
-		link: 'https://wa.me/c/18622306639',
+		link: 'https://www.instagram.com/odomite_rentals?utm_source=qr&igsh=MXdocm5yd2xxbTVuNg==',
 		item: <Instagram style={{ color: '#FF0000' }} />
 	}
 ]
