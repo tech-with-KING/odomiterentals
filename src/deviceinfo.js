@@ -265,7 +265,7 @@ export const products = [
             id:23,
             cartegory:'Chair & Table Covers',
             Product_name:'Sequin Table Cover',
-            price:"$8.00",
+            price:"$15.00",
             desc:`Adjustable Kiddies Table`,
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452762/Products/20240126_212220_ikksd2.jpg'
     

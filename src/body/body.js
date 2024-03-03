@@ -73,7 +73,7 @@ const Brands = (props)=>{
 	{
 		id: 3,
 		color: 'about_heading',
-		link: 'https://wa.me/c/18622306639',
+		link: 'https://maps.app.goo.gl/fQ1MtU4kyc8S1kWn8',
 		item: <Google style={{ color: '#DB4437' }} />
 
 	},
