@@ -59,7 +59,7 @@ export const device =
         device_nam:'',
         spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
         price:"$40",
-        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1710257843/OdomiteRentals/Hero_Images/banner2_gvhr8s.jpg'
+        img:''
 
     },
     {
@@ -83,15 +83,7 @@ export const products = [
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452771/Products/20240126_212436_aq25zk.jpg'
         },
     
-        {
-            id:1,
-            name:'Table',
-            Product_name:'Cocktail Table',
-            spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
-            price:"$12",
-            desc:"Elegant Cocktail Tables",
-            img:''
-        },
+
         {
             id:15,
             Product_name:'Black Padded Chair',
@@ -102,8 +94,8 @@ export const products = [
         },
         {
             id:16,
-            Product_name:'White Plastic Chair',
             cartegory:'Chair',
+            Product_name:'White Plastic Chair',
             spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
             price:"$2.5",
             desc:"Elegant Cocktail Tables",
@@ -145,15 +137,7 @@ export const products = [
             desc:`60" diameter Round Table Color white`,
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452762/Products/20240126_211809_coim1m.jpg'
         },
-        {
-            id:6,
-            cartegory:'Chairs',
-            Product_name:'Dainty Black Plastic Chair',
-            price:"$2.50",
-            desc:`60" diameter Round Table Color white`,
-            img:''
-    
-        },
+
         {
             id:7,
             cartegory:'Chair',
@@ -185,15 +169,6 @@ export const products = [
             price:"$12.00",
             desc:`60" diameter Round Table Color white`,
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_212405_nntett.jpg'
-        },
-        {
-            id:10,
-            cartegory:'Chairs',
-            Product_name:'Dainty Plastic Chair',
-            price:"$2.50",
-            desc:`60" diameter Round Table Color white`,
-            img:''
-    
         },
         {
             id:11,
