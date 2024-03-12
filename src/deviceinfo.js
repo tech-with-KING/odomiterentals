@@ -1,3 +1,5 @@
+// Product discount on chair covers is 35% when the chairs are rented from us . Add this to the promotion page
+//
 export const device = 
 [
     {
@@ -6,7 +8,7 @@ export const device =
         Product_name:'',
         spec: '6',
         price:"$10",
-        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/vddb37jv8bwcjo2k9w6o.jpg'
+        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1710257844/OdomiteRentals/Hero_Images/banner_v3bbwc.jpg     '
     },
 
     {
@@ -18,7 +20,7 @@ export const device =
         img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
     },
     {
-        id:"2",
+        id:"2",  
         name:'Chair',
         device_nam:'',
         spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
@@ -57,7 +59,7 @@ export const device =
         device_nam:'',
         spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
         price:"$40",
-        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/it2c4vmfwftwt6x9mjij.jpg'
+        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1710257843/OdomiteRentals/Hero_Images/banner2_gvhr8s.jpg'
 
     },
     {
@@ -269,8 +271,7 @@ export const products = [
             desc:`Adjustable Kiddies Table`,
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452762/Products/20240126_212220_ikksd2.jpg'
     
-        },
-        
+        }
     ]
         
 export const AboutUs = [
