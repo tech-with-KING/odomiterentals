@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Body from './body/body';
-import { BrowserRouter, Routes, Route,	 } from "react-router-dom";
+import { BrowserRouter, Routes, Route, } from "react-router-dom";
 import { PageNotFound } from './components/notfound';
 import { About } from './components/newsletters';
 import Menu from './components/menu/menu';
