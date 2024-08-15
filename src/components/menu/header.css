@@ -1,0 +1,130 @@
+*{
+  user-select: none;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.top-bar {
+  cursor: pointer;
+  background-color: #f8f8f8;
+  padding: 5px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.language-currency {
+  cursor: pointer;
+  display: flex;
+}
+
+.language-currency select {
+  cursor: pointer;
+  margin-right: 10px;
+  border: none;
+  background-color: transparent;
+}
+
+.top-links a {
+  cursor: pointer;
+  margin-left: 15px;
+  text-decoration: none;
+  color: #333;
+  font-size: 12px;
+}
+
+.main-header {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.logos {
+  font-weight: bold;
+  width: fit-content;
+  font-size: 34px;
+}
+
+.main-nav {
+  display: flex;
+}
+
+.main-nav a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+}
+
+.user-actions a {
+  margin-left: 15px;
+  text-decoration: none;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+.info-bar {
+  background-color: #f0f0f0;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.info-bar span {
+  margin: 0 15px;
+}
+
+.menu-toggle {
+  max-width: 60px;
+  display: none;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .main-nav, .info-bar {
+    display: none;
+  }
+  .main-header {
+    flex-wrap: wrap;
+  }
+  .menu-toggle {
+    display: block;
+	max-width: 50px;
+  }
+  .user-actions {
+    order: 3;
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+  .logos {
+  font-weight: bold;
+  width: fit-content;
+  font-size: 24px;
+}
+  .main-nav {
+    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    top: 85px;
+    left: 0;
+    background-color: #f8f8f8;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  .main-nav.active {
+    display: flex;
+  }
+  .main-nav a {
+    margin: 10px 0;
+  }
+}

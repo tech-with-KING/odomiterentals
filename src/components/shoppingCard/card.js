@@ -54,7 +54,31 @@ const SearchPrduct = (props)=>{
 	</div>
   )
 }
+const QuantityPopup = ({ product, quantity, onQuantityChange, onClose, onConfirm }) => {
+  return (
+    <div className="popup">
+      <div className="popup-content">
+        <h2>{product.deviceName}</h2>
+        <p>{product.spec}</p>
+        <p>Price: ${product.price}</p>
+        <label htmlFor="quantity">Quantity:</label>
+        <input
+          type="number"
+          id="quantity"
+          value={quantity}
+          onChange={onQuantityChange}
+          min="1"
+        />
+        <div className="popup-buttons">
+          <button onClick={onClose}>Cancel</button>
+          <button onClick={onConfirm}>Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export {ProductHeader};
       
-    
+  
 export default ProductCard;

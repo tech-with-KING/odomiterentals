@@ -29,7 +29,7 @@ const Body=(props)=>{
         paragraph="Comes in Silver Sequin, White, Pink, Gold Damask & Black Damask"
       />	  
 	  <ProductCard cart="Chair & Table Covers" products={products}/>
-	  <PromotionaPage />
+	  <PromotionaPage index={1} />
 	  
 	  <Header
         heading="Tents"
@@ -42,7 +42,7 @@ const Body=(props)=>{
       />	  
 	  <ProductCard cart="Kids" products={products}/>
 	  <HeaderBanner />
-	  <PromotionaPage />
+	  <PromotionaPage index={0}/>
       <BankAccounts />
       <GetNewsLetter />
 	</div>
@@ -56,7 +56,7 @@ const HeroImage = (props)=>{
 	</div>
   )
 }
-const Brands = (props)=>{
+const Brands = ()=>{
   const animae = [
 	{
 		id: 1,

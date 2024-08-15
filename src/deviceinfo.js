@@ -1,5 +1,3 @@
-// Product discount on chair covers is 35% when the chairs are rented from us . Add this to the promotion page
-//
 export const device = 
 [
     {
@@ -77,10 +75,12 @@ export const products = [
             id:0,
             cartegory:'Stackable Chair',
             Product_name:'White Stackable Chairs',
-            spec: '6',
             price:"$5",
             desc:"White Padded Chairs Strictly for indoor events",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452771/Products/20240126_212436_aq25zk.jpg'
+          img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452771/Products/20240126_212436_aq25zk.jpg',
+          instock:true,
+          uniltsleft:300,
+          
         },
     
 
@@ -246,6 +246,14 @@ export const products = [
             desc:`Adjustable Kiddies Table`,
             img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452762/Products/20240126_212220_ikksd2.jpg'
     
+        },
+        {
+            id:24,
+            cartegory:'Table',
+            Product_name:'8ft tables',
+            price:"$15.00",
+            desc:`Adjustable Kiddies Table`,
+            img:''
         }
     ]
         
