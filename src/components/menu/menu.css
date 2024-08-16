@@ -20,7 +20,12 @@
     flex-direction: row;
     color: var(--primary);
 }
-
+.user_photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 .menu__bar {
     width: 100%;
     display: flex;

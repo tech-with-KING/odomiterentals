@@ -1,3 +1,5 @@
+// Product discount on chair covers is 35% when the chairs are rented from us . Add this to the promotion page
+//
 export const device = 
 [
     {
@@ -71,192 +73,217 @@ export const device =
   
 ]
 export const products = [
-        {
-            id:0,
-            cartegory:'Stackable Chair',
-            Product_name:'White Stackable Chairs',
-            price:"$5",
-            desc:"White Padded Chairs Strictly for indoor events",
-          img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452771/Products/20240126_212436_aq25zk.jpg',
-          instock:true,
-          uniltsleft:300,
-          
-        },
-    
-
-        {
-            id:15,
-            Product_name:'Black Padded Chair',
-            cartegory:'Chair',
-            price:"$2.5",
-            desc:"Black Padded chairs",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452764/Products/20240126_212320_rbag6n.jpg'
-        },
-        {
-            id:16,
-            cartegory:'Chair',
-            Product_name:'White Plastic Chair',
-            spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
-            price:"$2.5",
-            desc:"Elegant Cocktail Tables",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452771/Products/20240126_212114_zhogg6.jpg'
-        },  
-        {
-            id:2,
-            cartegory:'Chair',
-            Product_name:'Black Folding Chair',
-            spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
-            price:"$2.50",
-            desc:"Black Padded Folding Chairs",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452767/Products/20240126_211748_tfbhpk.jpg'
-    
-        },
-        {
-            id:3,
-            cartegory:'Table',
-            Product_name:'Renctangular 6ft Table',
-            spec:'Pro - Mondrian (Ti56 + 8',
-            price:"$10.00",
-            desc:"High end esthetic table covering for indoor events",
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452760/Products/20240126_212145_awz8yv.jpg'
-        },
-        {
-            id:4,
-            cartegory:'Table',
-            Product_name:'60" diameter Round Table',
-            price:"$15.00",
-            desc:`60" diameter Round Table Color white`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_212054_obvbzp.jpg'
-        },
-    
-        {
-            id:5,
-            cartegory:'Kids',
-            Product_name:'Kids Folding Chair',
-            price:"$2.50",
-            desc:`60" diameter Round Table Color white`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452762/Products/20240126_211809_coim1m.jpg'
-        },
-
-        {
-            id:7,
-            cartegory:'Chair',
-            Product_name:'Tan Fabric Chair',
-            price:"$2.50",
-            desc:`60" diameter Round Table Color white`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_211713_ww0fol.jpg'
-        },
-        {
-            id:8,
-            cartegory:'Tent',
-            Product_name:'10 by 10 Tent White',
-            price:"$125.00",
-            desc:`60" diameter Round Table Color white`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452768/Products/20240126_212027_vgksxo.jpg'
-        },
-        {
-            id:19,
-            cartegory:'Tent',
-            Product_name:'10 by 10 Tent Black',
-            price:"$125.00",
-            desc:`60" diameter Round Table Color white`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1709301085/Products/10x10_dhzc6d.png'
-        },
-        {
-            id:9,
-            cartegory:'Table',
-            Product_name:'Cocktail Table',
-            price:"$12.00",
-            desc:`60" diameter Round Table Color white`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_212405_nntett.jpg'
-        },
-        {
-            id:11,
-            cartegory:'Chairs',
-            product_name:'Tan Fabric Chair',
-            price:"$2.50",
-            desc:`60" diameter Round Table Color white`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_211713_ww0fol.jpg'
-        },
-        {
-            id:18,
-            cartegory:'Chairs',
-            product_name:'Tan Fabric Chair',
-            price:"$2.50",
-            desc:`60" diameter Round Table Color white`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452771/Products/20240126_212114_zhogg6.jpg'
-        },
-        {
-            id:12,
-            cartegory:'Tent',
-            Product_name:'10 by 20 Tent White',
-            price:"$175.00",
-            desc:`60" diameter Round Table Color white`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452767/Products/20240126_211928_yblikn.jpg'
-        },
-        {
-            id:20,
-            cartegory:'Tent',
-            Product_name:'10 by 20 Tent Black',
-            price:"$175.00",
-            desc:`60" diameter Round Table Color white`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1709301087/Products/10x20_tent_ft7t09.png'
-        },
-        {
-            id:13,
-            cartegory:'Table',
-            Product_name:'Rectangular 5ft Table',
-            price:"$10.00",
-            desc:`60" diameter Round Table Color white`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1709299215/Products/Screenshot_from_2024-03-01_14-19-41_vqtqjk.png'
-    
-        },
-        {
-            id:14,
-            cartegory:'Kids',
-            Product_name:'Kids Table',
-            price:"$8.00",
-            desc:`Adjustable Kiddies Table`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1709298081/Products/Screenshot_from_2024-03-01_14-00-25_skz4yf.png'
-    
-        },
-        {
-            id:21,
-            cartegory:'Chair & Table Covers',
-            Product_name:'Gold Damask Table Cover',
-            price:"$15.00",
-            desc:`Adjustable Kiddies Table`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452772/Products/20240126_212342_npmxlg.jpg'
-    
-        },
-        {
-            id:22,
-            cartegory:'Chair & Table Covers',
-            Product_name:'Black Damask Table Cover',
-            price:"$15.00",
-            desc:`Adjustable Kiddies Table`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452761/Products/20240126_212259_wfnxyl.jpg'
-    
-        },
-        {
-            id:23,
-            cartegory:'Chair & Table Covers',
-            Product_name:'Sequin Table Cover',
-            price:"$15.00",
-            desc:`Adjustable Kiddies Table`,
-            img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452762/Products/20240126_212220_ikksd2.jpg'
-    
-        },
-        {
-            id:24,
-            cartegory:'Table',
-            Product_name:'8ft tables',
-            price:"$15.00",
-            desc:`Adjustable Kiddies Table`,
-            img:''
-        }
-    ]
-        
+    {
+        id: 0,
+        cartegory: 'Stackable Chair',
+        Product_name: 'White Stackable Chairs',
+        price: "$5",
+        desc: "White Padded Chairs Strictly for indoor events",
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452771/Products/20240126_212436_aq25zk.jpg',
+        instock: true,
+        uniltsleft: 300,
+    },
+    {
+        id: 15,
+        cartegory: 'Chair',
+        Product_name: 'Black Padded Chair',
+        price: "$2.5",
+        desc: "Black Padded chairs",
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452764/Products/20240126_212320_rbag6n.jpg',
+        instock: true,
+        uniltsleft: 200,
+    },
+    {
+        id: 16,
+        cartegory: 'Chair',
+        Product_name: 'White Plastic Chair',
+        price: "$2.5",
+        desc: "Elegant Cocktail Tables",
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452771/Products/20240126_212114_zhogg6.jpg',
+        instock: true,
+        uniltsleft: 250,
+    },
+    {
+        id: 2,
+        cartegory: 'Chair',
+        Product_name: 'Black Folding Chair',
+        price: "$2.50",
+        desc: "Black Padded Folding Chairs",
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452767/Products/20240126_211748_tfbhpk.jpg',
+        instock: true,
+        uniltsleft: 180,
+    },
+    {
+        id: 3,
+        cartegory: 'Table',
+        Product_name: 'Renctangular 6ft Table',
+        price: "$10.00",
+        desc: "High end esthetic table covering for indoor events",
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452760/Products/20240126_212145_awz8yv.jpg',
+        instock: true,
+        uniltsleft: 50,
+    },
+    {
+        id: 4,
+        cartegory: 'Table',
+        Product_name: '60" diameter Round Table',
+        price: "$15.00",
+        desc: `60" diameter Round Table Color white`,
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_212054_obvbzp.jpg',
+        instock: true,
+        uniltsleft: 40,
+    },
+    {
+        id: 5,
+        cartegory: 'Kids',
+        Product_name: 'Kids Folding Chair',
+        price: "$2.50",
+        desc: `Kids Folding Chair for children's events`,
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452762/Products/20240126_211809_coim1m.jpg',
+        instock: true,
+        uniltsleft: 100,
+    },
+    {
+        id: 7,
+        cartegory: 'Chair',
+        Product_name: 'Tan Fabric Chair',
+        price: "$2.50",
+        desc: `Comfortable Tan Fabric Chair for various events`,
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_211713_ww0fol.jpg',
+        instock: true,
+        uniltsleft: 150,
+    },
+    {
+        id: 8,
+        cartegory: 'Tent',
+        Product_name: '10 by 10 Tent White',
+        price: "$125.00",
+        desc: `10 by 10 White Tent for outdoor events`,
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452768/Products/20240126_212027_vgksxo.jpg',
+        instock: true,
+        uniltsleft: 20,
+    },
+    {
+        id: 19,
+        cartegory: 'Tent',
+        Product_name: '10 by 10 Tent Black',
+        price: "$125.00",
+        desc: `10 by 10 Black Tent for outdoor events`,
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1709301085/Products/10x10_dhzc6d.png',
+        instock: true,
+        uniltsleft: 20,
+    },
+    {
+        id: 9,
+        cartegory: 'Table',
+        Product_name: 'Cocktail Table',
+        price: "$12.00",
+        desc: `Elegant Cocktail Table for social gatherings`,
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_212405_nntett.jpg',
+        instock: true,
+        uniltsleft: 30,
+    },
+    {
+        id: 11,
+        cartegory: 'Chairs',
+        Product_name: 'Tan Fabric Chair',
+        price: "$2.50",
+        desc: `Comfortable Tan Fabric Chair for various events`,
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_211713_ww0fol.jpg',
+        instock: true,
+        uniltsleft: 150,
+    },
+    {
+        id: 18,
+        cartegory: 'Chairs',
+        Product_name: 'White Plastic Chair',
+        price: "$2.50",
+        desc: `Durable White Plastic Chair for outdoor events`,
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452771/Products/20240126_212114_zhogg6.jpg',
+        instock: true,
+        uniltsleft: 200,
+    },
+    {
+        id: 12,
+        cartegory: 'Tent',
+        Product_name: '10 by 20 Tent White',
+        price: "$175.00",
+        desc: `10 by 20 White Tent for larger outdoor events`,
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452767/Products/20240126_211928_yblikn.jpg',
+        instock: true,
+        uniltsleft: 15,
+    },
+    {
+        id: 20,
+        cartegory: 'Tent',
+        Product_name: '10 by 20 Tent Black',
+        price: "$175.00",
+        desc: `10 by 20 Black Tent for larger outdoor events`,
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1709301087/Products/10x20_tent_ft7t09.png',
+        instock: true,
+        uniltsleft: 15,
+    },
+    {
+        id: 13,
+        cartegory: 'Table',
+        Product_name: 'Rectangular 5ft Table',
+        price: "$10.00",
+        desc: `5ft Rectangular Table for various event setups`,
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1709299215/Products/Screenshot_from_2024-03-01_14-19-41_vqtqjk.png',
+        instock: true,
+        uniltsleft: 40,
+    },
+    {
+        id: 14,
+        cartegory: 'Kids',
+        Product_name: 'Kids Table',
+        price: "$8.00",
+        desc: `Adjustable Kiddies Table for children's events`,
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1709298081/Products/Screenshot_from_2024-03-01_14-00-25_skz4yf.png',
+        instock: true,
+        uniltsleft: 30,
+    },
+    {
+        id: 21,
+        cartegory: 'Chair & Table Covers',
+        Product_name: 'Gold Damask Table Cover',
+        price: "$15.00",
+        desc: `Elegant Gold Damask Table Cover for special events`,
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452772/Products/20240126_212342_npmxlg.jpg',
+        instock: true,
+        uniltsleft: 50,
+    },
+    {
+        id: 22,
+        cartegory: 'Chair & Table Covers',
+        Product_name: 'Black Damask Table Cover',
+        price: "$15.00",
+        desc: `Elegant Black Damask Table Cover for formal events`,
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452761/Products/20240126_212259_wfnxyl.jpg',
+        instock: true,
+        uniltsleft: 50,
+    },
+    {
+        id: 23,
+        cartegory: 'Chair & Table Covers',
+        Product_name: 'Sequin Table Cover',
+        price: "$15.00",
+        desc: `Glamorous Sequin Table Cover for special occasions`,
+        img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452762/Products/20240126_212220_ikksd2.jpg',
+        instock: true,
+        uniltsleft: 40,
+    },
+    {
+        id: 24,
+        cartegory: 'Table',
+        Product_name: '8ft tables',
+        price: "$15.00",
+        desc: `Large 8ft Tables for spacious event setups`,
+        img: '',
+        instock: true,
+        uniltsleft: 25,
+    }
+];       
 export const AboutUs = [
     {
         id: 1,

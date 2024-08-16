@@ -1,7 +1,8 @@
-
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
+
 const AuthContext = createContext();
+
 const api = axios.create({
   baseURL: 'http://localhost:8000/auth',
 });
@@ -12,13 +13,15 @@ export const AuthProvider = ({ children }) => {
     return storedState ? JSON.parse(storedState) : {
       isLoggedIn: false,
       user: null,
-      token: null
+      token: null,
+      isAdmin: false
     };
   });
 
   useEffect(() => {
     localStorage.setItem('authState', JSON.stringify(authState));
     if (authState.token) {
+      api.defaults.headers.common['Authorization'] = `Bearer ${authState.token}`;
     } else {
       delete api.defaults.headers.common['Authorization'];
     }
@@ -26,12 +29,13 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      console.log(credentials)
-      const response = await api.post('/login', credentials);
+      const endpoint = credentials.isAdmin ? '/admin/login' : '/login';
+      const response = await api.post(endpoint, credentials);
       setAuthState({
         isLoggedIn: true,
         user: response.data.user,
-        token: response.data.token
+        token: response.data.token,
+        isAdmin: credentials.isAdmin
       });
       return true;
     } catch (error) {
@@ -39,11 +43,10 @@ export const AuthProvider = ({ children }) => {
       return false;
     }
   };
-
   const signup = async (signupData) => {
     try {
       const response = await api.post('/signup', signupData);
-      
+
       setAuthState({
         isLoggedIn: true,
         user: response.data.user,
@@ -55,18 +58,16 @@ export const AuthProvider = ({ children }) => {
       return false;
     }
   };
-
   const logout = () => {
     setAuthState({
       isLoggedIn: false,
       user: null,
     });
   };
-
   const updateUser = async (newUserData) => {
     try {
       const response = await api.put('/user', newUserData);
-      
+
       setAuthState(prevState => ({
         ...prevState,
         user: { ...prevState.user, ...response.data.user }
@@ -77,6 +78,7 @@ export const AuthProvider = ({ children }) => {
       return false;
     }
   };
+
 
   return (
     <AuthContext.Provider value={{ 
@@ -92,5 +94,3 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
-
-// Axios interceptor for handling token expiration

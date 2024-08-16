@@ -37,10 +37,11 @@ userRouter.post('/signup', upload, processAndUploadImage, async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
 // User login (email)
 userRouter.post('/login', async (req, res) => {
   try {
-    const { email, password} = req.body;
+    const {email, password} = req.body;
     const user = await UserDetail.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: 'User not found' });
@@ -62,15 +63,15 @@ userRouter.post('/login', async (req, res) => {
 });
 
 // Google login
-userRouter.get('/auth/google',
+userRouter.get('/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
-userRouter.get('/auth/google/callback', 
+userRouter.get('/google/callback', 
   passport.authenticate('google', { failureRedirect: '/login', session: false }),
   (req, res) => {
     const token = generateToken(req.user);
-    res.redirect(`/login-success?token=${token}`);
+    res.redirect(`/?token=${token}`);
   }
 );
 
@@ -85,8 +86,7 @@ userRouter.post('/admin/login', async (req, res) => {
     }
 
     const isPasswordValid = await bcrypt.compare(password, admin.passwd);
-    const isPinValid = admin.adminPin === adminPin;
-
+    const isPinValid = admin.adminPin == adminPin;
     if (!isPasswordValid || !isPinValid) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
@@ -95,22 +95,11 @@ userRouter.post('/admin/login', async (req, res) => {
     const adminResponse = admin.toObject();
     delete adminResponse.passwd;
     delete adminResponse.adminPin;
-
     res.json({ admin: adminResponse, token });
   } catch (error) {
     console.error('Admin login error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
-});
-
-// Protected route for users
-userRouter.get('/protected', authMiddleware, (req, res) => {
-  res.json({ message: 'This is a protected route', userId: req.userId });
-});
-
-// Protected route for admins
-userRouter.get('/admin/protected', adminAuthMiddleware, (req, res) => {
-  res.json({ message: 'This is a protected admin route', adminId: req.adminId });
 });
 
 module.exports = userRouter;

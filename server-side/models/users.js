@@ -5,7 +5,7 @@ const UserDetailSchema = new mongoose.Schema(
     id: String,
     email: String, 
     user_name: String,
-    passwd: String,
+    passwd: {type: String, required: false},
     _image: String,
     first_name: String,
     last_name: String,

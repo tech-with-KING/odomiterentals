@@ -1,15 +1,14 @@
-// LoginForm.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/authcontext';
 import './index.css';
+
 const LoginForm = ({ onSwitchToSignup }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [adminPin, setAdminPin] = useState('');
   const [isAdminLogin, setIsAdminLogin] = useState(false);
   const [error, setError] = useState('');
-
   const { login } = useAuth();
   
   const navigate = useNavigate();
@@ -17,17 +16,17 @@ const LoginForm = ({ onSwitchToSignup }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
     const credentials = {
       email,
       password,
+      isAdmin: isAdminLogin,
       ...(isAdminLogin && { adminPin })
     };
 
     try {
       const success = await login(credentials);
       if (success) {
-        navigate('/addproducts');
+        navigate('/');
       } else {
         setError('Login failed. Please check your credentials.');
       }
@@ -40,9 +39,7 @@ const LoginForm = ({ onSwitchToSignup }) => {
   return (
     <div className="auth-container">
       <h3>Log in to your account to continue exploring</h3>
-      
       {error && <div className="error-message">{error}</div>}
-
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="email">Email</label>

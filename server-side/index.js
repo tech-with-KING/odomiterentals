@@ -11,7 +11,8 @@ const app = express();
 const productRouter = require('./routes/product');
 const userRouter = require('./routes/users');
 const sendMail = require('./routes/email');
-const cartRouter = require('./routes/cart')
+const cartRouter = require('./routes/cart');
+const addAdmin = require('./addadmin');
 
 // Load environment variables from a .env file if it exists
 require('dotenv').config();
@@ -19,16 +20,16 @@ require('dotenv').config();
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
-// // Session configuration
-// app.use(session({ 
-//   secret: process.env.SESSION_SECRET || 'your_session_secret', 
-//   resave: false, 
-//   saveUninitialized: false 
-// }));
+// Session configuration
+app.use(session({ 
+   secret: process.env.SESSION_SECRET || 'your_session_secret', 
+   resave: false, 
+  saveUninitialized: false
+}));
 
-// // Passport initialization
-// app.use(passport.initialize());
-// app.use(passport.session());
+// Passport initialization
+app.use(passport.initialize());
+app.use(passport.session());
 
 // MongoDB connection
 const connect = async () => {
@@ -46,9 +47,9 @@ connect();
 
 // Routes
 app.use('/addproducts', productRouter);
-app.use('/auth', userRouter); // Changed from '/signup' to '/auth' for more general auth routes
+app.use('/auth',userRouter); // Changed from '/signup' to '/auth' for more general auth routes
 app.use('/email', sendMail);
-app.use('/cart', cartRouter)
+app.use('/cart',authMiddleware, cartRouter)
 // Protected route example
 // app.get('/protected', authMiddleware, (req, res) => {
 //   res.json({ message: 'This is a protected route', userId: req.userId });

@@ -88,6 +88,11 @@
   display: none;
   cursor: pointer;
 }
+.user_photo{
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
 
 @media (max-width: 768px) {
   .main-nav, .info-bar {

@@ -1,6 +1,5 @@
 #!/usr/bin/node
 const mongoose = require('mongoose');
-
 // Define the schema for the Product
 const ProductSchema = new mongoose.Schema({
     id: {

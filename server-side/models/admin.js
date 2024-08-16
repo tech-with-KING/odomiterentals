@@ -3,8 +3,9 @@ const mongoose = require('mongoose')
 const AdminDetailSchema = new mongoose.Schema(
   {
     id: String,
-    adminPin: String,
+    adminPin: Number,
     user_name: String,
+    email:String,
     passwd: String,
     _image: String,
     first_name: String,

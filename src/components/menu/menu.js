@@ -7,10 +7,12 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PersonIcon from '@mui/icons-material/Person';
 import CloseIcon from '@mui/icons-material/Close';
+import { useAuth } from '../../contexts/authcontext';
 
 const Menu = () => {
   const [isNavVisible, setIsNavVisible] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isLoggedIn, isAdmin, logout } = useAuth()
   const navigate = useNavigate();
 
   const toggleNav = () => {
@@ -53,14 +55,15 @@ const Menu = () => {
           <a onClick={() => handleNavigation('/Catalogue')}>Products</a>
           <a onClick={() => handleNavigation('/Catalogue')}>Cartegories</a>
           <a onClick={() => handleNavigation('/services')}>Services</a>
-          
+          {isAdmin ? <a onClick={() => handleNavigation('/addproducts')}>UpdateStore</a>: null}    
           {/*<a  >Login</a>*/}
         </nav>
         <div className="user-actions">
-          <a href="#"  onClick={() => handleNavigation('/account')}>Login <PersonIcon /></a>
+
           <a href="#"><SearchIcon /></a>
-          <a href="#"><FavoriteIcon /></a>
           <a href="#" onClick={() => handleNavigation('/cart')}><ShoppingCartIcon /></a>
+          {!isAdmin && !isLoggedIn ?<a href="#"  onClick={() => handleNavigation('/accounts')}>Login <PersonIcon /></a>:  <img src="https://images.unsplash.com/photo-1517423568366-8b83523034fd?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80"                     alt="Profile Photo" 
+            className="user_photo"  onClick={() => handleNavigation('/profile')}/>}
         </div>
       </header>
       <div className="info-bar">
