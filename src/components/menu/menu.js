@@ -47,7 +47,7 @@ const Menu = () => {
         </div>
       </div>
       <header className="main-header">
-        <div className="logos" onClick={() => handleNavigation('/')}>OdomiteRentals</div>
+        <div className="logos" onClick={() => handleNavigation('/')}><> <h2>OdomiteRentals</h2> <p>a party rental you can trust</p></></div>
         <div className="menu-toggle" onClick={toggleMobileMenu}>
           {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
         </div>

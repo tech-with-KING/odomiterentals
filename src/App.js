@@ -20,6 +20,8 @@ import LoginForm from './components/account/login';
 import { AuthProvider } from './contexts/authcontext';
 import ProtectedRoute, { AdminRoute, ProtectedRoute2 } from './protectedroutes';
 import ProfilePage from './components/profile/inex';
+import Sidebar from './components/sidebar';
+import CataloguePage from './pages/catalogue';
 const App = () => {
   const [login, setLogin] = useState(true)
   const toggle_form = () => setLogin(!login)
@@ -31,7 +33,7 @@ const App = () => {
 
         <Route path="/" exact element={<Body />} />
         <Route path="/contactpage" exact element={<ProtectedRoute ><MessageForm content_head="sign in" /></ProtectedRoute>} />
-        <Route path="/Catalogue" exact element={<><ProductHeader /><ProductCard cart="All" products={products} /></>} />
+        <Route path="/Catalogue" exact element={<CataloguePage products={products}/>} />
         <Route path="/addproducts" exact element={<AdminRoute ><ProductUpload /></AdminRoute>} />
         <Route path="/profile" exact element={<ProtectedRoute2 > <ProfilePage /></ProtectedRoute2>} />
         <Route path="/updateproducts" exact element={<ProductUpdatePage />} />

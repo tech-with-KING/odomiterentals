@@ -1,11 +1,13 @@
 /* Your CSS file */
 .wrapper{ 
-
   border-radius: 10px;
   min-width: 90vw !important;
 }
 .container_wrapper{
-  min-width: 90vw;
+  min-width: 85vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
 }
 .shop_list {
@@ -55,8 +57,6 @@
 /* Your CSS file */
 
 .container {
-  margin-left: auto;
-  margin-right: auto;
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 0.8rem;
@@ -98,7 +98,6 @@
     background-color: transparent;
     cursor: pointer;
     min-height: 200px;
-    margin-left:20px;
 }
 
 .container li .card-content {
