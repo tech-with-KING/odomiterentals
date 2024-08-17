@@ -61,16 +61,15 @@ const Menu = () => {
         <div className="user-actions">
 
           <a href="#"><SearchIcon /></a>
-          <a href="#" onClick={() => handleNavigation('/cart')}><ShoppingCartIcon /></a>
+          <a href="#" onClick={() => handleNavigation('/cart')}><ShoppingCartIcon style={{fontSize: '30px'}}/></a>
           {!isAdmin && !isLoggedIn ?<a href="#"  onClick={() => handleNavigation('/accounts')}>Login <PersonIcon /></a>:  <img src="https://images.unsplash.com/photo-1517423568366-8b83523034fd?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80"                     alt="Profile Photo" 
             className="user_photo"  onClick={() => handleNavigation('/profile')}/>}
         </div>
       </header>
       <div className="info-bar">
-        <span>📦 Free Shipping Worldwide</span>
-        <span>🌳 3 trees planted</span>
-        <span>🔄 45 Day free returns</span>
-        <span>⭐ 8.2+ Independent Reviews</span>
+        <span>📦 Seamless Shipping Accross New Jersey</span>
+        <span>🔄 45 Early Pickup And Delivery</span>
+        <span>⭐⭐⭐⭐⭐  Perfect five star reviews form over 100+ clients</span>
       </div>
     </>
   );
