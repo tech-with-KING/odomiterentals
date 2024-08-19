@@ -41,7 +41,7 @@ const Menu = () => {
           </select>
         </div>
         <div className="top-links">
-          <a href="#" onClick={() => handleNavigation('/Contactus')}>Contact Us</a>
+          <a href="/contactpage" onClick={() => handleNavigation('/Contactus')}>Contact Us</a>
           <a href="#" onClick={() => handleNavigation('/aboutpage')}>About Us</a>
           <a href="#">FAQ</a>
         </div>

@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const endpoint = credentials.isAdmin ? '/admin/login' : '/login';
       const response = await api.post(endpoint, credentials);
+      console.log('Login response:', response.data);
       setAuthState({
         isLoggedIn: true,
         user: response.data.user,
@@ -67,7 +68,7 @@ export const AuthProvider = ({ children }) => {
   const updateUser = async (newUserData) => {
     try {
       const response = await api.put('/user', newUserData);
-
+         console.log('Update user API response:', response.data);
       setAuthState(prevState => ({
         ...prevState,
         user: { ...prevState.user, ...response.data.user }

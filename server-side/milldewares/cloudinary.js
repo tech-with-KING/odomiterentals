@@ -24,7 +24,7 @@ const upload = multer({
 
 // Function to upload to Cloudinary
 const uploadToCloudinary = async (buffer) => {
-  console.log('Uploading to Cloudinary...');
+  console.log('Uploading to Cloudinary...hi');
   try {
     const result = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream({ resource_type: "image" }, (error, result) => {
@@ -67,8 +67,33 @@ const processAndUploadImage = async (req, res, next) => {
     next(error);
   }
 };
+const deleteFromCloudinary = async (publicId) => {
+  console.log('Deleting from Cloudinary...');
+  try {
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.uploader.destroy(publicId, (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      });
+    });
+    console.log('Cloudinary delete successful');
+    return result;
+  } catch (e) {
+    console.log('Error deleting from Cloudinary:', e);
+    throw e;
+  }
+};
+
+// Helper function to extract public_id from Cloudinary URL
+const getPublicIdFromUrl = (url) => {
+  const parts = url.split('/');
+  const filename = parts[parts.length - 1];
+  return filename.split('.')[0];
+};
 
 module.exports = {
-  upload: upload.single('_image'),
-  processAndUploadImage
+  upload: upload.single('img'),
+  processAndUploadImage,
+  deleteFromCloudinary,
+  getPublicIdFromUrl 
 };

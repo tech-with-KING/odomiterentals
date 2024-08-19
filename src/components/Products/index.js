@@ -1,25 +1,58 @@
 import React, { useState } from 'react';
 import './index.css';
+import axios from 'axios';
 
-const ProductUpload = ({ existingProduct, onSave }) => {
-  const [productName, setProductName] = useState('Full Spectrum CBD Tincture - Pet Tincture');
-  const [description, setDescription] = useState('The ...');
+const ProductUpload = () => {
+  const [productName, setProductName] = useState('product name');
+  const [description, setDescription] = useState('no description');
   const [category, setCategory] = useState('');
-  const [subcategory, setSubcategory] = useState('Beauty');
   const [inventory, setInventory] = useState(1500);
-  const [sku, setSku] = useState('USG-BB-PUB-08');
+  const [color, setColor] = useState([]);
   const [price, setPrice] = useState(180.00);
-  const [inStore, setInStore] = useState(true);
-  const [online, setOnline] = useState(false);
-
   const categories = [
-    'Health & Medicine',
-    'Beauty',
-    'Electronics',
-    'Clothing',
-    'Food & Beverage',
-    'Home & Garden'
+    'Chairs',
+    'Tables',
+    'Table Covers',
+    'Tents',
+    'Sashes',
+    'Kids Rentals'
   ];
+  const [image, setImage] = useState(null);
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('img', image);
+    formData.append('category', category);
+    formData.append('Product_name', productName);
+    formData.append('price', `$${price}`);
+    formData.append('desc', description);
+    formData.append('instock', inventory > 0);
+    formData.append('unitsleft', inventory);
+    formData.append('color', color);
+    
+    try {
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
+   
+      const response = await axios.post('hello', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('Product added:', response.data);
+      // Handle success (e.g., show a success message, clear form, etc.)
+    } catch (error) {
+      console.error('Error adding product:', error);
+      // Handle error (e.g., show error message)
+    }
+  };
 
   const handleCategoryChange = (e) => {
     const selectedCategory = e.target.value;
@@ -40,11 +73,6 @@ const ProductUpload = ({ existingProduct, onSave }) => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log('Product added:', { productName, description, category, subcategory, inventory, sku, price, inStore, online });
-  };
 
   return (
     <div className="add-product-container">
@@ -94,10 +122,23 @@ const ProductUpload = ({ existingProduct, onSave }) => {
           <div className="form-group">
             <label>Product Images</label>
             <div className="image-upload">
-              <div className="image-placeholder">Upload Image</div>
-              <div className="image-placeholder">Upload Image</div>
+              <div className="image-placeholder">
+                <label htmlFor="image">Upload Image</label>
+                <input
+                  type="file"
+                  id="image"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </div>
+              {image && (
+                <div className="image-preview">
+                  <img src={URL.createObjectURL(image)} alt="Preview" />
+                </div>
+              )}
             </div>
           </div>
+
           <div className="form-group">
             <label htmlFor="category">Category</label>
             <select
@@ -112,16 +153,6 @@ const ProductUpload = ({ existingProduct, onSave }) => {
             </select>
           </div>
           <div className="form-group">
-            <label htmlFor="subcategory">Product Category</label>
-            <select
-              id="subcategory"
-              value={subcategory}
-              onChange={(e) => setSubcategory(e.target.value)}
-            >
-              <option>Beauty</option>
-            </select>
-          </div>
-          <div className="form-group">
             <label htmlFor="inventory">Inventory</label>
             <input
               type="number"
@@ -131,12 +162,13 @@ const ProductUpload = ({ existingProduct, onSave }) => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="sku">SKU (Optional)</label>
+            <label htmlFor="color">color (Optional)</label>
             <input
               type="text"
-              id="sku"
-              value={sku}
-              onChange={(e) => setSku(e.target.value)}
+              id="color"
+              value={color}
+              defaultValue={'white'}
+              onChange={(e) => setColor(e.target.value)}
             />
           </div>
           <div className="form-group">
@@ -148,34 +180,10 @@ const ProductUpload = ({ existingProduct, onSave }) => {
               onChange={(e) => setPrice(Number(e.target.value))}
             />
           </div>
-          <div className="form-group">
-            <label>Selling Type</label>
-            <div className="selling-type">
-              <label>
-                <input
-                  type="checkbox"
-                  id="in-store"
-                  checked={inStore}
-                  onChange={(e) => setInStore(e.target.checked)}
-                />
-                In-store selling only
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  id="online"
-                  checked={online}
-                  onChange={(e) => setOnline(e.target.checked)}
-                />
-                Online selling only
-              </label>
-            </div>
-          </div>
-          <button type="submit" className="button">Add Product</button>
+          <button type="submit" className="button" >Add Product</button>
         </form>
       </div>
     </div>
   );
 };
-
 export default ProductUpload;

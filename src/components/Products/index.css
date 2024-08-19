@@ -1,16 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f5f5f5;
-    color: #333;
-}
 
 .add-product-container {
     display: flex;
@@ -29,15 +18,17 @@ body {
 .sidebar h2 {
     margin-bottom: 20px;
     font-weight: 500;
-    color: #3498db;
+    color: white;
 }
 
 .category-list {
-    list-style-type: none;
+  list-style-type: none;
+  margin: 0;
 }
 
 .category-list li {
-    margin-bottom: 15px;
+  margin: 0;
+    margin-bottom: 10px;
 }
 
 .category-list label {
@@ -46,8 +37,8 @@ body {
     cursor: pointer;
 }
 
-.category-list input[type="checkbox"] {
-    margin-right: 10px;
+.category-list input[type="checkbox 08062889601"] {
+    margin-right: 5px;
 }
 
 .main-content {
@@ -102,8 +93,10 @@ input:focus, select:focus, textarea:focus {
 }
 
 .image-placeholder {
-    width: 120px;
+    width: 150px;
     height: 120px;
+	display: flex;
+	flex-direction: column;
     background-color: #ecf0f1;
     border: 2px dashed #bdc3c7;
     display: flex;

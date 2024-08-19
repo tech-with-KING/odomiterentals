@@ -46,21 +46,42 @@ userRouter.post('/login', async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: 'User not found' });
     }
-    console.log(req.body)
-    console.log(user.passwd)
     const isPasswordValid = await bcrypt.compare(password, user.passwd);
     if (!isPasswordValid) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
     const token = generateToken(user, 'user');
     const userResponse = user.toObject();
-    delete userResponse.passwd;
+    delete userResponse.passwd;  // Remove password from the response
     res.json({ user: userResponse, token });
   } catch (error) {
     console.error('User login error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+// userRouter.post('/login', async (req, res) => {
+  
+//   try {
+//     const {email, password} = req.body;
+//     const user = await UserDetail.findOne({ email });
+//     if (!user) {
+//       return res.status(400).json({ message: 'User not found' });
+//     }
+//     console.log(req.body)
+//     console.log(user.passwd)
+//     const isPasswordValid = await bcrypt.compare(password, user.passwd);
+//     if (!isPasswordValid) {
+//       return res.status(400).json({ message: 'Invalid credentials' });
+//     }
+//     const token = generateToken(user, 'user');
+//     const userResponse = user.toObject();
+//     delete userResponse.passwd;
+//     res.json({ user: userResponse, token });
+//   } catch (error) {
+//     console.error('User login error:', error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// });
 
 // Google login
 userRouter.get('/google',

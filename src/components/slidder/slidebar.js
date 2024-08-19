@@ -1,51 +1,51 @@
-        import React, { useState, useEffect } from 'react';
-        import { motion, AnimatePresence } from 'framer-motion';
-        import './slidebar.css';
-        import { device } from '../../deviceinfo';
-        
-        const SlideBar = () => {
-          const [index, setIndex] = useState(0);
-        
-          useEffect(() => {
-            const interval = setInterval(() => {
-              if (index >= device.length - 1) {
-                setIndex(0);
-              } else {
-                setIndex(index + 1);
-              }
-            }, 5000);
-        
-            return () => clearInterval(interval);
-          }, [index]);
-        
-          const setProduct = (id) => {
-            setIndex(id);
-          };
-        
-          return (
-            <AnimatePresence>
-              <motion.div
-                className="slideshow-container"
-                style={{ backgroundImage: `url(${device[index].img})` }}
-                key={index}
-              >
-                <div className="display_device">
-                </div>
-        
-                <div className="dot-container">
-                  {device.map((data) => (
-                    <span
-                      key={data.id}
-                      onClick={() => setProduct(data.id)}
-                      className={`dot`}
-                      style={data.id === device[index].id ? { backgroundColor: 'rgba(250, 250, 250, 1)'} : {}}
-                    ></span>
-                  ))}
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          );
-        };
-        
-        export default SlideBar;
-        
+import React, { useState, useEffect, useCallback } from 'react';
+import './slidebar.css';
+import { device } from '../../deviceinfo';
+const SlideBar = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const prevSlide = useCallback(() => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? device.length - 1 : prevIndex - 1
+    );
+  }, []);
+
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === device.length - 1 ? 0 : prevIndex + 1
+    );
+  }, []);
+
+  const goToSlide = useCallback((slideIndex) => {
+    setCurrentIndex(slideIndex);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 5000);
+    return () => clearInterval(interval);
+  }, [nextSlide]);
+  return (
+    <div className='slide-bar'>
+      <div
+        style={{ backgroundImage: `url(${device[currentIndex].img})` }}
+        className='slide-image'
+      ></div>
+      <div className='arrow left-arrow' onClick={prevSlide}>
+        &#10094;
+      </div>
+      <div className='arrow right-arrow' onClick={nextSlide}>
+        &#10095;
+      </div>
+      <div className='dots-container'>
+        {device.map((_, slideIndex) => (
+          <div
+            key={slideIndex}
+            onClick={() => goToSlide(slideIndex)}
+            className={`dot ${currentIndex === slideIndex ? 'active' : ''}`}
+          ></div>
+        ))}
+      </div>
+    </div>
+  );
+};
+export default SlideBar;

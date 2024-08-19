@@ -3,6 +3,9 @@
     background-color: #dcdcdc;
     border-radius: 15px;
     position: relative;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
     height: 250px; /* Adjusted height */
     line-height: 1.2; /* Adjusted line-height */
     width: 100%;
@@ -19,6 +22,7 @@
     padding: 8px 12px; /* Adjusted padding */
     background-color: #402df0;
     color: white;
+	overflow: hidden;
     border: none;
     margin-top: 20px;
     font-size: 14px; /* Adjusted font size */
@@ -28,6 +32,7 @@
   }
   
   .promotional-product-banner h3 {
+	overflow: hidden;
     font-size: 2rem; /* Adjusted font size */
     margin-top: 4px;
   }
@@ -36,6 +41,7 @@
     color: white;
     font-size: 3rem; /* Adjusted font size */
     text-transform: uppercase;
+	overflow: hidden;
   }
   
   .promotional-product-image {

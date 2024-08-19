@@ -8,6 +8,7 @@ import { products } from '../deviceinfo';
 import { motion } from 'framer-motion'
 import BankAccounts from '../components/slidder_downbar';
 import PromotionaPage from './promotion';
+import SlideBar from '../components/slidder/slidebar';
 const Body=(props)=>{
   return(
 	<div className='hero'>
@@ -52,7 +53,7 @@ const Body=(props)=>{
 const HeroImage = (props)=>{
   return(
 	<div className="hero_img">
-	  <Slide_Bar />
+	  <SlideBar />
 	</div>
   )
 }
@@ -98,7 +99,7 @@ const Brands = ()=>{
 		  REACH US ON THESE PLATFORMS
 		</h1>
 	  </div>
-	  <div className='logos'>
+	  <div className='logos_brand'>
 			{
 				animae.map((anim, i) => {
 					return (

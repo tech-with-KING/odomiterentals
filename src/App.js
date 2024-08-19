@@ -5,7 +5,6 @@ import { BrowserRouter, Routes, Route, } from "react-router-dom";
 import { PageNotFound } from './components/notfound';
 import { About } from './components/newsletters';
 import Menu from './components/menu/menu';
-import ProductCard, { ProductHeader } from './components/shoppingCard/card';
 import DownBar from './footer/bottom_bar';
 import ProductPage from './components/single_product';
 import MessageForm from './components/user_details/index';
@@ -20,7 +19,6 @@ import LoginForm from './components/account/login';
 import { AuthProvider } from './contexts/authcontext';
 import ProtectedRoute, { AdminRoute, ProtectedRoute2 } from './protectedroutes';
 import ProfilePage from './components/profile/inex';
-import Sidebar from './components/sidebar';
 import CataloguePage from './pages/catalogue';
 const App = () => {
   const [login, setLogin] = useState(true)
@@ -30,7 +28,6 @@ const App = () => {
       <AuthProvider >
       <Menu />
       <Routes>
-
         <Route path="/" exact element={<Body />} />
         <Route path="/contactpage" exact element={<ProtectedRoute ><MessageForm content_head="sign in" /></ProtectedRoute>} />
         <Route path="/Catalogue" exact element={<CataloguePage products={products}/>} />

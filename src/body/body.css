@@ -9,7 +9,7 @@
 }
 .hero_img{
     overflow: hidden;
-    height: 28vh;
+    height: 32vh;
     width:100vw;
     display: flex;
     flex-direction: column;
@@ -102,7 +102,7 @@ border-radius: 10px;
     color: #ff8c1a;
 }
 
-/* brands this part contains the logos and the names */
+/* brands this part contains the logos_brand and the names */
 .brands_{
     height: fit-content;
     display: flex;
@@ -116,11 +116,12 @@ border-radius: 10px;
     background-color: rgb(255, 242, 230);
     border-radius: 10px;
     margin: 10px;
+	max-height: 200px;
 }
 .fav_brands{
     width: 40%;
 }
-.logos{
+.logos_brand{
     width: 60%;
     display: flex;
     flex-wrap: wrap;
