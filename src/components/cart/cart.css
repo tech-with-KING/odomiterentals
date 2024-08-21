@@ -1,11 +1,29 @@
 /* CSS for CartPage component */
 
 /* Container for the entire cart */
+#loading {
+  height: 80vh;
+  width: 100vw;
+  background-color:white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+#empty-cart {
+  height: 80vh;
+  width: 100vw;
+  background-color:#cccccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
 .cart-container {
   height: fit-content;
   width: 100vw;
   justify-content: space-around;
-  background-color: #f3f4f6;
+  background-color: #f0f0f0;
   padding-top: 5rem;
   display: flex;
   flex-direction: column;

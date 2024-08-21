@@ -7,7 +7,7 @@ const ProductSchema = new mongoose.Schema({
     unique: true,
     required: true
   },
-  cartegory: {
+  category: {
     type: String,
     required: true
   },
@@ -31,7 +31,7 @@ const ProductSchema = new mongoose.Schema({
     type: Boolean,
     required: true
   },
-  uniltsleft: {
+  unitsleft: {
     type: Number, // Number of units left
     required: true
   },

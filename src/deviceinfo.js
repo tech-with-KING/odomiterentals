@@ -1,4 +1,6 @@
 // Product discount on chair covers is 35% when the chairs are rented from us . Add this to the promotion page
+import axios from "axios";
+
 //
 export const device = 
 [
@@ -71,8 +73,85 @@ export const device =
         img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
     }
   
+];
+
+export const products = async ()=>{
+  try {
+    const response = await axios.get('http://localhost:8000/addproducts');
+    const product = response.data
+    console.log(product[0])
+    return(product)
+    
+  }
+  catch (error) {
+    console.log(error)
+    return[]
+  }
+}
+
+export const AboutUs = [
+    {
+        id: 1,
+        heading:"",
+        paragraph:`
+        Welcome to Odomite Rentals, your premier destination for top-quality party rentals in the heart of Newark, 
+        New Jersey! At Odomite Rentals, we specialize in providing a wide range of event essentials, including chairs, 
+        tables, tents, and various other party items, to make your gatherings truly unforgettable. 
+        Whether you're planning a lively birthday party,
+        a romantic wedding, a joyous graduation celebration, or a professional conference, we've got you covered.`,
+        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/xpubptglh75mwrsbzrpb.jpg'
+    },
+    {
+        id:2,
+        heading:"",
+        paragraph:`Our extensive inventory ensures that we have the perfect pieces to suit any occasion, and we 
+        take pride in offering these rentals at exceptionally reasonable rates. Convenience is key at Odomite Rentals, 
+        and our commitment to customer satisfaction extends to our seamless delivery service. Located at 331 Seymour 
+        Avenue, Newark, we proudly 
+        serve the entire New Jersey area, ensuring that your chosen items arrive promptly and in pristine condition.`,
+        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484408/services/decor_ztjzbw.png'
+    },
+    {
+        id:3,
+        heading:"",
+        paragraph:`
+        Our dedicated team understands the importance of creating memorable events, and we are here to assist you every step
+        of the way. Trust Odomite Rentals to elevate your next party, wedding, graduation, conference, seminar, or any special
+        gathering with our top-notch rental offerings 
+        and reliable service. Let us turn your vision into a reality and make your event truly remarkable.`,
+        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484410/services/odomiterentals_itjcft.jpg'
+    }
+    
+    
 ]
-export const products = [
+export const Services = [
+    {
+        id: 1,
+        heading:"Transportation",
+        paragraph:`
+        Experience hassle-free events with our transportation service. From chairs to tents, we ensure timely delivery to 
+        your venue, covering Newark and beyond. Relax and let Odomite Rentals handle the logistics, so you can focus on celebrating.`,
+        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484410/services/movingtruck3_enz8z7.jpg'
+    },
+    {
+        id:2,
+        heading:"Setup",
+        paragraph:`
+        Elevate your event without lifting a finger. Our professional setup service ensures every chair, table, and 
+        decoration is perfectly arranged, creating 
+        a seamless and inviting atmosphere. Trust us to bring your vision to life, leaving you free to enjoy the festivities.`,
+        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484409/services/decoration_qrq7gd.jpg'
+    },
+    {
+        id:3,
+        heading:"Decoration",
+        paragraph:`Transform your venue into a captivating space with our decoration service. 
+        From elegant table settings to vibrant tent accents, our curated collection adds the perfect touch. 
+        Let Odomite Rentals infuse style and flair into your event, making it truly unforgettable.`,
+        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484409/services/decoration2_ddhc5a.jpg'
+    },
+];
+export const local_products = [
     {
         id: 0,
         cartegory: 'Stackable Chair',
@@ -84,7 +163,8 @@ export const products = [
         uniltsleft: 300,
     },
     {
-        id: 15,
+ 
+       id: 15,
         cartegory: 'Chair',
         Product_name: 'Black Padded Chair',
         price: "$2.5",
@@ -283,66 +363,4 @@ export const products = [
         instock: true,
         uniltsleft: 25,
     }
-];       
-export const AboutUs = [
-    {
-        id: 1,
-        heading:"",
-        paragraph:`
-        Welcome to Odomite Rentals, your premier destination for top-quality party rentals in the heart of Newark, 
-        New Jersey! At Odomite Rentals, we specialize in providing a wide range of event essentials, including chairs, 
-        tables, tents, and various other party items, to make your gatherings truly unforgettable. 
-        Whether you're planning a lively birthday party,
-        a romantic wedding, a joyous graduation celebration, or a professional conference, we've got you covered.`,
-        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/xpubptglh75mwrsbzrpb.jpg'
-    },
-    {
-        id:2,
-        heading:"",
-        paragraph:`Our extensive inventory ensures that we have the perfect pieces to suit any occasion, and we 
-        take pride in offering these rentals at exceptionally reasonable rates. Convenience is key at Odomite Rentals, 
-        and our commitment to customer satisfaction extends to our seamless delivery service. Located at 331 Seymour 
-        Avenue, Newark, we proudly 
-        serve the entire New Jersey area, ensuring that your chosen items arrive promptly and in pristine condition.`,
-        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484408/services/decor_ztjzbw.png'
-    },
-    {
-        id:3,
-        heading:"",
-        paragraph:`
-        Our dedicated team understands the importance of creating memorable events, and we are here to assist you every step
-        of the way. Trust Odomite Rentals to elevate your next party, wedding, graduation, conference, seminar, or any special
-        gathering with our top-notch rental offerings 
-        and reliable service. Let us turn your vision into a reality and make your event truly remarkable.`,
-        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484410/services/odomiterentals_itjcft.jpg'
-    },
-    
-    
-]
-export const Services = [
-    {
-        id: 1,
-        heading:"Transportation",
-        paragraph:`
-        Experience hassle-free events with our transportation service. From chairs to tents, we ensure timely delivery to 
-        your venue, covering Newark and beyond. Relax and let Odomite Rentals handle the logistics, so you can focus on celebrating.`,
-        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484410/services/movingtruck3_enz8z7.jpg'
-    },
-    {
-        id:2,
-        heading:"Setup",
-        paragraph:`
-        Elevate your event without lifting a finger. Our professional setup service ensures every chair, table, and 
-        decoration is perfectly arranged, creating 
-        a seamless and inviting atmosphere. Trust us to bring your vision to life, leaving you free to enjoy the festivities.`,
-        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484409/services/decoration_qrq7gd.jpg'
-    },
-    {
-        id:3,
-        heading:"Decoration",
-        paragraph:`Transform your venue into a captivating space with our decoration service. 
-        From elegant table settings to vibrant tent accents, our curated collection adds the perfect touch. 
-        Let Odomite Rentals infuse style and flair into your event, making it truly unforgettable.`,
-        image:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484409/services/decoration2_ddhc5a.jpg'
-    },
-]
+];

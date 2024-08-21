@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './index.css';
 import axios from 'axios';
+import { useAuth } from '../../contexts/authcontext';
 
 const ProductUpload = () => {
   const [productName, setProductName] = useState('product name');
@@ -9,6 +10,7 @@ const ProductUpload = () => {
   const [inventory, setInventory] = useState(1500);
   const [color, setColor] = useState([]);
   const [price, setPrice] = useState(180.00);
+  const isAdmin = useAuth()
   const categories = [
     'Chairs',
     'Tables',
@@ -25,11 +27,10 @@ const ProductUpload = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append('img', image);
     formData.append('category', category);
-    formData.append('Product_name', productName);
+    formData.append('product_name', productName);
     formData.append('price', `$${price}`);
     formData.append('desc', description);
     formData.append('instock', inventory > 0);
@@ -39,18 +40,18 @@ const ProductUpload = () => {
     try {
       for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
-      }
-   
-      const response = await axios.post('hello', formData, {
+  }
+
+      console.log(isAdmin.token)
+      const response = await axios.post('http://localhost:8000/addproducts', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${isAdmin.token}`,
         },
       });
       console.log('Product added:', response.data);
-      // Handle success (e.g., show a success message, clear form, etc.)
     } catch (error) {
       console.error('Error adding product:', error);
-      // Handle error (e.g., show error message)
     }
   };
 
@@ -76,9 +77,9 @@ const ProductUpload = () => {
 
   return (
     <div className="add-product-container">
-      <div className="sidebar">
+      <div className="sidebar_one">
         <h2>Categories</h2>
-        <ul className="category-list">
+        <ul className="cartegory_parent">
           {categories.map((cat, index) => (
             <li key={index}>
               <label>

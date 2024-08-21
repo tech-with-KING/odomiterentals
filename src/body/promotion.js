@@ -30,20 +30,7 @@ const PromotionalPage = ({ index = 0 }) => {
   const [heroBanner, setHeroBanner] = useState(sampleHeroBanner);
 
   useEffect(() => {
-    const fetchHeroBanner = async () => {
-      try {
-        const response = await axios.get('YOUR_API_ENDPOINT_HERE');
-        if (response.data && response.data.length > 0) {
-          setHeroBanner(response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching hero banner data:', error);
-        // Fallback to sampleHeroBanner if there's an error
-        setHeroBanner(sampleHeroBanner);
-      }
-    };
-
-    fetchHeroBanner();
+    setHeroBanner(sampleHeroBanner);
   }, []);
 
   // Ensure index is within bounds

@@ -6,7 +6,7 @@ const UserDetailSchema = new mongoose.Schema(
     email: String, 
     user_name: String,
     passwd: {type: String, required: false},
-    _image: {
+    image: {
       type: String,
       default: 'https://avatars.githubusercontent.com/u/214020?s=40&v=4'
     },

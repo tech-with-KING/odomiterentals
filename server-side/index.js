@@ -2,17 +2,14 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
 const session = require('express-session');
 const passport = require('passport');
-const { authMiddleware } = require('./milldewares/auth'); // Make sure to create this file
-
+const { authMiddleware } = require('./milldewares/auth'); // Make sur
 const app = express();
 const productRouter = require('./routes/product');
 const userRouter = require('./routes/users');
 const sendMail = require('./routes/email');
 const cartRouter = require('./routes/cart');
-const addAdmin = require('./addadmin');
 
 // Load environment variables from a .env file if it exists
 require('dotenv').config();
@@ -43,7 +40,8 @@ const connect = async () => {
     console.log('MongoDB connection error:', e);
   }
 };
-connect();
+
+
 
 // Routes
 app.use('/addproducts', productRouter);
@@ -60,8 +58,9 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
-
+connect()
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+
 });

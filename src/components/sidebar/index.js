@@ -25,10 +25,10 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="profile">
-        <img src={isLoggedIn & user._image ? user._image : "https://avatars.githubusercontent.com/u/214020?s=40&v=4"} alt={user.name} />
+        <img src={"https://avatars.githubusercontent.com/u/214020?s=40&v=4"} alt="hello" />
         <div className="profile-info">
-          <div className="profile-name">{isLoggedIn ? user.name : 'username'}</div>
-          <div className="profile-email">{isLoggedIn ? user.email : 'email@example.com'}</div>
+          <div className="profile-name">{'username'}</div>
+          <div className="profile-email">{'email@example.com'}</div>
         </div>
       </div>
       <div className="search-bar">
@@ -36,24 +36,19 @@ const Sidebar = () => {
         <input type="text" placeholder="Search..." />
       </div>
       <div className="menu-item">
-        <Science />
-        <span>Research</span>
+        <Group />
+        <span>Cartegory</span>
       </div>
       <div className="menu-item dropdown">
         <Description />
-        <span>Reports</span>
+        <span>Featured</span>
         <div className="dropdown-content">
-          <a href="#">Daily Report</a>
-          <a href="#">Weekly Report</a>
-          <a href="#">Monthly Report</a>
+          <a href="#">Cartegories</a>
+          <a href="#">Featured Products</a>
           <a href="#">Quarterly Report</a>
-          <a href="#">Annual Report</a>
-          <a href="#">Custom Report</a>
+          <a href="#">Promotions</a>
+          <a href="#"></a>
         </div>
-      </div>
-      <div className="menu-item">
-        <Group />
-        <span>Groups</span>
       </div>
       <div className="menu-item">
         <Notifications />

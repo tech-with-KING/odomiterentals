@@ -65,7 +65,7 @@ body {
 }
 
 .logout .menu-item {
-  background-color: #16213e;
+  background-color: #cccc;
   border-radius: 5px;
   padding: 10px;
 }
@@ -82,7 +82,7 @@ body {
 .search-bar {
   display: flex;
   align-items: center;
-  background-color: #16213e;
+  background-color: #cccc;
   border-radius: 5px;
   padding: 5px 10px;
   margin-bottom: 20px;

@@ -9,6 +9,13 @@ const ProtectedRoute = ({ children }) => {
   }
   return children;
 };
+const ProtectedRoute3 = ({ children }) => {
+  const { isLoggedIn, isAdmin} = useAuth()
+  if (isLoggedIn || isAdmin) {
+    return children;
+  }
+  return <Navigate to="/" />;
+};
 const ProtectedRoute2 = ({ children }) => {
   const { isLoggedIn, isAdmin} = useAuth()
   if (!isLoggedIn) {
@@ -26,5 +33,5 @@ const AdminRoute = ({ children }) => {
   }
   return children;
 };
-export {AdminRoute, ProtectedRoute2}
+export {AdminRoute, ProtectedRoute2, ProtectedRoute3}
 export default ProtectedRoute;

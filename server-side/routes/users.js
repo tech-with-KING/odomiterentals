@@ -4,20 +4,23 @@ const { upload, processAndUploadImage } = require('../milldewares/cloudinary');
 const { v4: uuidv4 } = require('uuid');
 const { UserDetail} = require('../models/users');
 const { AdminDetail} = require('../models/admin');
-const { passport, generateToken, authMiddleware, adminAuthMiddleware } = require('../milldewares/auth');
-
+const {generateToken, authMiddleware, adminAuthMiddleware } = require('../milldewares/auth');
 const userRouter = express.Router();
-
 userRouter.post('/signup', upload, processAndUploadImage, async (req, res) => {
   if (!req.processedImage) {
     return res.status(400).send({ error: "Profile Image required" });
   }
+
+  let imageUploaded = false;
   try {
+    imageUploaded = true;
     const { email, password, first_name, last_name } = req.body;
+
     const existingUser = await UserDetail.findOne({ email });
     if (existingUser) {
-      return res.status(400).send({ error: "Email already exists" });
+      throw new Error("Email already exists");
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new UserDetail({
       id: uuidv4(),
@@ -25,8 +28,9 @@ userRouter.post('/signup', upload, processAndUploadImage, async (req, res) => {
       passwd: hashedPassword,
       first_name,
       last_name,
-      _image: req.processedImage.url
+      img: req.processedImage.url
     });
+
     await newUser.save();
     const token = generateToken(newUser);
     const userResponse = newUser.toObject();
@@ -34,9 +38,23 @@ userRouter.post('/signup', upload, processAndUploadImage, async (req, res) => {
     res.status(201).json({ user: userResponse, token });
   } catch (e) {
     console.log('Signup error:', e);
-    res.status(500).send('Internal Server Error');
+    if (imageUploaded) {
+      try {
+        const publicId = getPublicIdFromUrl(req.processedImage.url);
+        await deleteFromCloudinary(publicId);
+        console.log('Cleanup: Image deleted from Cloudinary');
+      } catch (deleteError) {
+        console.error('Error during image cleanup:', deleteError);
+      }
+    }
+    if (e.message === "Email already exists") {
+      res.status(400).send({ error: e.message });
+    } else {
+      res.status(500).send('Internal Server Error');
+    }
   }
 });
+
 
 // User login (email)
 userRouter.post('/login', async (req, res) => {
@@ -59,49 +77,11 @@ userRouter.post('/login', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-// userRouter.post('/login', async (req, res) => {
-  
-//   try {
-//     const {email, password} = req.body;
-//     const user = await UserDetail.findOne({ email });
-//     if (!user) {
-//       return res.status(400).json({ message: 'User not found' });
-//     }
-//     console.log(req.body)
-//     console.log(user.passwd)
-//     const isPasswordValid = await bcrypt.compare(password, user.passwd);
-//     if (!isPasswordValid) {
-//       return res.status(400).json({ message: 'Invalid credentials' });
-//     }
-//     const token = generateToken(user, 'user');
-//     const userResponse = user.toObject();
-//     delete userResponse.passwd;
-//     res.json({ user: userResponse, token });
-//   } catch (error) {
-//     console.error('User login error:', error);
-//     res.status(500).json({ message: 'Internal server error' });
-//   }
-// });
-
-// Google login
-userRouter.get('/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] })
-);
-
-userRouter.get('/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/login', session: false }),
-  (req, res) => {
-    const token = generateToken(req.user);
-    res.redirect(`/?token=${token}`);
-  }
-);
-
 // Admin login
 userRouter.post('/admin/login', async (req, res) => {
   try {
     const { email, password, adminPin } = req.body;
-    const admin = await AdminDetail.findOne({ email });
-
+    const admin = await AdminDetail.findOne({ email });// userRouter.post('/login', async (req, res) => {
     if (!admin) {
       return res.status(400).json({ message: 'Admin not found' });
     }

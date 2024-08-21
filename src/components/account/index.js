@@ -1,25 +1,25 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/authcontext'; // Adjust the path as needed
+import { useAuth } from '../../contexts/authcontext';
 import './index.css';
 
 const SignupForm = ({ onSwitchToLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [accountType, setAccountType] = useState('creator');
+  const [user_name, setUserName] = useState('');
+  const [first_name, setFirstName] = useState('');
+  const [last_name, setLastName] = useState('');
+  const [image, setImage] = useState(null);
   const [error, setError] = useState('');
-
   const { signup } = useAuth();
   const navigate = useNavigate();
 
   const validatePassword = (password) => {
-    // Add your password validation logic here
     return password.length >= 8;
   };
 
   const getPasswordStrength = (password) => {
-    // Add your password strength logic here
     if (password.length < 8) return 'Weak';
     if (password.length < 12) return 'Medium';
     return 'Strong';
@@ -40,7 +40,15 @@ const SignupForm = ({ onSwitchToLogin }) => {
     }
 
     try {
-      const success = await signup({ email, password, accountType });
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+      formData.append('user_name', user_name);
+      formData.append('first_name', first_name);
+      formData.append('last_name', last_name);
+      if (image) formData.append('image', image);
+
+      const success = await signup(formData);
       if (success) {
         navigate('/dashboard');
       } else {
@@ -52,9 +60,13 @@ const SignupForm = ({ onSwitchToLogin }) => {
     }
   };
 
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+  };
+
   return (
     <div className="auth-container">
-      <h1>Don't Have an Account ? No worries</h1>
+      <h1>Don't Have an Account? No worries</h1>
       <p>Register to continue shopping with us</p>
       
       {error && <div className="error-message">{error}</div>}
@@ -71,7 +83,43 @@ const SignupForm = ({ onSwitchToLogin }) => {
             required 
           />
         </div>
-        
+
+        <div className="form-group">
+          <label htmlFor="user_name">Username</label>
+          <input 
+            type="text" 
+            id="user_name" 
+            value={user_name}
+            onChange={(e) => setUserName(e.target.value)}
+            placeholder="Username" 
+            required 
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="first_name">First Name</label>
+          <input 
+            type="text" 
+            id="first_name" 
+            value={first_name}
+            onChange={(e) => setFirstName(e.target.value)}
+            placeholder="First Name" 
+            required 
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="last_name">Last Name</label>
+          <input 
+            type="text" 
+            id="last_name" 
+            value={last_name}
+            onChange={(e) => setLastName(e.target.value)}
+            placeholder="Last Name" 
+            required 
+          />
+        </div>
+
         <div className="form-group">
           <label htmlFor="password">Password</label>
           <input 
@@ -95,31 +143,16 @@ const SignupForm = ({ onSwitchToLogin }) => {
             required 
           />
         </div>
-        
-        <div className="account-type">
-          <p>Select type of your account</p>
-          <label>
-            <input 
-              type="radio" 
-              name="account-type" 
-              value="creator" 
-              checked={accountType === 'creator'}
-              onChange={() => setAccountType('creator')}
-            />
-            Creator Account
-          </label>
-          <label>
-            <input 
-              type="radio" 
-              name="account-type" 
-              value="personal"
-              checked={accountType === 'personal'}
-              onChange={() => setAccountType('personal')}
-            />
-            Personal Account
-          </label>
+
+        <div className="form-group">
+          <label htmlFor="image">Profile Image</label>
+          <input 
+            type="file" 
+            id="image"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
         </div>
-        
         <button type="submit" className="auth-btn">Register</button>
       </form>
       
