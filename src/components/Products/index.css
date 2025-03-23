@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+.add-product-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar_one {
+    background-color: #262626;
+    color: #ffffff;
+    width: 250px;
+    height: 100vh;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    transition: width 0.3s ease;
+}
+
+.sidebar_one h2 {
+    margin-bottom: 20px;
+    font-weight: 500;
+    color: white;
+}
+
+.category-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Adding space between list items */
+}
+.cartegory_parent{
+  
+}
+.category-parent li label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.category-parent li label input[type="checkbox"] {
+  margin: 0;
+}
+
+.category-parent li label p {
+  margin: 0;
+}
+
+.category-list input[type="checkbox"] {
+    margin-right: 10px; /* Space between checkbox and label */
+}
+.cartegory_parent li label{
+  display: block;
+}
+
+.main-content {
+    flex: 1;
+    padding: 30px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 20px;
+}
+
+.header h1 {
+    font-weight: 500;
+    color: black;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.label {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    color: black;
+	flex-direction: row;
+	justify-content: center;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+.image-upload {
+    display: flex;
+    gap: 15px;
+}
+
+.image-placeholder {
+    width: 150px;
+    height: 120px;
+    background-color: #ecf0f1;
+    border: 2px dashed #bdc3c7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.image-placeholder:hover {
+    background-color: #e0e0e0;
+}
+
+.button {
+    padding: 12px 24px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #2980b9;
+}
+
+.selling-type {
+    display: flex;
+    gap: 20px;
+}
+
+.selling-type label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.selling-type input[type="checkbox"] {
+    margin-right: 8px;
+}
+@media (max-width: 700px) {
+  .sidebar_one {
+    width: 100px; /* Reduce sidebar width */
+    padding: 5px; /* Adjust padding */
+  }
+
+  .category-list {
+    flex-direction: row; /* Stack categories in a row */
+    flex-wrap: wrap; /* Wrap items to new lines as needed */
+    gap: 5px; /* Smaller gap between items */
+  }
+
+  .category-item {
+    padding: 8px 12px; /* Reduce padding */
+    font-size: 12px; /* Reduce font size */
+    flex: 1 1 calc(50% - 10px); /* Flex items to take up half the width */
+    text-align: center; /* Center text */
+  }
+
+  .main-content {
+    padding: 20px; /* Reduce padding for main content */
+  }
+
+  .header h1 {
+    font-size: 18px; /* Smaller font size for headers */
+  }
+
+  .button {
+    padding: 10px 20px; /* Adjust button size */
+    font-size: 14px; /* Smaller font size */
+  }
+
+  /* Further adjust form elements */
+  input, select, textarea {
+    padding: 8px; /* Reduce padding */
+    font-size: 12px; /* Smaller font size */
+  }
+}

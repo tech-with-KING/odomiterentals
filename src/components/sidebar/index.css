@@ -1,0 +1,165 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+}
+
+.sidebar {
+  background-color:#262626;
+  color: #ffffff;
+  width: 250px;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  transition: width 0.3s ease;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.profile img {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.profile-info {
+  flex-grow: 1;
+}
+
+.profile-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.profile-email {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.menu-item svg {
+  margin-right: 10px;
+  width: 20px;
+  text-align: center;
+}
+
+.menu-item span {
+  flex-grow: 1;
+}
+
+.logout {  
+  max-width: 200px;
+}
+
+.logout .menu-item {
+  background-color: #cccc;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.notification-badge {
+  background-color: #e94560;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #cccc;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  background-color: transparent;
+  border: none;
+  color: #ffffff;
+  flex-grow: 1;
+  margin-left: 10px;
+  outline: none;
+}
+
+.search-bar input::placeholder {
+  color: #ffffff;
+  opacity: 0.7;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #16213e;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  left: 100%;
+  top: 0;
+  border-radius: 5px;
+}
+
+.dropdown-content a {
+  color: #ffffff;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #1a1a2e;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 60px;
+  }
+
+  .profile-info, .menu-item span, .search-bar input {
+    display: none;
+  }
+
+  .menu-item {
+    justify-content: center;
+  }
+
+  .menu-item svg {
+    margin-right: 0;
+  }
+
+  .logout {
+    left: 10px;
+    right: 10px;
+  }
+
+  .search-bar {
+    justify-content: center;
+  }
+
+  .dropdown-content {
+    left: 60px;
+  }
+}

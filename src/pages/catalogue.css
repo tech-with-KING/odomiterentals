@@ -1,0 +1,11 @@
+.catalogue-container {
+  display: flex;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+
+.product-container {
+  flex-grow: 1;
+  overflow-y: auto;
+}
