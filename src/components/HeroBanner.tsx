@@ -1,8 +1,7 @@
-'use client'
+"use client"
 
-import React, { useEffect, useCallback } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
-import GlobalHeader from '@/components/GlobalHeader'
+import React, { useEffect, useCallback } from "react"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
   CarouselContent,
@@ -10,81 +9,173 @@ import {
   CarouselNext,
   CarouselPrevious,
   type CarouselApi,
-} from '@/components/ui/carousel'
-import Image from 'next/image'
+} from "@/components/ui/carousel"
+import Image from "next/image"
+import { motion, AnimatePresence } from "framer-motion"
 
 const services = [
   {
     id: 1,
-    title: 'Chair Rentals',
-    description: 'Wide selection of chairs for any event.',
-    image: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
-    category: 'Seating'
+    title: "Chair Rentals",
+    description: "Wide selection of chairs for any event.",
+    image:
+      "https://media.istockphoto.com/id/1269776313/photo/suburban-house.jpg?s=2048x2048&w=is&k=20&c=EbPPSMkI6lNpsSnKAUiVV3fR5XzAEbu3AQbBr-K4jdc=",
+    category: "Seating",
   },
   {
     id: 2,
-    title: 'Table Rentals',
-    description: 'Various table sizes and styles to fit your needs.',
-    image: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
-    category: 'Tables'
+    title: "Table Rentals",
+    description: "Various table sizes and styles to fit your needs.",
+    image:
+      "https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=",
+    category: "Tables",
   },
   {
     id: 3,
-    title: 'Equipment Rentals',
-    description: 'Lighting and sound equipment to enhance your event.',
-    image: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
-    category: 'Equipment'
+    title: "Equipment Rentals",
+    description: "Lighting and sound equipment to enhance your event.",
+    image:
+      "https://media.istockphoto.com/id/1269776313/photo/suburban-house.jpg?s=2048x2048&w=is&k=20&c=EbPPSMkI6lNpsSnKAUiVV3fR5XzAEbu3AQbBr-K4jdc=",
+    category: "Equipment",
   },
   {
     id: 4,
-    title: 'Tent Rentals',
-    description: 'Weather protection and elegant outdoor spaces.',
-    image: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
-    category: 'Shelter'
+    title: "Tent Rentals",
+    description: "Weather protection and elegant outdoor spaces.",
+    image:
+      "https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=",
+    category: "Shelter",
   },
   {
     id: 5,
-    title: 'Decor Rentals',
-    description: 'Beautiful decorative elements for memorable events.',
-    image: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
-    category: 'Decor'
-  }
+    title: "Decor Rentals",
+    description: "Beautiful decorative elements for memorable events.",
+    image:
+      "https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=",
+    category: "Decor",
+  },
 ]
+
+// Animation variants for better text animations
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.1,
+    },
+  },
+  exit: {
+    opacity: 0,
+    transition: {
+      staggerChildren: 0.1,
+      staggerDirection: -1,
+    },
+  },
+}
+
+const titleVariants = {
+  hidden: {
+    opacity: 0,
+    y: 50,
+    scale: 0.8,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      damping: 20,
+      stiffness: 100,
+      duration: 0.8,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -30,
+    scale: 0.9,
+    transition: { duration: 0.4 },
+  },
+}
+
+const descriptionVariants = {
+  hidden: {
+    opacity: 0,
+    y: 30,
+    filter: "blur(4px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring",
+      damping: 25,
+      stiffness: 120,
+      duration: 0.6,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -20,
+    filter: "blur(2px)",
+    transition: { duration: 0.3 },
+  },
+}
+
+const categoryVariants = {
+  hidden: {
+    opacity: 0,
+    x: -20,
+    scale: 0.8,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      damping: 20,
+      stiffness: 150,
+      duration: 0.5,
+    },
+  },
+  exit: {
+    opacity: 0,
+    x: 20,
+    scale: 0.8,
+    transition: { duration: 0.2 },
+  },
+}
 
 export default function HeroBanner() {
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0)
   const [count, setCount] = React.useState(0)
 
-  // Auto-scroll functionality
   const scrollNext = useCallback(() => {
-    if (api) {
-      api.scrollNext()
-    }
-  }, [api])     
+    if (api) api.scrollNext()
+  }, [api])
 
   useEffect(() => {
     if (!api) return
 
     setCount(api.scrollSnapList().length)
-    setCurrent(api.selectedScrollSnap() + 1)
+    setCurrent(api.selectedScrollSnap())
 
-    api.on('select', () => {
-      setCurrent(api.selectedScrollSnap() + 1)
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap())
     })
 
-    // Auto-scroll with delay
-    const autoScroll = setInterval(() => {
-      scrollNext()
-    }, 4000) // 4 second delay
-
+    const autoScroll = setInterval(scrollNext, 5000) // Increased to 5 seconds for better text reading
     return () => clearInterval(autoScroll)
   }, [api, scrollNext])
 
   return (
-    <section className="py-16 px-4 bg-gray-50 container mx-auto px-4 max-w-6xl">
-      <div className="max-w-7xl mx-auto">
-        <div className="w-full max-w-6xl mx-auto px-4 py-8">
+    <section className="px-4 container mx-auto max-w-8xl">
+      <div className="relative rounded-3xl overflow-hidden ">
         <Carousel
           setApi={setApi}
           opts={{
@@ -93,52 +184,89 @@ export default function HeroBanner() {
           }}
           className="w-full"
         >
-          <CarouselContent className="-ml-2 md:-ml-4">
+          <CarouselContent>
             {services.map((service, index) => (
-               <CarouselItem key={index} className="basis-full">
+              <CarouselItem key={index} className="basis-full">
                 <Card className="border-0 shadow-none">
-                    <CardContent className="p-0">
-                    <div className="relative w-full h-[400px] rounded-6xl"> {/* Full-width, fixed-height hero */}
-                        <Image
-                        src={service.image ?? "/placeholder.svg"}
+                  <CardContent className="p-0">
+                    <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl">
+                      <Image
+                        src={service.image || "/placeholder.svg"}
                         alt={service.title}
                         fill
                         unoptimized
-                        className="object-cover w-full h-full rounded-6xl"
-                        />
-                        {/* Optional: Add overlay text */}
-                        <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-white px-4 text-center">
-                        <h3 className="text-3xl font-bold mb-2">{service.title}</h3>
-                        <p className="text-lg max-w-xl">{service.description}</p>
-                        </div>
+                        className="object-cover "
+                        priority={index === 0}
+                      />
+                      {/* Gradient overlay for better text readability */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+
+                      <AnimatePresence mode="wait">
+                        {current === index && (
+                          <motion.div
+                            key={`${index}-${service.id}`}
+                            variants={containerVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className="absolute inset-0 flex flex-col justify-center items-center text-white px-4 sm:px-6 md:px-8 text-center z-10"
+                          >
+                       
+                            <motion.div
+                              variants={categoryVariants}
+                              className="mb-4 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium border border-white/30"
+                            >
+                              {service.category}
+                            </motion.div>
+
+                            <motion.h3
+                              variants={titleVariants}
+                              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 leading-tight"
+                            >
+                              {service.title}
+                            </motion.h3>
+
+                            <motion.p
+                              variants={descriptionVariants}
+                              className="text-base sm:text-lg md:text-xl max-w-2xl leading-relaxed"
+                            >
+                              {service.description}
+                            </motion.p>
+
+                            <motion.button
+                              variants={descriptionVariants}
+                              className="mt-6 md:mt-8 px-6 py-3 bg-white text-gray-900 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-300 transform hover:scale-105"
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              Learn More
+                            </motion.button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
-                    </CardContent>
+                  </CardContent>
                 </Card>
-               </CarouselItem>
-
-                ))}
+              </CarouselItem>
+            ))}
           </CarouselContent>
-          <CarouselPrevious className="hidden md:flex" />
-          <CarouselNext className="hidden md:flex" />
-        </Carousel>
-        </div>
 
-        {/* Dots Indicator */}
-        <div className="flex justify-center items-center space-x-2 mt-8">
+          <CarouselPrevious className="absolute top-1/2 left-2 sm:left-4 -translate-y-1/2 z-20 bg-white/80 hover:bg-white rounded-full shadow-lg p-2 transition-all duration-300 hover:scale-110" />
+          <CarouselNext className="absolute top-1/2 right-2 sm:right-4 -translate-y-1/2 z-20 bg-white/80 hover:bg-white rounded-full shadow-lg p-2 transition-all duration-300 hover:scale-110" />
+        </Carousel>
+
+        {/* Enhanced dots indicator */}
+        <div className="absolute bottom-4 sm:bottom-6 left-0 right-0 flex justify-center items-center space-x-2 z-20">
           {Array.from({ length: count }, (_, index) => (
             <button
               key={index}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                index === current - 1 
-                  ? 'bg-blue-600 w-8' 
-                  : 'bg-gray-300 hover:bg-gray-400'
+              className={`rounded-full transition-all duration-500 hover:scale-125 ${
+                index === current ? "bg-white w-8 h-2 shadow-lg" : "bg-white/50 hover:bg-white/80 w-2 h-2"
               }`}
               onClick={() => api?.scrollTo(index)}
+              aria-label={`Go to slide ${index + 1}`}
             />
           ))}
-        </div>
-        <div className="sr-only">
-          Slide {current} of {count}
         </div>
       </div>
     </section>

@@ -18,7 +18,7 @@ const services = [
     id: 1,
     title: 'Chair Rentals',
     description: 'Wide selection of chairs for any event.',
-    image: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Frent&psig=AOvVaw37pPSkDUE6V6ytsJqM4CV2&ust=1749728081773000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCPCnn5uj6Y0DFQAAAAAdAAAAABAE',
+    image: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
     category: 'Seating'
   },
   {
@@ -82,7 +82,7 @@ export default function FeaturedServicesCarousel() {
   }, [api, scrollNext])
 
   return (
-    <section className="py-16 px-4 bg-gray-50 container mx-auto px-4 max-w-6xl">
+    <section className="container mx-auto px-4 py-12 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
         <GlobalHeader
