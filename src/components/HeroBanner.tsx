@@ -174,7 +174,7 @@ export default function HeroBanner() {
   }, [api, scrollNext])
 
   return (
-    <section className="px-4 container mx-auto max-w-8xl">
+    <section className="px-0 container mx-auto max-w-10xl md:max-w-8xl">
       <div className="relative rounded-3xl overflow-hidden ">
         <Carousel
           setApi={setApi}
@@ -189,7 +189,7 @@ export default function HeroBanner() {
               <CarouselItem key={index} className="basis-full">
                 <Card className="border-0 shadow-none">
                   <CardContent className="p-0">
-                    <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl">
+                    <div className="relative w-full h-[220px] sm:h-[300px] md:h-[350px] lg:h-[450px] xl:h-[500px] rounded-2xl">
                       <Image
                         src={service.image || "/placeholder.svg"}
                         alt={service.title}
@@ -211,13 +211,7 @@ export default function HeroBanner() {
                             exit="exit"
                             className="absolute inset-0 flex flex-col justify-center items-center text-white px-4 sm:px-6 md:px-8 text-center z-10"
                           >
-                       
-                            <motion.div
-                              variants={categoryVariants}
-                              className="mb-4 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium border border-white/30"
-                            >
-                              {service.category}
-                            </motion.div>
+                
 
                             <motion.h3
                               variants={titleVariants}
@@ -228,19 +222,19 @@ export default function HeroBanner() {
 
                             <motion.p
                               variants={descriptionVariants}
-                              className="text-base sm:text-lg md:text-xl max-w-2xl leading-relaxed"
+                              className="text-base hidden sm:inline sm:text-lg md:text-xl max-w-2xl leading-relaxed"
                             >
                               {service.description}
                             </motion.p>
 
-                            <motion.button
-                              variants={descriptionVariants}
-                              className="mt-6 md:mt-8 px-6 py-3 bg-white text-gray-900 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-300 transform hover:scale-105"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              Learn More
-                            </motion.button>
+                          <motion.button
+                            variants={descriptionVariants}
+                            className="mt-6 md:mt-8 px-4 py-2 md:px-6 md:py-3 bg-white text-gray-900 rounded-full font-semibold text-sm md:text-base hover:bg-gray-100 transition-colors duration-300 transform hover:scale-105"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            Learn More
+                          </motion.button>
                           </motion.div>
                         )}
                       </AnimatePresence>

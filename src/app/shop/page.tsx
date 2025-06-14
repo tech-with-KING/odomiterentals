@@ -1,0 +1,108 @@
+'use client';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { ProductCard, ProductData} from '@/components/Products';
+
+const ShopPage = () => {
+  return (
+    <CategoryFilter
+      title="Filter by Product Type"
+      categories={[
+        'Accessibility',
+        'Addition',
+        'Basement',
+        'Bathroom',
+        'Elevators',
+        'Exterior',
+        'Kitchen',
+        'Main Floor',
+        'Second Floor',
+        'Whole Home',
+      ]}
+      products={ProductData}
+      onFilterChange={(selected) => {
+      }}
+    />
+  );
+};
+
+export default ShopPage;
+
+interface CategoryFilterProps {
+  title?: string;
+  categories: string[];
+  products: ProductData[];
+  className?: string;
+  onFilterChange?: (selectedCategories: string[]) => void;
+}
+
+const CategoryFilter: React.FC<CategoryFilterProps> = ({
+  title = 'Filter by Product Type',
+  categories,
+  products,
+  className = '',
+  onFilterChange,
+}) => {
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<ProductType[]>(products);
+
+  useEffect(() => {
+    if (selectedCategories.length === 0) {
+      setFilteredProducts(products);
+    } else {
+      const filtered = products.filter((product) => {
+        const productCategories = product.categories || [];
+        return productCategories.some((category) =>
+          selectedCategories.includes(category)
+        );
+      });
+      setFilteredProducts(filtered);
+    }
+
+    if (onFilterChange) onFilterChange(selectedCategories);
+  }, [selectedCategories, products, onFilterChange]);
+
+  const toggleCategory = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((cat) => cat !== category)
+        : [...prev, category]
+    );
+  };
+
+  return (
+    <div className={`w-full max-w-6xl mx-auto px-4 pb-4 ${className}`}>
+      <h2 className="text-3xl sm:text-4xl font-medium text-center text-gray-800 my-8">
+        {title}
+      </h2>
+      <div className="flex flex-wrap justify-center gap-2 mb-12">
+        {categories.map((category) => (
+          <button
+            key={category}
+            onClick={() => toggleCategory(category)}
+            className={`px-4 py-2 rounded border transition-colors ${
+              selectedCategories.includes(category)
+                ? 'bg-orange-500 text-white border-orange-500'
+                : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100'
+            }`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        {filteredProducts.map((product) => (
+          <Link key={product.id} href={`/products/${product.id}`}>
+            <ProductCard image={product.img} title={product.Product_name} price={product.price} desc={product.desc} />
+          </Link>
+        ))}
+      </div>
+      {filteredProducts.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-gray-600">No products match the selected filters.</p>
+        </div>
+      )}
+    </div>
+  );
+};
+

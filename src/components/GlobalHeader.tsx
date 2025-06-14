@@ -35,7 +35,7 @@ export default function GlobalHeader({
           staggerChildren: 0.075,
           delayChildren: 0.25,
         }}
-        className="relative z-10 block text-4xl font-bold text-teal-700 transition-colors duration-500 hover:text-teal-600 md:text-6xl"
+        className="relative z-10 block text-4xl font-bold text-gray-700 transition-colors duration-500 hover:text-gray-500 md:text-6xl"
       >
         {title.split("").map((l, i) => (
           <motion.span
@@ -80,6 +80,43 @@ export default function GlobalHeader({
           )}
         </div>
       )}
+    </div>
+  )
+}
+
+export function HeaderThree({
+  title,
+}: GlobalHeaderProps) {
+  return (
+    <div className={`my-6  sm:my-10 `}>
+      {/* Animated Title */}
+      <motion.span
+        whileHover="whileHover"
+        variants={{
+          initial: { x: 0 },
+          whileHover: { x: -16 },
+        }}
+        transition={{
+          type: "spring",
+          staggerChildren: 0.075,
+          delayChildren: 0.25,
+        }}
+        className="relative z-10 block text-2xl font-bold text-gray-500 transition-colors duration-500 hover:text-gray-600 md:text-4xl"
+      >
+        {title.split("").map((l, i) => (
+          <motion.span
+            variants={{
+              initial: { x: 0 },
+              whileHover: { x: 16 },
+            }}
+            transition={{ type: "spring" }}
+            className="inline-block"
+            key={i}
+          >
+            {l}
+          </motion.span>
+        ))}
+      </motion.span>
     </div>
   )
 }

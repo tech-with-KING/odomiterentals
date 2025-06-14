@@ -1,20 +1,21 @@
+'use client';
 import Link from 'next/link';
 import React from 'react';
-import GlobalHeader from './GlobalHeader';
+import GlobalHeader, { HeaderThree } from './GlobalHeader';
 type ProductCardProps = {
   image: string;
   title: string;
-  price: number | string; // depending on how you handle price
-  altText: string;
+  price: number | string;
+  desc: string;
 };
 
 const ProductData = [
   {
     id: "0",
     category: ['Bathroom', 'Main Floor'],
-    Product_name: "Elegant Bathroom Vanity",
-    price: 299.99,
-    desc: "Modern bathroom vanity with granite countertop and under-mount sink.",
+    Product_name: "Bathroom Vanity",
+    price: 299.9,
+    desc: "Modern bathroom",
     img: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
     instock: true,
     unitsleft: 12
@@ -22,9 +23,9 @@ const ProductData = [
   {
     id: "1",
     category: ['Kitchen', 'Main Floor'],
-    Product_name: "Granite Kitchen Countertop",
-    price: 899.00,
-    desc: "Premium granite countertop perfect for kitchen islands and counters.",
+    Product_name: "Granite Kitchen",
+    price: 899.0,
+    desc: "Premium granite countertop",
     img: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
     instock: true,
     unitsleft: 5
@@ -32,9 +33,9 @@ const ProductData = [
   {
     id: "4",
     category: ['Exterior', 'Whole Home'],
-    Product_name: "Exterior Wall Cladding",
-    price: 450.75,
-    desc: "Durable exterior wall cladding panels for home renovation projects.",
+    Product_name: "Exterior",
+    price: 450.7,
+    desc: "Durable exterior wall .",
     img: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
     instock: false,
     unitsleft: 0
@@ -42,9 +43,9 @@ const ProductData = [
   {
     id: "2",
     category: ['Addition', 'Exterior'],
-    Product_name: "Modular Home Extension Kit",
-    price: 1599.00,
-    desc: "Comprehensive kit for modular home additions and expansions.",
+    Product_name: "Modulart",
+    price: 159.0,
+    desc: "Comprehensive kit for",
     img: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
     instock: true,
     unitsleft: 3
@@ -52,9 +53,9 @@ const ProductData = [
   {
     id: "3",
     category: ['Whole Home', 'Kitchen', 'Bathroom'],
-    Product_name: "Complete Home Renovation Package",
-    price: 7999.99,
-    desc: "All-in-one package for whole-home remodeling including kitchen and bathroom.",
+    Product_name: "Complete Home ",
+    price: 790.9,
+    desc: "All-in-one package for ",
     img: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
     instock: true,
     unitsleft: 1
@@ -62,39 +63,82 @@ const ProductData = [
   {
     id: "5",
     category: ['Basement', 'Addition'],
-    Product_name: "Basement Finishing Kit",
-    price: 2100.49,
-    desc: "Kit with insulation, flooring, and walls for finishing your basement.",
+    Product_name: "Basement ",
+    price: 21.9,
+    desc: "Kit with insulation.",
     img: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
     instock: true,
     unitsleft: 7
   },
 ];
 
-// Individual Product Card Component
-function ProductCard({ image, title, price,  altText }: ProductCardProps) {
+function ServiceCard({ image, title, price, desc }: ProductCardProps) {
   return (
-    <div className="bg-white rounded-lg overflow-hidden">
-      <div className="relative rounded-lg">
+    <div className="bg-white rounded-xl overflow-hidden max-w-sm mx-auto">
+      <div className="relative rounded-2xl">
         <img 
           src={image} 
-          alt={altText}
-          className="w-full h-84 object-cover rounded-lg transition-transform duration-300 transform hover:scale-105"
+          alt={title}
+          className="w-full h-45 md:h-64 object-cover rounded-2xl transition-transform duration-300 transform hover:scale-105"
         />
-        <button className="absolute top-4 right-4 bg-white text-gray-800 px-4 py-2 rounded-full font-medium hover:bg-gray-100 transition-colors">
+        <button className="absolute top-3 right-3 bg-white text-gray-800 px-2 py-1 text-xs rounded-full font-medium hover:bg-gray-100 transition-colors">
           Book Now
         </button>
       </div>
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${price}</span>
-        </div>
+      <div className="p-1 sm:p-3 md:flex md: md:flex-1 md:justify-between">
+        <h3 className="text-[16px] sm:text-sm sm:font-semibold font-medium text-gray-900">{title}</h3>
       </div>
     </div>
   );
 }
+
+function ProductCard({ image, title, price, desc }: ProductCardProps) {
+  return (
+    <div className="bg-white rounded-xl overflow-hidden max-w-sm mx-auto">
+      <div className="relative rounded-2xl">
+        <img 
+          src={image} 
+          alt={title}
+          className="w-full h-45 md:h-64 object-cover rounded-2xl transition-transform duration-300 transform hover:scale-105"
+        />
+        <button className="absolute top-3 right-3 bg-white text-gray-800 px-2 py-1 text-xs rounded-full font-medium hover:bg-gray-100 transition-colors">
+          Book Now
+        </button>
+      </div>
+      <div className="p-1 sm:p-3 md:flex md: md:flex-1 md:justify-between">
+        <h3 className="text-[16px] sm:text-sm sm:font-semibold font-medium text-gray-900">{title}</h3>
+        <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
+           <span className="text-blue-900">${price}</span> a unit
+        </p>
+      </div>
+    </div>
+  );
+}
+
+
 export const Products = () => {
+	const galleryItems = ProductData.map((item) => ({
+		id: item.id,
+		image: item.img,
+		title: item.Product_name,
+		price: item.price,
+		altText: item.Product_name,
+	}));
+	return (
+		<div className='container mx-auto px-1 py-6 bg-white '>
+			<HeaderThree title='Day Rentals' />
+			<div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2  md:gap-6  mx-auto'>
+				{ProductData.map((item, index) => (
+					<Link key={item.id} href={`/product/${item.Product_name}`} className="group">
+						<ProductCard image={item.img} title={item.Product_name} price={item.price} desc={item.desc} />
+					</Link>
+				))}
+			</div>
+		</div>
+	);
+};
+
+export const Cartegories = () => {
 	const galleryItems = ProductData.map((item) => ({
 		id: item.id,
 		image: item.img,
@@ -110,7 +154,7 @@ export const Products = () => {
 				<div className='flex overflow-x-auto gap-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4'>
 					{ProductData.map((item, index) => (
 					<Link key={item.id} href={`/projects/${item.Product_name}`}>
-						<ProductCard  image={item.img} title={item.Product_name} price={item.price} altText={item.img}/>
+						<ProductCard  image={item.img} title={item.Product_name} price={item.price} desc={item.desc}/>
 					</Link>
 					))}
 				</div>
@@ -120,12 +164,12 @@ export const Products = () => {
 			<div className='hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto'>
 				{ProductData.map((item, index) => (
 					<Link key={item.id} href={`/product/${item.Product_name}`} className="group">
-						<ProductCard image={item.img} title={item.Product_name} price={item.price} altText={item.img} />
+						<ProductCard image={item.img} title={item.Product_name} price={item.price} desc={item.desc} />
 					</Link>
 				))}
 			</div>
 		</div>
 	);
 };
-
 export default Products;
+export {ProductCard, ProductData};
