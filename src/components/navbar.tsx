@@ -11,6 +11,9 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
+import { Search, Phone, ShoppingCart } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 function MobileNav() {
@@ -140,7 +143,7 @@ function DesktopNav() {
   ]
 
   return (
-    <div className="hidden md:flex justify-center flex-1">
+    <div className="hidden md:flex justify-centerflex-1">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
@@ -163,7 +166,7 @@ function DesktopNav() {
           <NavigationMenuItem>
             <NavigationMenuTrigger>More</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+              <ul className="grid w-[200px] gap-3 p-4 md:w-[300px] md:grid-cols-2 lg:w-[400px]">
                 {moreItems.map((item) => (
                   <li key={item.name}>
                     <NavigationMenuLink asChild>
@@ -188,16 +191,9 @@ function DesktopNav() {
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
-
-          <NavigationMenuItem>
-            <Link href="/catalogue" passHref>
-              <NavigationMenuLink className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
-                Catalogue
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
+      <SearchBar />
     </div>
   )
 }
@@ -213,6 +209,7 @@ function Header() {
         </Link>
       </div>
       <DesktopNav />
+      
       <div className="flex items-center space-x-2">
         <div className="hidden md:block">
           <SignedOut>
@@ -230,7 +227,9 @@ function Header() {
                 },
               }}
             />
+            
           </SignedIn>
+          
         </div>
         <MobileNav />
       </div>
@@ -239,3 +238,41 @@ function Header() {
 }
 
 export default Header
+
+function SearchBar() {
+  return (
+    <div className="mx-auto px-4 py-3">
+      <div className="flex items-center justify-between gap-4">
+        {/* Right Section - Icons and Button */}
+        <div className="flex items-center gap-3">
+          {/* Contact Us Icon */}
+          <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full">
+            <Phone className="h-5 w-5 text-gray-600" />
+            <span className="sr-only">Contact us</span>
+          </Button>
+          {/* Search Section */}
+          <div className="flex-1 max-w-md">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                type="search"
+                placeholder="Search"
+                className="pl-10 bg-gray-50 border-gray-200 rounded-full h-10"
+              />
+            </div>
+          </div>
+
+          {/* Cart Icon */}
+          <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full relative bg-[#bcd1e5] ">
+            <ShoppingCart className="h-5 w-5 text-gray-600" />
+            <span className="sr-only">Cart</span>
+            <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              2
+            </span>
+          </Button>
+          <Button className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-4 h-8">Get A Quote</Button>
+        </div>
+      </div>
+    </div>
+  )
+}

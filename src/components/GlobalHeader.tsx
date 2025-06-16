@@ -22,7 +22,7 @@ export default function GlobalHeader({
   className = "",
 }: GlobalHeaderProps) {
   return (
-    <div className={`space-y-6 ${className}`}>
+    <div className={`mx-auto flex items-center flex-col container space-y-6 ${className}`}>
       {/* Animated Title */}
       <motion.span
         whileHover="whileHover"
@@ -35,7 +35,7 @@ export default function GlobalHeader({
           staggerChildren: 0.075,
           delayChildren: 0.25,
         }}
-        className="relative z-10 block text-4xl font-bold text-gray-700 transition-colors duration-500 hover:text-gray-500 md:text-6xl"
+        className="relative z-10 block text-4xl font-bold text-gray-800 transition-colors duration-700 hover:text-gray-600 md:text-6xl"
       >
         {title.split("").map((l, i) => (
           <motion.span
@@ -47,13 +47,13 @@ export default function GlobalHeader({
             className="inline-block"
             key={i}
           >
-            {l}
+            {l === " " ? "\u00A0" : l}
           </motion.span>
         ))}
       </motion.span>
 
       {/* Optional Description */}
-      {description && <p className="text-lg text-gray-600 leading-relaxed max-w-3xl">{description}</p>}
+      {description && <p className="text-lg text-gray-600 leading-relaxed">{description}</p>}
 
       {/* Optional Button */}
       {buttonText && (

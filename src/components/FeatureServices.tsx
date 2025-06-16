@@ -2,7 +2,7 @@
 
 import React, { useEffect, useCallback } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
-import GlobalHeader from '@/components/GlobalHeader'
+import GlobalHeader, { HeaderThree } from '@/components/GlobalHeader'
 import {
   Carousel,
   CarouselContent,
@@ -12,6 +12,7 @@ import {
   type CarouselApi,
 } from '@/components/ui/carousel'
 import Image from 'next/image'
+import Header from './navbar'
 
 const services = [
   {
@@ -111,6 +112,7 @@ export default function FeaturedServicesCarousel() {
 
   return (
     <section className="container mx-auto px-0 pt-6 pb-2 bg-white">
+        <HeaderThree title='Featured Services' ></HeaderThree>
         <div className="w-full mx-auto  py-8">
         <Carousel
           setApi={setApi}
@@ -126,7 +128,7 @@ export default function FeaturedServicesCarousel() {
                 <Card className="border-0 shadow-none">
                   <CardContent className="p-0">
                     <div className="space-y-4">
-                      <div className="relative overflow-hidden rounded-lg md:h-[150px]">
+                      <div className="relative h-[120px] overflow-hidden rounded-lg md:h-[150px]">
                          <Image
                             src={service.image ?? "/placeholder.svg"}
                             alt={service.title}
@@ -138,7 +140,7 @@ export default function FeaturedServicesCarousel() {
                       </div>
                       <div className="space-y-2">
                         <h3 className="text-lg font-semibold text-gray-900">{service.title}</h3>
-                        <p className="text-sm text-blue-600 leading-relaxed">{service.description}</p>
+                        <p className="text-sm text-gray-600 leading-relaxed">{service.description}</p>
                       </div>
                     </div>
                   </CardContent>
