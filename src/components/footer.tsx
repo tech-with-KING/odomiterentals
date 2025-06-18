@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Mail, Phone, Facebook, Twitter, Instagram, Linkedin } from "lucide-react"
+import { Mail, Phone, Facebook, Twitter, Instagram, Linkedin, LucideIcon } from "lucide-react"
 
 export default function Footer() {
   return (
@@ -20,8 +20,8 @@ export default function Footer() {
               className="w-[250px] h-auto brightness-110"
             />
             <p className="text-lg text-gray-500 leading-relaxed italic">
-              "Building dreams with precision, delivering excellence in every project. Your trusted partner for quality
-              construction solutions."
+              &ldquo;Building dreams with precision, delivering excellence in every project. Your trusted partner for quality
+              construction solutions.&rdquo;
             </p>
           </div>
 
@@ -97,8 +97,33 @@ export default function Footer() {
   )
 }
 
+// Type definitions
+interface InteractiveLinkProps {
+  href: string;
+  children: React.ReactNode;
+}
+
+interface ContactItemProps {
+  icon: LucideIcon;
+  href: string;
+  children: React.ReactNode;
+  type?: "email" | "phone" | "link";
+}
+
+interface SocialIconProps {
+  icon: LucideIcon;
+  href: string;
+  label: string;
+  hoverColor: string;
+}
+
+interface BottomLinkProps {
+  href: string;
+  children: string;
+}
+
 // Interactive link component
-const InteractiveLink = ({ href, children }:{href:string, children:any}) => {
+const InteractiveLink = ({ href, children }: InteractiveLinkProps) => {
   const [isHovered, setIsHovered] = useState(false)
 
   return (
@@ -116,7 +141,7 @@ const InteractiveLink = ({ href, children }:{href:string, children:any}) => {
 }
 
 // Interactive contact item
-const ContactItem = ({ icon: Icon, href, children, type = "link" }) => {
+const ContactItem = ({ icon: Icon, href, children, type = "link" }: ContactItemProps) => {
   const [isHovered, setIsHovered] = useState(false)
 
   const content = (
@@ -152,7 +177,7 @@ const ContactItem = ({ icon: Icon, href, children, type = "link" }) => {
 }
 
 // Interactive social icon
-const SocialIcon = ({ icon: Icon, href, label, hoverColor = "#4299e1" }:{icon: any, href: any, label: any, hoverColor:any}) => {
+const SocialIcon = ({ icon: Icon, href, label, hoverColor }: SocialIconProps) => {
   const [isHovered, setIsHovered] = useState(false)
 
   return (
@@ -175,7 +200,7 @@ const SocialIcon = ({ icon: Icon, href, label, hoverColor = "#4299e1" }:{icon: a
 }
 
 // Interactive bottom link
-const BottomLink = ({ href, children }:{href:string, children:string}) => {
+const BottomLink = ({ href, children }: BottomLinkProps) => {
   const [isHovered, setIsHovered] = useState(false)
 
   return (

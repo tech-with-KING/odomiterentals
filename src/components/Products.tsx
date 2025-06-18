@@ -1,19 +1,21 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import React from 'react';
 import GlobalHeader, { HeaderThree } from './GlobalHeader';
-import { title } from 'process';
-import { timeLog } from 'console';
+
 type ProductCardProps = {
   image: string;
   title: string;
   price: number | string;
   desc: string;
 };
+
 type ServiceCardProps = {
   image: string;
   title: string;
 }
+
 const ServiceData = [
   {
     id: "0",
@@ -137,14 +139,15 @@ const ProductData = [
   }
 ];
 
-
 function ServiceCard({ image, title }: ServiceCardProps) {
   return (
     <div className="bg-white rounded-xl overflow-hidden max-w-sm mx-auto">
       <div className="relative rounded-2xl">
-        <img 
+        <Image 
           src={image} 
           alt={title}
+          width={400}
+          height={256}
           className="w-full h-68 md:h-64 object-cover rounded-2xl transition-transform duration-300 transform hover:scale-105"
         />
         <button className="absolute top-3 right-3 bg-white text-gray-800 px-2 py-1 text-xs rounded-full font-medium hover:bg-gray-100 transition-colors">
@@ -158,13 +161,15 @@ function ServiceCard({ image, title }: ServiceCardProps) {
   );
 }
 
-function ProductCard({ image, title, price, desc }: ProductCardProps) {
+function ProductCard({ image, title, price }: ProductCardProps) {
   return (
     <div className="bg-white rounded-xl overflow-hidden max-w-sm mx-auto">
       <div className="relative rounded-2xl">
-        <img 
+        <Image 
           src={image} 
           alt={title}
+          width={400}
+          height={256}
           className="w-full h-45 md:h-64 object-cover rounded-2xl transition-transform duration-300 transform hover:scale-105"
         />
         <button className="absolute top-3 right-3 bg-white text-gray-800 px-2 py-1 text-xs rounded-full font-medium hover:bg-gray-100 transition-colors">
@@ -181,82 +186,62 @@ function ProductCard({ image, title, price, desc }: ProductCardProps) {
   );
 }
 
-
 export const Products = () => {
-	const galleryItems = ProductData.map((item) => ({
-		id: item.id,
-		image: item.img,
-		title: item.Product_name,
-		price: item.price,
-		altText: item.Product_name,
-	}));
-	return (
-		<div className='container mx-auto px-1 py-6 bg-white '>
-			<HeaderThree title='Day Rentals' />
-			<div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2  md:gap-6  mx-auto'>
-				{ProductData.map((item, index) => (
-					<Link key={item.id} href={`/product/${item.Product_name}`} className="group">
-						<ProductCard image={item.img} title={item.Product_name} price={item.price} desc={item.desc} />
-					</Link>
-				))}
-			</div>
-		</div>
-	);
+  return (
+    <div className='container mx-auto px-1 py-6 bg-white '>
+      <HeaderThree title='Day Rentals' />
+      <div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2  md:gap-6  mx-auto'>
+        {ProductData.map((item) => (
+          <Link key={item.id} href={`/product/${item.Product_name}`} className="group">
+            <ProductCard image={item.img} title={item.Product_name} price={item.price} desc={item.desc} />
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export const Services = () => {
-	const galleryItems = ServiceData.map((item) => ({
-		id: item.id,
-		image: item.img,
-		title: item.service_name,
-		
-		altText: item.desc,
-	}));
-	return (
-		<div className='container mx-auto px-1 py-6 bg-white '>
-			<HeaderThree title='Featured Cartegories' />
-			<div className='w-full grid sm:grid-col-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4 mx-auto'>
-				{ServiceData.map((item, index) => (
-					<Link key={item.id} href={`/product/${item.service_name}`} className="group">
+  return (
+    <div className='container mx-auto px-1 py-6 bg-white '>
+      <HeaderThree title='Featured Cartegories' />
+      <div className='w-full grid sm:grid-col-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4 mx-auto'>
+        {ServiceData.map((item) => (
+          <Link key={item.id} href={`/product/${item.service_name}`} className="group">
             <ServiceCard image={item.img} title={item.service_name ?? ''} />
-					</Link>
-				))}
-			</div>
-		</div>
-	);
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
 };
-export const Cartegories = () => {
-	const galleryItems = ProductData.map((item) => ({
-		id: item.id,
-		image: item.img,
-		title: item.Product_name,
-		price: item.price,
-		altText: item.Product_name,
-	}));
-	return (
-		<div className='container mx-auto px-4 py-12 bg-white '>
-			<GlobalHeader title='Day Rentals' description='our day rental products come at affodable rates' buttonHref='/products' buttonText='View More'/>
-			{/* Mobile Scroll */}
-			<div className='relative md:hidden'>
-				<div className='flex overflow-x-auto gap-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4'>
-					{ProductData.map((item, index) => (
-					<Link key={item.id} href={`/projects/${item.Product_name}`}>
-						<ProductCard  image={item.img} title={item.Product_name} price={item.price} desc={item.desc}/>
-					</Link>
-					))}
-				</div>
-			</div>
 
-			{/* Desktop Grid */}
-			<div className='hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto'>
-				{ProductData.map((item, index) => (
-					<Link key={item.id} href={`/product/${item.Product_name}`} className="group">
-						<ProductCard image={item.img} title={item.Product_name} price={item.price} desc={item.desc} />
-					</Link>
-				))}
-			</div>
-		</div>
-	);
+export const Cartegories = () => {
+  return (
+    <div className='container mx-auto px-4 py-12 bg-white '>
+      <GlobalHeader title='Day Rentals' description='our day rental products come at affodable rates' buttonHref='/products' buttonText='View More'/>
+      {/* Mobile Scroll */}
+      <div className='relative md:hidden'>
+        <div className='flex overflow-x-auto gap-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4'>
+          {ProductData.map((item) => (
+          <Link key={item.id} href={`/projects/${item.Product_name}`}>
+            <ProductCard  image={item.img} title={item.Product_name} price={item.price} desc={item.desc}/>
+          </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop Grid */}
+      <div className='hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto'>
+        {ProductData.map((item) => (
+          <Link key={item.id} href={`/product/${item.Product_name}`} className="group">
+            <ProductCard image={item.img} title={item.Product_name} price={item.price} desc={item.desc} />
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
 };
+
 export default Products;
 export {ProductCard, ProductData};

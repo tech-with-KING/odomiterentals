@@ -1,5 +1,5 @@
 "use client"
-import { MenuIcon, ChevronRight, Fullscreen } from "lucide-react"
+import { MenuIcon, ChevronRight } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs"
 import { useState } from "react"
@@ -200,7 +200,6 @@ function DesktopNav() {
 }
 
 function Header() {
-  const { user } = useUser()
 
   return (
     <div className="flex justify-between items-center p-4">

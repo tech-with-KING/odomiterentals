@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { Star, ThumbsUp, ThumbsDown } from "lucide-react"
+import { Star} from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
@@ -128,7 +128,7 @@ export default function ReviewsPage() {
           onMouseLeave={handleMouseLeave}
         >
           <CarouselContent className="-ml-2 md:-ml-4">
-            {reviews.map((review, index) => (
+            {reviews.map((review) => (
               <CarouselItem key={review.id} className="pl-2 md:pl-4 md:basis-1/3 lg:basis-1/4">
                 <Card className="border-0 shadow-none">
                   <CardContent className="p-0">
