@@ -32,21 +32,39 @@ export default function ShoppingCartPage() {
     },
   ])
 
-  const [editingField, setEditingField] = useState(null)
+  const [editingField, setEditingField] = useState<string | null>(null)
   const [editValue, setEditValue] = useState("")
 
-  const startEditing = (itemId, field, currentValue) => {
+  interface CartItem {
+    id: number
+    name: string
+    image: string
+    quantity: number
+    duration: number
+    unitPrice: number
+    total: number
+    category: string
+  }
+
+  type EditableField = "name" | "duration" | "unitPrice" | "category"
+
+  const startEditing = (itemId: number, field: EditableField, currentValue: string | number) => {
     setEditingField(`${itemId}-${field}`)
     setEditValue(currentValue.toString())
   }
 
-  const saveEdit = (itemId, field) => {
-    const newValue = field === "name" ? editValue : Number.parseFloat(editValue) || 0
+  interface SaveEditParams {
+    itemId: number
+    field: EditableField
+  }
 
-    setCartItems((items) =>
-      items.map((item) => {
+  const saveEdit = (itemId: number, field: EditableField): void => {
+    const newValue: string | number = field === "name" ? editValue : Number.parseFloat(editValue) || 0
+
+    setCartItems((items: CartItem[]) =>
+      items.map((item: CartItem) => {
         if (item.id === itemId) {
-          const updatedItem = { ...item, [field]: newValue }
+          const updatedItem: CartItem = { ...item, [field]: newValue as any }
           if (field !== "name" && field !== "category") {
             updatedItem.total = updatedItem.quantity * updatedItem.duration * updatedItem.unitPrice
           }
@@ -65,9 +83,14 @@ export default function ShoppingCartPage() {
     setEditValue("")
   }
 
-  const updateQuantity = (itemId, change) => {
-    setCartItems((items) =>
-      items.map((item) => {
+  interface UpdateQuantityParams {
+    itemId: number
+    change: number
+  }
+
+  const updateQuantity = (itemId: number, change: number): void => {
+    setCartItems((items: CartItem[]) =>
+      items.map((item: CartItem) => {
         if (item.id === itemId) {
           const newQuantity = Math.max(1, item.quantity + change)
           return {
@@ -81,8 +104,12 @@ export default function ShoppingCartPage() {
     )
   }
 
-  const removeItem = (itemId) => {
-    setCartItems((items) => items.filter((item) => item.id !== itemId))
+  interface RemoveItemParams {
+    itemId: number
+  }
+
+  const removeItem = (itemId: number): void => {
+    setCartItems((items: CartItem[]) => items.filter((item: CartItem) => item.id !== itemId))
   }
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.total, 0)

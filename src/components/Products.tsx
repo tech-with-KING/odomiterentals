@@ -13,8 +13,6 @@ type ProductCardProps = {
 type ServiceCardProps = {
   image: string;
   title: string;
-  price: number | string;
-  desc: string;
 }
 const ServiceData = [
   {
@@ -140,7 +138,7 @@ const ProductData = [
 ];
 
 
-function ServiceCard({ image, title, }: ServiceCardProps) {
+function ServiceCard({ image, title }: ServiceCardProps) {
   return (
     <div className="bg-white rounded-xl overflow-hidden max-w-sm mx-auto">
       <div className="relative rounded-2xl">
@@ -220,7 +218,7 @@ export const Services = () => {
 			<div className='w-full grid sm:grid-col-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4 mx-auto'>
 				{ServiceData.map((item, index) => (
 					<Link key={item.id} href={`/product/${item.service_name}`} className="group">
-						<ServiceCard image={item.img} title={item.service_name}  />
+            <ServiceCard image={item.img} title={item.service_name ?? ''} />
 					</Link>
 				))}
 			</div>
