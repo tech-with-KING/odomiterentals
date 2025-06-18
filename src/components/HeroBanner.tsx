@@ -51,7 +51,7 @@ const services = [
     title: "Setup",
     description: "Beautiful decorative elements for memorable events.",
     image:
-      "https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484409/services/decoration_qrq7gd.jpg",
+      "https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484410/services/odomiterentals_itjcft.jpg",
     category: "Services",
   },
 ]

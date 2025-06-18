@@ -136,18 +136,7 @@ const ProductData = [
     img: 'https://res.cloudinary.com/algopinile/image/upload/v1750259962/projects/jl4fps6ymngmshu1sd3v.png',
     instock: true,
     unitsleft: 6
-  },
-  {
-    id: "9",
-    category: ['products', 'equipments'],
-    Product_name: "Portable Sound System",
-    price: 50.00,
-    desc: "This portable sound system is perfect for events, parties, and gatherings. It includes a powerful speaker and microphone for clear audio.",
-    img: 'https://res.cloudinary.com/algopinile/image/upload/v1750259962/projects/jl4fps6ymngmshu1sd3v.png',
-    instock: true,
-    unitsleft: 10
-  },
-
+  }
 ];
 
 
