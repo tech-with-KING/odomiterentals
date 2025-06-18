@@ -19,15 +19,15 @@ const services = [
     title: "Chair Rentals",
     description: "Wide selection of chairs for any event.",
     image:
-      "https://media.istockphoto.com/id/1269776313/photo/suburban-house.jpg?s=2048x2048&w=is&k=20&c=EbPPSMkI6lNpsSnKAUiVV3fR5XzAEbu3AQbBr-K4jdc=",
-    category: "Seating",
+      "https://res.cloudinary.com/dpcvlheu9/image/upload/v1710257844/OdomiteRentals/Hero_Images/banner_v3bbwc.jpg ",
+    category: "chairs",
   },
   {
     id: 2,
     title: "Table Rentals",
     description: "Various table sizes and styles to fit your needs.",
     image:
-      "https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=",
+      "https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg",
     category: "Tables",
   },
   {
@@ -35,24 +35,24 @@ const services = [
     title: "Equipment Rentals",
     description: "Lighting and sound equipment to enhance your event.",
     image:
-      "https://media.istockphoto.com/id/1269776313/photo/suburban-house.jpg?s=2048x2048&w=is&k=20&c=EbPPSMkI6lNpsSnKAUiVV3fR5XzAEbu3AQbBr-K4jdc=",
-    category: "Equipment",
+      "https://res.cloudinary.com/algopinile/image/upload/v1750259936/projects/ze3sisi0vbmnvegfxcyg.png",
+    category: "Equipments",
   },
   {
     id: 4,
     title: "Tent Rentals",
     description: "Weather protection and elegant outdoor spaces.",
     image:
-      "https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=",
+      "https://res.cloudinary.com/algopinile/image/upload/v1750262022/samples/zyzq9mvkggecloxbleie.png",
     category: "Shelter",
   },
   {
     id: 5,
-    title: "Decor Rentals",
+    title: "Setup",
     description: "Beautiful decorative elements for memorable events.",
     image:
-      "https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=",
-    category: "Decor",
+      "https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484409/services/decoration_qrq7gd.jpg",
+    category: "Services",
   },
 ]
 

@@ -13,72 +13,39 @@ import {
 } from '@/components/ui/carousel'
 import Image from 'next/image'
 import Header from './navbar'
+import { title } from 'process'
 
 const services = [
   {
+    id: 0,
+    title: "Transportation",
+    desription:"Fast, reliable delivery to your event location.",
+    image: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484410/services/movingtruck3_enz8z7.jpg',
+    category: 'Service'
+  },
+  {
     id: 1,
-    title: 'Chair Rentals',
-    description: 'Wide selection of chairs for any event.',
-    image: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
-    category: 'Seating'
-  },
-  {
-    id: 2,
-    title: 'Table Rentals',
-    description: 'Various table sizes and styles to fit your needs.',
-    image: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
-    category: 'Tables'
+    title: "Setup",
+    description: "Professional setup for a perfect event layout.",
+    image: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484409/services/decoration_qrq7gd.jpg',
+    category: 'Service'
   },
   {
     id: 3,
-    title: 'Equipment Rentals',
-    description: 'Lighting and sound equipment to enhance your event.',
-    image: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
-    category: 'Equipment'
+    title: "Decoration",
+    description: "Stylish decor to make your event unforgettable.",
+    image: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484409/services/decoration2_ddhc5a.jpg',
+    category: 'Service'
   },
   {
     id: 4,
-    title: 'Tent Rentals',
-    description: 'Weather protection and elegant outdoor spaces.',
-    image: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
-    category: 'Shelter'
-  },
-  {
-    id: 5,
-    title: 'Decor Rentals',
-    description: 'Beautiful decorative elements for memorable events.',
-    image: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
-    category: 'Decor'
-  },
-    {
-    id: 2,
-    title: 'Table Rentals',
-    description: 'Various table sizes and styles to fit your needs.',
-    image: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
-    category: 'Tables'
-  },
-  {
-    id: 3,
-    title: 'Equipment Rentals',
-    description: 'Lighting and sound equipment to enhance your event.',
-    image: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
-    category: 'Equipment'
-  },
-  {
-    id: 4,
-    title: 'Tent Rentals',
-    description: 'Weather protection and elegant outdoor spaces.',
-    image: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
-    category: 'Shelter'
-  },
-  {
-    id: 5,
-    title: 'Decor Rentals',
-    description: 'Beautiful decorative elements for memorable events.',
-    image: 'https://media.istockphoto.com/id/149060607/photo/for-rent-sign-in-front-of-new-house.jpg?s=612x612&w=0&k=20&c=By627yICPZugFR1j2_a_7MCEn1f5ltYlivg6Tv50JaQ=',
-    category: 'Decor'
+    title: "Rentals",
+    description: "Post-event cleanup handled with care",
+    image: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484411/services/cleanup_pwv9lj.jpg',
+    category: 'Product'
   }
-]
+];
+
 
 export default function FeaturedServicesCarousel() {
   const [api, setApi] = React.useState<CarouselApi>()

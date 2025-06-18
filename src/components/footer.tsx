@@ -39,7 +39,7 @@ export default function Footer() {
                   <InteractiveLink href="/services">Our Services</InteractiveLink>
                 </li>
                 <li>
-                  <InteractiveLink href="/projects">Portfolio</InteractiveLink>
+                  <InteractiveLink href="/shop">Catalogue</InteractiveLink>
                 </li>
                 <li>
                   <InteractiveLink href="/resources">Resources</InteractiveLink>
@@ -98,7 +98,7 @@ export default function Footer() {
 }
 
 // Interactive link component
-const InteractiveLink = ({ href, children }) => {
+const InteractiveLink = ({ href, children }:{href:string, children:any}) => {
   const [isHovered, setIsHovered] = useState(false)
 
   return (

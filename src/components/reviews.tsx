@@ -15,82 +15,60 @@ import {
 const reviews = [
   {
     id: 1,
-    name: "Sophia Carter",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+    name: "Connie G",
+    avatar: "https://randomuser.me/api/portraits/women/1.jpg",
     rating: 5,
-    date: "1 month ago",
+    date: "4 months ago",
     comment:
-      "This lounge chair is incredibly comfortable and stylish. It was the perfect addition to my living room and made it feel so much more inviting. The rental process was smooth and hassle-free.",
-    likes: 12,
-    dislikes: 2,
+      "They were very professional, on time and they actually picked up the tables and chairs at the end of our party. We called them and they came quick. I will definitely do more rentals with them. I recommend Odomite Rentals to everyone.",
+    likes: 0,
+    dislikes: 0,
   },
   {
     id: 2,
-    name: "Ethan Bennett",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-    rating: 4,
-    date: "2 months ago",
+    name: "K. Grant",
+    avatar: "https://randomuser.me/api/portraits/women/2.jpg",
+    rating: 5,
+    date: "a month ago",
     comment:
-      "The chair is great, but I wish there were more color options available. Overall, it's a solid rental choice for anyone looking for a temporary seating solution.",
-    likes: 8,
-    dislikes: 1,
+      "Service was great! We had a last minute holiday party. Steven was able to supply our requested table and chairs colors with no problem. Communication was excellent.",
+    likes: 0,
+    dislikes: 0,
   },
   {
     id: 3,
-    name: "Maya Rodriguez",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+    name: "Darnell Brunson",
+    avatar: "https://randomuser.me/api/portraits/men/3.jpg",
     rating: 5,
-    date: "3 weeks ago",
+    date: "a year ago",
     comment:
-      "Excellent quality and super comfortable! The delivery was prompt and the setup was easy. Highly recommend for anyone looking to upgrade their space temporarily.",
-    likes: 15,
+      "I was looking around for rental chairs but I wanted a certain look. So I found this amazing rental company on Facebook marketplace. Did my research on the internet and found them to be legit. This was the best decision I’ve made. I own an intimate event space and will be using them for all my events! Communication and delivery, let’s not forget pricing, was all on point!! Thank you Thank you Thank you!",
+    likes: 0,
     dislikes: 0,
   },
   {
     id: 4,
-    name: "James Wilson",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-    rating: 3,
-    date: "6 weeks ago",
-    comment:
-      "Decent chair but not as comfortable as I expected. It serves its purpose but I probably wouldn't rent it again.",
-    likes: 5,
-    dislikes: 3,
-  },
-    {
-    id: 2,
-    name: "Ethan Bennett",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-    rating: 4,
-    date: "2 months ago",
-    comment:
-      "The chair is great, but I wish there were more color options available. Overall, it's a solid rental choice for anyone looking for a temporary seating solution.",
-    likes: 8,
-    dislikes: 1,
-  },
-  {
-    id: 3,
-    name: "Maya Rodriguez",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+    name: "Simply Stefené",
+    avatar: "https://randomuser.me/api/portraits/women/4.jpg",
     rating: 5,
-    date: "3 weeks ago",
+    date: "4 months ago",
     comment:
-      "Excellent quality and super comfortable! The delivery was prompt and the setup was easy. Highly recommend for anyone looking to upgrade their space temporarily.",
-    likes: 15,
+      "I had such a great experience renting chairs for a small party. The transaction was smooth and the owner was super nice. I will be returning and recommending this company!",
+    likes: 0,
     dislikes: 0,
   },
   {
-    id: 4,
-    name: "James Wilson",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-    rating: 3,
-    date: "6 weeks ago",
+    id: 5,
+    name: "Stephanie Homem",
+    avatar: "https://randomuser.me/api/portraits/women/5.jpg",
+    rating: 5,
+    date: "a year ago",
     comment:
-      "Decent chair but not as comfortable as I expected. It serves its purpose but I probably wouldn't rent it again.",
-    likes: 5,
-    dislikes: 3,
+      "Everything was perfect — we rented for Thanksgiving! Scheduled for pick up and delivery and everything went very smoothly. Very friendly and very professional. I will be renting from this company again. The chairs and table were clean. When I called, they answered all my questions and everything he said was done. Very pleased. Thank you so much!",
+    likes: 0,
+    dislikes: 0,
   },
-]
+];
 
 const renderStars = (rating: number, size = 18) => {
   return Array.from({ length: 5 }, (_, index) => (
@@ -154,14 +132,12 @@ export default function ReviewsPage() {
               <CarouselItem key={review.id} className="pl-2 md:pl-4 md:basis-1/3 lg:basis-1/4">
                 <Card className="border-0 shadow-none">
                   <CardContent className="p-0">
-                    <div className="w-full flex-shrink-0 px-2">
-                      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 h-full">
+                    <div className="w-full flex-shrink-0 px-2]">
+                      <div className="bg-white  min-h-[350px] rounded-lg shadow-sm border border-gray-100 p-6 h-full ">
                         <div className="flex items-center gap-3 mb-4">
-                          <img
-                            src={review.avatar || "/placeholder.svg"}
-                            alt={review.name}
-                            className="w-10 h-10 rounded-full object-cover"
-                          />
+                          <div className='w-16 h-16 mb-4 rounded-full bg-gray-200  flex items-center justify-center text-gray-800 font-semibold text-lg'>
+									        {review.name[0]}
+								          </div>
                           <div className="flex-1">
                             <p className="text-gray-900 text-base font-medium">{review.name}</p>
                             <p className="text-gray-600 text-sm">{review.date}</p>
@@ -171,17 +147,6 @@ export default function ReviewsPage() {
                         <div className="flex gap-1 mb-4">{renderStars(review.rating, 20)}</div>
 
                         <p className="text-gray-900 text-base mb-4 leading-relaxed">{review.comment}</p>
-
-                        <div className="flex items-center gap-6 text-gray-600">
-                          <button className="flex items-center gap-2 hover:text-blue-600 transition-colors">
-                            <ThumbsUp size={18} />
-                            <span className="text-sm">{review.likes}</span>
-                          </button>
-                          <button className="flex items-center gap-2 hover:text-red-600 transition-colors">
-                            <ThumbsDown size={18} />
-                            <span className="text-sm">{review.dislikes}</span>
-                          </button>
-                        </div>
                       </div>
                     </div>
                   </CardContent>

@@ -8,16 +8,15 @@ const ShopPage = () => {
     <CategoryFilter
       title="Filter by Product Type"
       categories={[
-        'Accessibility',
-        'Addition',
-        'Basement',
-        'Bathroom',
-        'Elevators',
-        'Exterior',
-        'Kitchen',
-        'Main Floor',
-        'Second Floor',
-        'Whole Home',
+        'chairs',
+        'tables',
+        'tents',
+        'equipments',
+        'services',
+        'products',
+        'transportation',
+        'setup',
+        'decoration',
       ]}
       products={ProductData}
       onFilterChange={(selected) => {
@@ -80,9 +79,9 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
           <button
             key={category}
             onClick={() => toggleCategory(category)}
-            className={`px-4 py-2 rounded border transition-colors ${
+            className={`px-4 py-2 rounded-full border transition-colors ${
               selectedCategories.includes(category)
-                ? 'bg-orange-500 text-white border-orange-500'
+                ? 'bg-[#bcd1e5] text-grey-900 '
                 : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100'
             }`}
           >

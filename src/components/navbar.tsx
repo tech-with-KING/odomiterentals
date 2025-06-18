@@ -1,5 +1,5 @@
 "use client"
-import { MenuIcon, ChevronRight } from "lucide-react"
+import { MenuIcon, ChevronRight, Fullscreen } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs"
 import { useState } from "react"
@@ -15,6 +15,7 @@ import { Search, Phone, ShoppingCart } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import Image from "next/image"
 
 function MobileNav() {
   const [isMoreOpen, setIsMoreOpen] = useState(false)
@@ -202,10 +203,10 @@ function Header() {
   const { user } = useUser()
 
   return (
-    <div className="flex justify-between items-center p-4 border-b">
+    <div className="flex justify-between items-center p-4">
       <div className="flex items-center">
         <Link href="/" className="text-xl font-bold hover:opacity-80 transition-opacity">
-          Odomite Rental
+          <Image src="/logo.png" width={250} height={80} alt="Logo" />
         </Link>
       </div>
       <DesktopNav />
