@@ -1,8 +1,6 @@
-import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import  Header from '@/components/navbar'
-import SideBar from "@/components/navbar";
 import Footer from "@/components/footer";
 
 

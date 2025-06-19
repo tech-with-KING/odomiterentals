@@ -2,7 +2,7 @@
 
 import React, { useEffect, useCallback } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
-import GlobalHeader, { HeaderThree } from '@/components/GlobalHeader'
+import { HeaderThree } from '@/components/GlobalHeader'
 import {
   Carousel,
   CarouselContent,
@@ -12,8 +12,6 @@ import {
   type CarouselApi,
 } from '@/components/ui/carousel'
 import Image from 'next/image'
-import Header from './navbar'
-import { title } from 'process'
 
 const services = [
   {

@@ -1,7 +1,17 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ProductCard, ProductData} from '@/components/Products';
+import { ProductCard, ProductData } from '@/components/Products';
+
+// Define proper types for your product data
+interface Product {
+  id: string | number;
+  img: string;
+  Product_name: string;
+  price: number | string;
+  desc: string;
+  categories?: string[];
+}
 
 const ShopPage = () => {
   return (
@@ -19,7 +29,9 @@ const ShopPage = () => {
         'decoration',
       ]}
       products={ProductData}
-      onFilterChange={(selected) => {
+      onFilterChange={(selectedCategories) => {
+        // You can handle the filter change here if needed
+        console.log('Selected categories:', selectedCategories);
       }}
     />
   );
@@ -30,7 +42,7 @@ export default ShopPage;
 interface CategoryFilterProps {
   title?: string;
   categories: string[];
-  products: ProductData[];
+  products: Product[];
   className?: string;
   onFilterChange?: (selectedCategories: string[]) => void;
 }
@@ -43,21 +55,20 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
   onFilterChange,
 }) => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<ProductType[]>(products);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
 
   useEffect(() => {
     if (selectedCategories.length === 0) {
       setFilteredProducts(products);
     } else {
-      const filtered = products.filter((product) => {
+      const filtered = products.filter((product: Product) => {
         const productCategories = product.categories || [];
-        return productCategories.some((category) =>
+        return productCategories.some((category: string) =>
           selectedCategories.includes(category)
         );
       });
       setFilteredProducts(filtered);
     }
-
     if (onFilterChange) onFilterChange(selectedCategories);
   }, [selectedCategories, products, onFilterChange]);
 
@@ -90,9 +101,14 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
         ))}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        {filteredProducts.map((product) => (
+        {filteredProducts.map((product: Product) => (
           <Link key={product.id} href={`/products/${product.id}`}>
-            <ProductCard image={product.img} title={product.Product_name} price={product.price} desc={product.desc} />
+            <ProductCard 
+              image={product.img} 
+              title={product.Product_name} 
+              price={product.price} 
+              desc={product.desc} 
+            />
           </Link>
         ))}
       </div>
@@ -104,4 +120,3 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
     </div>
   );
 };
-

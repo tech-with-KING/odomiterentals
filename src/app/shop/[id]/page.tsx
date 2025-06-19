@@ -1,9 +1,11 @@
 'use client';
 import React, { useState } from 'react';
+import type { ReactElement } from 'react';
 import { Star, ThumbsUp, ThumbsDown, ShoppingCart, MessageSquare } from 'lucide-react';
+import Image from 'next/image';
 
 const FurnitureRentalPage = () => {
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [activeImageIndex] = useState(0);
 
   const productImages = [
     "https://lh3.googleusercontent.com/aida-public/AB6AXuBS3F3kqH2MQC2RiwBFUVZw5ub-vimTaNnwhiQ5CXP3a8ueGxZeZpjtK4JxCoZ_zoV8cK5Ptp12Hmsgwp92F0b0HyT4jn3tHfOVaHO1YJ_mowXkKiR1WvS5xvPh4q-cFNcl5jccaeehMjg47_bP2RG1HMddKdocs4_QkBU5d0WK5Kwuc1_2qIA2MB8P9EAqPO53uIhhk304oF1MWARRovqAbts4Jt5fWz94-KD-QjeMm4yaJdnK9MAi5C8ekCEl5rLM1J7d2h14pA"
@@ -40,7 +42,7 @@ const FurnitureRentalPage = () => {
     { stars: 1, percentage: 5 }
   ];
 
-  const renderStars = (rating, size = 18) => {
+  const renderStars = (rating: number, size: number = 18): ReactElement[] => {
     return Array.from({ length: 5 }, (_, index) => (
       <Star
         key={index}
@@ -74,11 +76,14 @@ const FurnitureRentalPage = () => {
 
           {/* Product Image */}
           <div className="px-4 mb-8">
-            <div className="w-full bg-center bg-no-repeat bg-cover aspect-[3/2] md:aspect-[16/10] lg:aspect-[3/2] rounded-xl overflow-hidden shadow-lg">
-              <img 
+            <div className="w-full bg-center bg-no-repeat bg-cover aspect-[3/2] md:aspect-[16/10] lg:aspect-[3/2] rounded-xl overflow-hidden shadow-lg relative">
+              <Image 
                 src={productImages[activeImageIndex]} 
                 alt="Modern Lounge Chair"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                fill
+                className="object-cover hover:scale-105 transition-transform duration-300"
+                sizes="(max-width: 768px) 100vw, 800px"
+                priority
               />
             </div>
           </div>
@@ -152,11 +157,15 @@ const FurnitureRentalPage = () => {
               {reviews.map((review) => (
                 <div key={review.id} className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <img 
-                      src={review.avatar} 
-                      alt={review.name}
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
+                    <div className="w-10 h-10 relative">
+                      <Image 
+                        src={review.avatar} 
+                        alt={review.name}
+                        fill
+                        className="rounded-full object-cover"
+                        sizes="40px"
+                      />
+                    </div>
                     <div className="flex-1">
                       <p className="text-gray-900 text-base font-medium">{review.name}</p>
                       <p className="text-gray-600 text-sm">{review.date}</p>

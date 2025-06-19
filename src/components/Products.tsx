@@ -42,7 +42,7 @@ const ServiceData = [
     service_name: "Equipments",
     title: "Equipments",
     desc: "Post-event cleanup handled with care",
-    img: '',
+    img: 'https://res.cloudinary.com/algopinile/image/upload/v1750259962/projects/jl4fps6ymngmshu1sd3v.png',
   }
 ];
 

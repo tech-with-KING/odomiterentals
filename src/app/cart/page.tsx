@@ -1,15 +1,28 @@
 "use client"
 
 import { useState } from "react"
-import { Search, Heart, ShoppingCart, Plus, Minus, Trash2, Edit3, Check, X, ArrowLeft } from "lucide-react"
+import { ShoppingCart, Plus, Minus, Trash2, Edit3, Check, X, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 
+interface CartItem {
+  id: number
+  name: string
+  image: string
+  quantity: number
+  duration: number
+  unitPrice: number
+  total: number
+  category: string
+}
+
+type EditableField = "name" | "duration" | "unitPrice" | "category"
+
 export default function ShoppingCartPage() {
-  const [cartItems, setCartItems] = useState([
+  const [cartItems, setCartItems] = useState<CartItem[]>([
     {
       id: 1,
       name: "Professional Camera",
@@ -35,27 +48,9 @@ export default function ShoppingCartPage() {
   const [editingField, setEditingField] = useState<string | null>(null)
   const [editValue, setEditValue] = useState("")
 
-  interface CartItem {
-    id: number
-    name: string
-    image: string
-    quantity: number
-    duration: number
-    unitPrice: number
-    total: number
-    category: string
-  }
-
-  type EditableField = "name" | "duration" | "unitPrice" | "category"
-
   const startEditing = (itemId: number, field: EditableField, currentValue: string | number) => {
     setEditingField(`${itemId}-${field}`)
     setEditValue(currentValue.toString())
-  }
-
-  interface SaveEditParams {
-    itemId: number
-    field: EditableField
   }
 
   const saveEdit = (itemId: number, field: EditableField): void => {
@@ -64,7 +59,10 @@ export default function ShoppingCartPage() {
     setCartItems((items: CartItem[]) =>
       items.map((item: CartItem) => {
         if (item.id === itemId) {
-          const updatedItem: CartItem = { ...item, [field]: newValue as any }
+          const updatedItem: CartItem = { 
+            ...item, 
+            [field]: field === "name" || field === "category" ? newValue : Number(newValue)
+          }
           if (field !== "name" && field !== "category") {
             updatedItem.total = updatedItem.quantity * updatedItem.duration * updatedItem.unitPrice
           }
@@ -83,11 +81,6 @@ export default function ShoppingCartPage() {
     setEditValue("")
   }
 
-  interface UpdateQuantityParams {
-    itemId: number
-    change: number
-  }
-
   const updateQuantity = (itemId: number, change: number): void => {
     setCartItems((items: CartItem[]) =>
       items.map((item: CartItem) => {
@@ -102,10 +95,6 @@ export default function ShoppingCartPage() {
         return item
       }),
     )
-  }
-
-  interface RemoveItemParams {
-    itemId: number
   }
 
   const removeItem = (itemId: number): void => {
@@ -147,10 +136,11 @@ export default function ShoppingCartPage() {
                   <div className="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-6">
                     {/* Product Image */}
                     <div className="flex-shrink-0">
-                      <img
-                        src={item.image || "/placeholder.svg"}
-                        alt={item.name}
-                        className="w-20 h-20 md:w-24 md:h-24 rounded-xl object-cover bg-slate-100"
+                      <div
+                        className="w-20 h-20 md:w-24 md:h-24 rounded-xl bg-slate-100 bg-cover bg-center"
+                        style={{ backgroundImage: `url(${item.image || "/placeholder.svg"})` }}
+                        role="img"
+                        aria-label={item.name}
                       />
                     </div>
 

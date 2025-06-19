@@ -1,4 +1,5 @@
 // components/GoogleMapEmbed.tsx
+"use client";
 const MapIntegration = () => {
   return (
     <div className="w-full h-[400px]">

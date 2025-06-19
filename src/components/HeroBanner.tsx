@@ -125,31 +125,6 @@ const descriptionVariants = {
   },
 }
 
-const categoryVariants = {
-  hidden: {
-    opacity: 0,
-    x: -20,
-    scale: 0.8,
-  },
-  visible: {
-    opacity: 1,
-    x: 0,
-    scale: 1,
-    transition: {
-      type: "spring",
-      damping: 20,
-      stiffness: 150,
-      duration: 0.5,
-    },
-  },
-  exit: {
-    opacity: 0,
-    x: 20,
-    scale: 0.8,
-    transition: { duration: 0.2 },
-  },
-}
-
 export default function HeroBanner() {
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0)

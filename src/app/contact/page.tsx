@@ -41,7 +41,7 @@ export default function ContactPage() {
         <div className="text-center mb-12 lg:mb-16">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 lg:mb-6">Get in Touch</h1>
           <p className="text-lg lg:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-            Ready to start your next project? We'd love to hear from you. Reach out to discuss your development needs,
+            Ready to start your next project? We&apos;d love to hear from you. Reach out to discuss your development needs,
             get a quote, or learn more about how DevConnect can help bring your ideas to life.
           </p>
         </div>
@@ -67,7 +67,7 @@ export default function ContactPage() {
                 <Mail className="w-6 h-6 text-green-600" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Email Us</h3>
-              <p className="text-sm text-gray-600 mb-2">We'll respond within 24hrs</p>
+              <p className="text-sm text-gray-600 mb-2">We&apos;ll respond within 24hrs</p>
               <a href="mailto:hello@devconnect.com" className="text-green-600 hover:text-green-700 font-medium">
                 hello@devconnect.com
               </a>
@@ -271,7 +271,7 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">Remote First</h3>
                     <p className="text-gray-700 mb-2">
-                      We're a distributed team with developers and staff working from 50+ countries worldwide.
+                      We&apos;re a distributed team with developers and staff working from 50+ countries worldwide.
                     </p>
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <Clock className="w-4 h-4" />
@@ -302,7 +302,7 @@ export default function ContactPage() {
             </div>
 
             <div className="bg-gray-50 rounded-xl p-6">
-              <h3 className="font-semibold text-gray-900 mb-2">What's your developer vetting process?</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">What&apos;s your developer vetting process?</h3>
               <p className="text-gray-700 text-sm leading-relaxed">
                 We have a rigorous 5-step vetting process including technical assessments, portfolio reviews,
                 communication tests, and reference checks. Only the top 3% of applicants join our network.
@@ -312,13 +312,13 @@ export default function ContactPage() {
             <div className="bg-gray-50 rounded-xl p-6">
               <h3 className="font-semibold text-gray-900 mb-2">Do you offer project management services?</h3>
               <p className="text-gray-700 text-sm leading-relaxed">
-                Yes, we provide dedicated project managers for complex projects, along with our platform's built-in
+                Yes, we provide dedicated project managers for complex projects, along with our platform&apos;s built-in
                 project management tools, time tracking, and milestone management features.
               </p>
             </div>
 
             <div className="bg-gray-50 rounded-xl p-6">
-              <h3 className="font-semibold text-gray-900 mb-2">What if I'm not satisfied with the work?</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">What if I&apos;m not satisfied with the work?</h3>
               <p className="text-gray-700 text-sm leading-relaxed">
                 We offer a satisfaction guarantee with our DevConnect Protection program, including milestone-based
                 payments, dispute resolution, and the ability to switch developers if needed.

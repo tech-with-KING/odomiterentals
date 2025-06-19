@@ -16,7 +16,6 @@ const reviews = [
   {
     id: 1,
     name: "Connie G",
-    avatar: "https://randomuser.me/api/portraits/women/1.jpg",
     rating: 5,
     date: "4 months ago",
     comment:
@@ -27,7 +26,6 @@ const reviews = [
   {
     id: 2,
     name: "K. Grant",
-    avatar: "https://randomuser.me/api/portraits/women/2.jpg",
     rating: 5,
     date: "a month ago",
     comment:
@@ -38,7 +36,6 @@ const reviews = [
   {
     id: 3,
     name: "Darnell Brunson",
-    avatar: "https://randomuser.me/api/portraits/men/3.jpg",
     rating: 5,
     date: "a year ago",
     comment:
@@ -49,7 +46,6 @@ const reviews = [
   {
     id: 4,
     name: "Simply Stefené",
-    avatar: "https://randomuser.me/api/portraits/women/4.jpg",
     rating: 5,
     date: "4 months ago",
     comment:
@@ -60,7 +56,6 @@ const reviews = [
   {
     id: 5,
     name: "Stephanie Homem",
-    avatar: "https://randomuser.me/api/portraits/women/5.jpg",
     rating: 5,
     date: "a year ago",
     comment:

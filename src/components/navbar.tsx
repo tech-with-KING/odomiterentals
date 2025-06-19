@@ -31,7 +31,7 @@ function MobileNav() {
   return (
     <div className="md:hidden">
       <Sheet>
-        <SheetTrigger asChild>
+        <SheetTrigger asChild>                                                    
           <button className="p-2 hover:bg-accent rounded-md transition-colors">
             <MenuIcon size={24} />
             <span className="sr-only">Open menu</span>
@@ -205,7 +205,7 @@ function Header() {
     <div className="flex justify-between items-center p-4">
       <div className="flex items-center">
         <Link href="/" className="text-xl font-bold hover:opacity-80 transition-opacity">
-          <Image src="/logo.png" width={250} height={80} alt="Logo" />
+          <Image src="/logo.png" width={250} height={80} alt="Logo"  />
         </Link>
       </div>
       <DesktopNav />

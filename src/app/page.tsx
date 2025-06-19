@@ -1,3 +1,4 @@
+'use client';
 import FeaturedServicesCarousel from "@/components/FeatureServices";
 import GlobalHeader from "@/components/GlobalHeader";
 import HeroBanner from "@/components/HeroBanner";
