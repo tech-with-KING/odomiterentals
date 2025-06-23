@@ -1,56 +1,95 @@
 'use client';
-import React, { useState } from 'react';
-import type { ReactElement } from 'react';
-import { Star, ThumbsUp, ThumbsDown, ShoppingCart, MessageSquare } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import { ShoppingCart, MessageSquare } from 'lucide-react';
 import Image from 'next/image';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
-const FurnitureRentalPage = () => {
-  const [activeImageIndex] = useState(0);
+interface ProductData {
+  id: string;
+  name: string;
+  short_description: string;
+  description: string;
+  images: string[];
+  dimensions: string;
+  material: string;
+  features: string;
+  category: string;
+  subcategory: string;
+  rating: number;
+  instock: boolean;
+  unitsleft: number;
+  price: number;
+}
 
-  const productImages = [
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuBS3F3kqH2MQC2RiwBFUVZw5ub-vimTaNnwhiQ5CXP3a8ueGxZeZpjtK4JxCoZ_zoV8cK5Ptp12Hmsgwp92F0b0HyT4jn3tHfOVaHO1YJ_mowXkKiR1WvS5xvPh4q-cFNcl5jccaeehMjg47_bP2RG1HMddKdocs4_QkBU5d0WK5Kwuc1_2qIA2MB8P9EAqPO53uIhhk304oF1MWARRovqAbts4Jt5fWz94-KD-QjeMm4yaJdnK9MAi5C8ekCEl5rLM1J7d2h14pA"
-  ];
+const ShopPage = () => {
+  const params = useParams();
+  const productId = params?.id as string;
+  
+  const [product, setProduct] = useState<ProductData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  const reviews = [
-    {
-      id: 1,
-      name: "Sophia Carter",
-      avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuApfbjpD7DAuh1QVF6OLpE-j5J4lqeBTG5WR9Gm4iq9QQOa5XKzFURP392LGyhvljQdV7mfCTkf7-e1CTmbuXa2m2RKudWb9m9rlwQ3dBIyN8Oo_6WpA5m-2rQefpLF-MPxlIqEh0bfqbonGWTlnz6fOphBRc5i0rbfC0C-Dg4zjrAvNCyP2cAAQhwGGCcOaA4vvYu3959KK_7kMz7dK8Xoh7KVh1msAEcma2o7JGIyAYp38eSRECfUWy4Y8to2D8tog4pbCxL_hQ",
-      rating: 5,
-      date: "1 month ago",
-      comment: "This lounge chair is incredibly comfortable and stylish. It was the perfect addition to my living room and made it feel so much more inviting. The rental process was smooth and hassle-free.",
-      likes: 12,
-      dislikes: 2
-    },
-    {
-      id: 2,
-      name: "Ethan Bennett",
-      avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuCVaZaHyEgXlSUcoaTW7Vrtd3RSNgl7Rysw3eRmV3QZoKo9AgX_hzq8fcdwlfIULTLOTn_r9ECFyH4EA0wvquN35L4O56EOHdIAMmoHMI-NvREi9yPZV7qbVVDUkAAbAHZwF16nMofzfDe4-vvWHuO7MAnT_HMRt50ttkJXsys_g3LtUMYtmxMNpkqd0GwmS2PjaQktulUZyoac6DUZRCiYHbJa9uriqtyC0Af4ZoCTLhbm3-4UdD7g5A4qD5xvTQM3j5U3V2fkPQ",
-      rating: 4,
-      date: "2 months ago",
-      comment: "The chair is great, but I wish there were more color options available. Overall, it's a solid rental choice for anyone looking for a temporary seating solution.",
-      likes: 8,
-      dislikes: 1
-    }
-  ];
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!productId) {
+        setError('Product ID not found');
+        setLoading(false);
+        return;
+      }
 
-  const ratingDistribution = [
-    { stars: 5, percentage: 40 },
-    { stars: 4, percentage: 30 },
-    { stars: 3, percentage: 15 },
-    { stars: 2, percentage: 10 },
-    { stars: 1, percentage: 5 }
-  ];
+      try {
+        const productRef = doc(db, 'products', productId);
+        const productSnap = await getDoc(productRef);
 
-  const renderStars = (rating: number, size: number = 18): ReactElement[] => {
-    return Array.from({ length: 5 }, (_, index) => (
-      <Star
-        key={index}
-        size={size}
-        className={index < rating ? "text-blue-600 fill-current" : "text-gray-300"}
-      />
-    ));
-  };
+        if (productSnap.exists()) {
+          const productData = productSnap.data() as Omit<ProductData, 'id'>;
+          setProduct({
+            id: productSnap.id,
+            ...productData
+          });
+        } else {
+          setError('Product not found');
+        }
+      } catch (err) {
+        console.error('Error fetching product:', err);
+        setError('Failed to load product');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading product...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 text-lg font-medium mb-4">{error || 'Product not found'}</p>
+          <button 
+            onClick={() => window.history.back()}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 font-['Plus_Jakarta_Sans',_'Noto_Sans',_sans-serif]">
@@ -59,33 +98,60 @@ const FurnitureRentalPage = () => {
         <div className="max-w-6xl mx-auto">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 p-4 text-sm">
-            <a href="#" className="text-blue-600 hover:text-blue-800 transition-colors">Furniture</a>
+            <a href="#" className="text-blue-600 hover:text-blue-800 transition-colors">
+              {product.category}
+            </a>
             <span className="text-blue-600">/</span>
-            <span className="text-gray-900 font-medium">Chairs</span>
+            <span className="text-gray-900 font-medium">{product.subcategory}</span>
           </nav>
 
           {/* Product Header */}
           <div className="px-4 mb-6">
             <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
-              The Modern Lounge Chair
+              {product.name}
             </h1>
             <p className="text-gray-600 text-sm md:text-base max-w-2xl">
-              A stylish and comfortable lounge chair perfect for any living space.
+              {product.description}
             </p>
           </div>
 
-          {/* Product Image */}
+          {/* Product Images */}
           <div className="px-4 mb-8">
             <div className="w-full bg-center bg-no-repeat bg-cover aspect-[3/2] md:aspect-[16/10] lg:aspect-[3/2] rounded-xl overflow-hidden shadow-lg relative">
               <Image 
-                src={productImages[activeImageIndex]} 
-                alt="Modern Lounge Chair"
+                src={product.images[activeImageIndex]} 
+                alt={product.name}
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 768px) 100vw, 800px"
                 priority
+                unoptimized
               />
             </div>
+            
+            {/* Image Thumbnails (if multiple images) */}
+            {product.images.length > 1 && (
+              <div className="flex gap-2 mt-4 overflow-x-auto">
+                {product.images.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setActiveImageIndex(index)}
+                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
+                      index === activeImageIndex ? 'border-blue-600' : 'border-gray-200'
+                    }`}
+                  >
+                    <Image
+                      src={image}
+                      alt={`${product.name} view ${index + 1}`}
+                      width={80}
+                      height={80}
+                      className="object-cover w-full h-full"
+                      unoptimized
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Product Details */}
@@ -93,10 +159,9 @@ const FurnitureRentalPage = () => {
             <h3 className="text-lg font-bold text-gray-900 px-4 pb-4">Product Details</h3>
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
               {[
-                { label: "Dimensions", value: "30\"W x 35\"D x 32\"H" },
-                { label: "Material", value: "Upholstered in premium fabric with a sturdy wooden frame" },
-                { label: "Features", value: "Ergonomic design, plush cushioning, and a sleek, modern aesthetic" },
-                { label: "Rental Price", value: "$50/week" }
+                { label: "Dimensions", value: product.dimensions },
+                { label: "Material", value: product.material },
+                { label: "Features", value: product.features },
               ].map((detail, index) => (
                 <div key={index} className={`grid grid-cols-1 md:grid-cols-4 gap-4 p-4 ${index !== 3 ? 'border-b border-gray-100' : ''}`}>
                   <p className="text-gray-600 text-sm font-medium md:col-span-1">{detail.label}</p>
@@ -117,85 +182,10 @@ const FurnitureRentalPage = () => {
               Request a Quote
             </button>
           </div>
-
-          {/* Customer Reviews */}
-          <section>
-            <h3 className="text-lg font-bold text-gray-900 px-4 pb-4">Customer Reviews</h3>
-            
-            {/* Rating Summary */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
-              <div className="flex flex-col lg:flex-row gap-8">
-                {/* Overall Rating */}
-                <div className="flex flex-col items-center lg:items-start gap-2">
-                  <p className="text-4xl font-black text-gray-900">4.5</p>
-                  <div className="flex gap-1">
-                    {renderStars(4.5)}
-                  </div>
-                  <p className="text-gray-900 text-base">24 reviews</p>
-                </div>
-
-                {/* Rating Breakdown */}
-                <div className="flex-1 max-w-md">
-                  {ratingDistribution.map((rating) => (
-                    <div key={rating.stars} className="grid grid-cols-[20px_1fr_40px] items-center gap-3 mb-3">
-                      <p className="text-gray-900 text-sm">{rating.stars}</p>
-                      <div className="flex h-2 overflow-hidden rounded-full bg-gray-200">
-                        <div 
-                          className="rounded-full bg-blue-600 transition-all duration-300" 
-                          style={{ width: `${rating.percentage}%` }}
-                        />
-                      </div>
-                      <p className="text-gray-600 text-sm text-right">{rating.percentage}%</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Individual Reviews */}
-            <div className="space-y-6">
-              {reviews.map((review) => (
-                <div key={review.id} className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 relative">
-                      <Image 
-                        src={review.avatar} 
-                        alt={review.name}
-                        fill
-                        className="rounded-full object-cover"
-                        sizes="40px"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-gray-900 text-base font-medium">{review.name}</p>
-                      <p className="text-gray-600 text-sm">{review.date}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-1 mb-4">
-                    {renderStars(review.rating, 20)}
-                  </div>
-                  
-                  <p className="text-gray-900 text-base mb-4 leading-relaxed">{review.comment}</p>
-                  
-                  <div className="flex items-center gap-6 text-gray-600">
-                    <button className="flex items-center gap-2 hover:text-blue-600 transition-colors">
-                      <ThumbsUp size={18} />
-                      <span className="text-sm">{review.likes}</span>
-                    </button>
-                    <button className="flex items-center gap-2 hover:text-red-600 transition-colors">
-                      <ThumbsDown size={18} />
-                      <span className="text-sm">{review.dislikes}</span>
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
         </div>
       </main>
     </div>
   );
 };
 
-export default FurnitureRentalPage;
+export default ShopPage;

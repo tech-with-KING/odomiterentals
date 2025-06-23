@@ -11,27 +11,35 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
-import { Search, Phone, ShoppingCart } from "lucide-react"
+import { Search, Phone, ShoppingCart, Shield } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
+import { useAdminCheck } from "@/context/admin"
 
 function MobileNav() {
   const [isMoreOpen, setIsMoreOpen] = useState(false)
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
   const { user } = useUser()
-
-  const moreItems = [
-    { name: "Services", href: "/services" },
-    { name: "Gallery", href: "/gallery" },
-    { name: "Reviews", href: "/reviews" },
-    { name: "Contact", href: "/contact" },
+  const { isAdmin } = useAdminCheck()
+  
+  const categoryItems = [
+    { name: "Tables", href: "/shop" },
+    { name: "Chairs", href: "/shop" },
+    { name: "Tents", href: "/shop" },
+    { name: "Equipments", href: "/shop" },
   ]
+
+  const handleLinkClick = () => {
+    setIsSheetOpen(false)
+    setIsMoreOpen(false)
+  }
 
   return (
     <div className="md:hidden">
-      <Sheet>
-        <SheetTrigger asChild>                                                    
+      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+        <SheetTrigger asChild>
           <button className="p-2 hover:bg-accent rounded-md transition-colors">
             <MenuIcon size={24} />
             <span className="sr-only">Open menu</span>
@@ -46,23 +54,27 @@ function MobileNav() {
           <nav className="flex-1 mt-6">
             <div className="flex flex-col space-y-1">
               <Link
-                href="/chair"
+                href="/"
+                onClick={handleLinkClick}
                 className="flex items-center px-3 py-3 text-base font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
               >
-                Chair
+                Home
               </Link>
+              
               <Link
-                href="/table"
+                href="/shop"
+                onClick={handleLinkClick}
                 className="flex items-center px-3 py-3 text-base font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
               >
-                Table
+                Catalogue
               </Link>
+              {/* Categories Dropdown */}
               <div className="space-y-1">
                 <button
                   onClick={() => setIsMoreOpen(!isMoreOpen)}
                   className="flex items-center justify-between w-full px-3 py-3 text-base font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
                 >
-                  More
+                  Categories
                   <ChevronRight
                     size={16}
                     className={`transform transition-transform duration-200 ${isMoreOpen ? "rotate-90" : ""}`}
@@ -70,10 +82,11 @@ function MobileNav() {
                 </button>
                 {isMoreOpen && (
                   <div className="ml-3 space-y-1 border-l-2 border-border pl-3">
-                    {moreItems.map((item) => (
+                    {categoryItems.map((item) => (
                       <Link
                         key={item.name}
                         href={item.href}
+                        onClick={handleLinkClick}
                         className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
                       >
                         {item.name}
@@ -85,18 +98,17 @@ function MobileNav() {
 
               <Link
                 href="/about"
+                onClick={handleLinkClick}
                 className="flex items-center px-3 py-3 text-base font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
               >
                 About
               </Link>
-              <Link
-                href="/catalogue"
-                className="flex items-center px-3 py-3 text-base font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
-              >
-                Catalogue
-              </Link>
+
+              
             </div>
           </nav>
+          
+          {/* User Section */}
           <div className="mt-auto border-t border-border pt-4">
             <div className="px-3">
               <SignedOut>
@@ -109,6 +121,19 @@ function MobileNav() {
                   </SignInButton>
                 </div>
               </SignedOut>
+              {/* Admin Link - Only show if user is admin */}
+              <SignedIn>
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    onClick={handleLinkClick}
+                    className="flex items-center px-3 py-3 text-base font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-primary"
+                  >
+                    <Shield size={18} className="mr-2" />
+                    Admin Dashboard
+                  </Link>
+                )}
+              </SignedIn>
               <SignedIn>
                 <div className="flex items-center space-x-3 p-3 rounded-md bg-accent/50">
                   <UserButton
@@ -122,7 +147,9 @@ function MobileNav() {
                     <p className="text-sm font-medium truncate">
                       {user?.firstName || user?.emailAddresses[0]?.emailAddress}
                     </p>
-                    <p className="text-xs text-muted-foreground truncate">{user?.emailAddresses[0]?.emailAddress}</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {user?.emailAddresses[0]?.emailAddress}
+                    </p>
                   </div>
                 </div>
               </SignedIn>
@@ -136,39 +163,41 @@ function MobileNav() {
 
 // Desktop Navigation Menu
 function DesktopNav() {
-  const moreItems = [
-    { name: "Services", href: "/services", description: "Our professional services" },
-    { name: "Gallery", href: "/gallery", description: "View our work portfolio" },
-    { name: "Reviews", href: "/reviews", description: "Customer testimonials" },
-    { name: "Contact", href: "/contact", description: "Get in touch with us" },
+  const { isAdmin } = useAdminCheck()
+  
+  const categoryItems = [
+    { name: "Chairs", href: "/shop", description: "Quality Chairs for your events" },
+    { name: "Tables", href: "/shop", description: "Foldable and non-foldable" },
+    { name: "Tents", href: "/shop", description: "10X10, 10X20 and more" },
+    { name: "Equipments", href: "/shop", description: "Lights, Tent accessories and more" },
   ]
 
   return (
-    <div className="hidden md:flex justify-centerflex-1">
+    <div className="hidden md:flex items-center justify-center flex-1">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <Link href="/chair" passHref>
-              <NavigationMenuLink className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
-                Chair
-              </NavigationMenuLink>
-            </Link>
-              {/* More submenu */}
+            <NavigationMenuLink 
+              href="/" 
+              className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+            >
+              Home
+            </NavigationMenuLink>
           </NavigationMenuItem>
-
+          
           <NavigationMenuItem>
-            <Link href="/table"  passHref>
-              <NavigationMenuLink className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
-                Table
-              </NavigationMenuLink>
-            </Link>
+            <NavigationMenuLink 
+              href="/shop" 
+              className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+            >
+              Catalogue
+            </NavigationMenuLink>
           </NavigationMenuItem>
-
           <NavigationMenuItem>
-            <NavigationMenuTrigger>More</NavigationMenuTrigger>
+            <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[200px] gap-3 p-4 md:w-[300px] md:grid-cols-2 lg:w-[400px]">
-                {moreItems.map((item) => (
+                {categoryItems.map((item) => (
                   <li key={item.name}>
                     <NavigationMenuLink asChild>
                       <Link
@@ -176,7 +205,9 @@ function DesktopNav() {
                         className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                       >
                         <div className="text-sm font-medium leading-none">{item.name}</div>
-                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{item.description}</p>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          {item.description}
+                        </p>
                       </Link>
                     </NavigationMenuLink>
                   </li>
@@ -186,93 +217,119 @@ function DesktopNav() {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <Link href="/about"  passHref>
-              <NavigationMenuLink className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
-                About
-              </NavigationMenuLink>
-            </Link>
+            <NavigationMenuLink 
+              href="/about" 
+              className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+            >
+              About
+            </NavigationMenuLink>
           </NavigationMenuItem>
+
+          {/* Admin Link - Only show if user is admin */}
         </NavigationMenuList>
       </NavigationMenu>
-      <SearchBar />
+    </div>
+  )
+}
+
+function SearchBar() {
+  return (
+    <div className="hidden md:flex items-center gap-3">
+      {/* Search Section */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+        <Input
+          type="search"
+          placeholder="Search"
+          className="pl-10 bg-gray-50 border-gray-200 rounded-full h-10 w-64"
+        />
+      </div>
+
+      {/* Contact Us Icon */}
+      <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full">
+        <Phone className="h-5 w-5 text-gray-600" />
+        <span className="sr-only">Contact us</span>
+      </Button>
+
+      {/* Cart Icon */}
+      <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full relative bg-[#bcd1e5]">
+        <ShoppingCart className="h-5 w-5 text-gray-600" />
+        <span className="sr-only">Cart</span>
+        <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+          2
+        </span>
+      </Button>
+
+      {/* Get Quote Button */}
+      <Button className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-4 h-10">
+        Get A Quote
+      </Button>
     </div>
   )
 }
 
 function Header() {
-
+  const { isAdmin } = useAdminCheck()
   return (
-    <div className="flex justify-between items-center p-4">
-      <div className="flex items-center">
-        <Link href="/" className="text-xl font-bold hover:opacity-80 transition-opacity">
-          <Image src="/logo.png" width={250} height={80} alt="Logo"  />
-        </Link>
-      </div>
-      <DesktopNav />
-      
-      <div className="flex items-center space-x-2">
-        <div className="hidden md:block">
-          <SignedOut>
-            <SignInButton mode="modal">
-              <button className="px-4 py-2 text-sm font-medium text-primary hover:bg-accent rounded-md transition-colors">
-                Sign In
-              </button>
-            </SignInButton>
-          </SignedOut>
-          <SignedIn>
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "w-8 h-8",
-                },
-              }}
-            />
-            
-          </SignedIn>
+    <header className="border-b border-border bg-background">
+      <div className="container mx-auto">
+        {/* Main Header */}
+        <div className="flex justify-between items-center p-4">
+          {/* Logo */}
+          <div className="flex items-center flex-shrink-0">
+            <Link href="/" className="text-xl font-bold hover:opacity-80 transition-opacity">
+              <Image src="/logo.png" width={250} height={80} alt="Logo" />
+            </Link>
+          </div>
+
+          {/* Desktop Navigation */}
+          <DesktopNav />
           
+          {/* Right Section */}
+          <div className="flex items-center space-x-4">
+            {/* Search Bar for Desktop */}
+            <SearchBar />
+            
+            {/* Auth Section for Desktop */}
+            <div className="hidden md:flex items-center space-x-2">
+            <SignedIn>
+            {isAdmin && (
+              
+                <Link 
+                  href="/admin" 
+                  className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 text-primary"
+                >
+                  <Shield size={16} className="mr-1" />
+                  Admin
+                </Link>
+              
+            )}
+          </SignedIn>
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <button className="px-4 py-2 text-sm font-medium text-primary hover:bg-accent rounded-md transition-colors">
+                    Sign In
+                  </button>
+                </SignInButton>
+              </SignedOut>
+              <SignedIn>
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-8 h-8",
+                    },
+                  }}
+                />
+              </SignedIn>
+            </div>
+            
+            {/* Mobile Navigation */}
+            <MobileNav />
+          </div>
         </div>
-        <MobileNav />
       </div>
-    </div>
+    </header>
   )
 }
 
 export default Header
-
-function SearchBar() {
-  return (
-    <div className="mx-auto px-4 py-3">
-      <div className="flex items-center justify-between gap-4">
-        {/* Right Section - Icons and Button */}
-        <div className="flex items-center gap-3">
-          {/* Contact Us Icon */}
-          <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full">
-            <Phone className="h-5 w-5 text-gray-600" />
-            <span className="sr-only">Contact us</span>
-          </Button>
-          {/* Search Section */}
-          <div className="flex-1 max-w-md">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                type="search"
-                placeholder="Search"
-                className="pl-10 bg-gray-50 border-gray-200 rounded-full h-10"
-              />
-            </div>
-          </div>
-
-          {/* Cart Icon */}
-          <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full relative bg-[#bcd1e5] ">
-            <ShoppingCart className="h-5 w-5 text-gray-600" />
-            <span className="sr-only">Cart</span>
-            <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-              2
-            </span>
-          </Button>
-          <Button className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-4 h-8">Get A Quote</Button>
-        </div>
-      </div>
-    </div>
-  )
-}
