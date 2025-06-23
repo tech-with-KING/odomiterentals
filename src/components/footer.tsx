@@ -13,15 +13,14 @@ export default function Footer() {
           {/* Logo and Company Info */}
           <div className="flex flex-col gap-6 max-w-[300px]">
             <Image
-              src="/medias/construction_company_logo.png"
-              alt="Kizush Constructions Logo"
+              src="/logo.png"
+              alt="Odomite Rental Logo"
               width={250}
               height={80}
               className="w-[250px] h-auto brightness-110"
             />
             <p className="text-lg text-gray-500 leading-relaxed italic">
-              &ldquo;Building dreams with precision, delivering excellence in every project. Your trusted partner for quality
-              construction solutions.&rdquo;
+              &ldquo;Your trusted evnet rental to cater to all your party needs.&rdquo;
             </p>
           </div>
 
@@ -58,7 +57,7 @@ export default function Footer() {
             </h3>
             <div className="flex flex-col gap-4">
               <ContactItem icon={Mail} href="info@kizushconstructions.com" type="email">
-                info@kizushconstructions.com
+                odomitegroupsllc@gmail.com
               </ContactItem>
               <ContactItem icon={Phone} href="+123456789" type="phone">
                 416-300-4040

@@ -1,8 +1,10 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import GlobalHeader, { HeaderThree } from './GlobalHeader';
+import { collection, doc, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase'; // Adjust the import path to your Firebase config
 
 type ProductCardProps = {
   image: string;
@@ -16,128 +18,25 @@ type ServiceCardProps = {
   title: string;
 }
 
-const ServiceData = [
-  {
-    id: "0",
-    title:"Chairs",
-    desc: "Transportation",
-    img: 'https://res.cloudinary.com/algopinile/image/upload/v1750259937/projects/zpyqv0b23khpzwxgvfz2.png',
-  },
-  {
-    id: "1",
-    title:"Tables",
-    service_name: "Tables",
-    desc: "Professional setup for a perfect event layout.",
-    img: 'https://res.cloudinary.com/algopinile/image/upload/v1750259936/projects/ctxpkd14h3n5n1zszsop.png',
-  },
-  {
-    id: "3",
-    title:"Tents",
-    service_name: "Tents",
-    desc: "Stylish decor to make your event unforgettable.",
-    img: 'https://res.cloudinary.com/algopinile/image/upload/v1750270531/products/xfrudnzxqgoilpwra3ft.png',
-  },
-  {
-    id: "5",
-    service_name: "Equipments",
-    title: "Equipments",
-    desc: "Post-event cleanup handled with care",
-    img: 'https://res.cloudinary.com/algopinile/image/upload/v1750259962/projects/jl4fps6ymngmshu1sd3v.png',
-  }
-];
+// Define proper types for your product data from Firestore
+interface Product {
+  id: string | number;
+  images: string[];
+  name: string;
+  price: number | string;
+  desc: string;
+  categories?: string[];
+  instock?: boolean;
+  unitsleft?: number;
+}
 
-const ProductData = [
-  {
-    id: "0",
-    category: ['products', 'chairs'],
-    Product_name: "Hercules Folding Chairs",
-    price: 3.50,
-    desc: "mahogany red",
-    img: 'https://res.cloudinary.com/algopinile/image/upload/v1750270532/products/cqhhlipvoeg6yckbopvt.png',
-    instock: true,
-    unitsleft: 12
-  },
-  {
-    id: "1",
-    category: ['products', 'chairs'],
-    Product_name: "Enchanted Garden Chairs",
-    price: 3.99,
-    desc: "white",
-    img: 'https://res.cloudinary.com/algopinile/image/upload/v1750270531/products/xfrudnzxqgoilpwra3ft.png',
-    instock: true,
-    unitsleft: 5
-  },
-  {
-    id: "2",
-    category: ['products', 'tables'],
-    Product_name: `Cocktail Table`,
-    price: 12.00,
-    desc: "Elegant Cocktail Table",
-    img: 'https://res.cloudinary.com/algopinile/image/upload/v1750270533/products/btwbw6foiny14cq0jwhm.png',
-    instock: false,
-    unitsleft: 0
-  },
-  {
-    id: "3",
-    category: ['products', 'chairs'],
-    Product_name: "Dainty Black Plastic Chair",
-    price: 2.50,
-    desc: "Top on style. With 600 pounds static weight capacity, this chair is perfect for any event.",
-    img: 'https://res.cloudinary.com/algopinile/image/upload/v1750259937/projects/zpyqv0b23khpzwxgvfz2.png',
-    instock: true,
-    unitsleft: 3
-  },
-  {
-    id: "4",
-    category: ['products', 'tables'],
-    Product_name: "8ft long Bi-Fold Table",
-    price: 15.00,
-    desc: "This Sturdy Table seats 10 people conveniently and ideal for cozy close family reunion and other events. This table comes in black and off-white colors",
-    img: 'https://res.cloudinary.com/algopinile/image/upload/v1750270533/products/giu3lm3ojqtknkjda03c.png',
-    instock: true,
-    unitsleft: 1
-  },
-  {
-    id: "5",
-    category: ['products', 'tents'],
-    Product_name: "24' Heavy Duty 3ft speed Fan",
-    price: 21.9,
-    desc: "Tent Accessories",
-    img: 'https://res.cloudinary.com/algopinile/image/upload/v1750259937/projects/p823v78rftljyvcxgabm.png',
-    instock: true,
-    unitsleft: 7
-  },
-  {
-    id: "6",
-    category: ['products', 'tents'],
-    Product_name: "10x20 Tent ",
-    price: 175.00,
-    desc: "This waterproof tent comes with sidewalls and stylish counterweight at a reasonable rate without additional charges for  setup and takedown.",
-    img: 'https://res.cloudinary.com/algopinile/image/upload/v1750262022/samples/zyzq9mvkggecloxbleie.png',
-    instock: true,
-    unitsleft: 4
-  },
-  {
-    id: "7",
-    category: ['products', 'chairs'],
-    Product_name: "Throne Chair",
-    price: 150.00,
-    desc: "White and Gold- Step into luxury with our exquisite Throne Chair, designed to elevate your event's elegance. Perfect for weddings, parties, and special occasions.",
-    img: 'https://res.cloudinary.com/algopinile/image/upload/v1750270530/products/z3pisqi7ep3uoslammpv.png',
-    instock: true,
-    unitsleft: 2
-  },
-  {
-    id: "8",
-    category: ['products', 'equipments'],
-    Product_name: "Patio Heater",
-    price: 100.00,
-    desc: "These 90ft patio heaters are perfect for keeping your outdoor space warm and cozy during chilly evenings. Ideal for patios, decks, and outdoor events.",
-    img: 'https://res.cloudinary.com/algopinile/image/upload/v1750259962/projects/jl4fps6ymngmshu1sd3v.png',
-    instock: true,
-    unitsleft: 6
-  }
-];
+interface Service {
+  id: string | number;
+  images: string[];
+  name: string;
+  desc: string;
+  categories?: string[];
+}
 
 function ServiceCard({ image, title }: ServiceCardProps) {
   return (
@@ -186,14 +85,149 @@ function ProductCard({ image, title, price }: ProductCardProps) {
   );
 }
 
+// Custom hook for fetching products
+const useProducts = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const productsCollection = collection(db, 'products');
+        const productsSnapshot = await getDocs(productsCollection);
+        
+        const productsData: Product[] = productsSnapshot.docs.map(doc => {
+          const data = doc.data();
+          let images: string[] = [];
+          if (data.images && Array.isArray(data.images)) {
+            images = data.images;
+          } else if (data.img && typeof data.img === 'string') {
+            images = [data.img];
+          } else if (data.image && typeof data.image === 'string') {
+            images = [data.image];
+          }
+          const name = data.name || data.Product_name || data.title || 'Unnamed Product';
+          let categories: string[] = [];
+          if (data.categories && Array.isArray(data.categories)) {
+            categories = data.categories;
+          } else if (data.category && Array.isArray(data.category)) {
+            categories = data.category;
+          } else if (typeof data.category === 'string') {
+            categories = [data.category];
+          }
+          
+          return {
+            id: doc.id,
+            images,
+            name,
+            price: data.price || 0,
+            desc: data.desc || data.description || '',
+            categories
+          };
+        });
+        
+        setProducts(productsData);
+        console.log('Fetched products:', productsData);
+        console.log('Raw Firestore data:', productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setError('Failed to load products');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  return { products, loading, error };
+};
+
+const useServices = () => {
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        setLoading(true);
+        const servicesCollection = collection(db, 'services');
+        const servicesSnapshot = await getDocs(servicesCollection);
+        
+        const servicesData: Service[] = servicesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data() as Omit<Service, 'id'>
+        }));
+        
+        setServices(servicesData);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching services:', err);
+        setError('Failed to load services');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
+  return { services, loading, error };
+};
+
+const LoadingGrid = ({ cols = 4 }: { cols?: number }) => (
+  <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-${cols} gap-2 md:gap-6`}>
+    {Array.from({ length: 8 }).map((_, index) => (
+      <div key={index} className="bg-gray-200 animate-pulse rounded-xl">
+        <div className="h-64 bg-gray-300 rounded-xl mb-2"></div>
+        <div className="p-3">
+          <div className="h-4 bg-gray-300 rounded mb-2"></div>
+          <div className="h-3 bg-gray-300 rounded w-2/3"></div>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
 export const Products = () => {
+  const { products, loading, error } = useProducts();
+
+  if (loading) {
+    return (
+      <div className='container mx-auto px-1 py-6 bg-white'>
+        <HeaderThree title='Day Rentals' />
+        <LoadingGrid cols={4} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className='container mx-auto px-1 py-6 bg-white'>
+        <HeaderThree title='Day Rentals' />
+        <div className="text-center py-12">
+          <p className="text-red-600">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='container mx-auto px-1 py-6 bg-white '>
       <HeaderThree title='Day Rentals' />
       <div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2  md:gap-6  mx-auto'>
-        {ProductData.map((item) => (
-          <Link key={item.id} href={`/product/${item.Product_name}`} className="group">
-            <ProductCard image={item.img} title={item.Product_name} price={item.price} desc={item.desc} />
+        {products.map((item: Product) => (
+          <Link key={item.id} href={`/shop/${item.id}`} className="group">
+            <ProductCard 
+              image={item.images[0] || ''} 
+              title={item.name} 
+              price={item.price} 
+              desc={item.desc} 
+            />
           </Link>
         ))}
       </div>
@@ -202,13 +236,38 @@ export const Products = () => {
 };
 
 export const Services = () => {
+  const { services, loading, error } = useServices();
+
+  if (loading) {
+    return (
+      <div className='container mx-auto px-1 py-12 bg-white'>
+        <HeaderThree title='Featured Categories' />
+        <LoadingGrid cols={4} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className='container mx-auto px-1 py-12 bg-white'>
+        <HeaderThree title='Featured Categories' />
+        <div className="text-center py-12">
+          <p className="text-red-600">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className='container mx-auto px-1 py-6 bg-white '>
-      <HeaderThree title='Featured Cartegories' />
-      <div className='w-full grid sm:grid-col-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4 mx-auto'>
-        {ServiceData.map((item) => (
-          <Link key={item.id} href={`/product/${item.service_name}`} className="group">
-            <ServiceCard image={item.img} title={item.service_name ?? ''} />
+    <div className='container mx-auto px-1 py-12 bg-white '>
+      <HeaderThree title='Featured Categories' />
+      <div className='w-full grid gap-8 sm:grid-col-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4 mx-auto'>
+        {services.map((item) => (
+          <Link key={item.id} href={`/product/${item.name}`} className="group">
+            <ServiceCard 
+              image={item.images[0] || ''} 
+              title={item.name} 
+            />
           </Link>
         ))}
       </div>
@@ -216,26 +275,74 @@ export const Services = () => {
   );
 };
 
-export const Cartegories = () => {
+export const Categories = () => {
+  const { products, loading, error } = useProducts();
+
+  if (loading) {
+    return (
+      <div className='container mx-auto px-4 py-12 bg-white'>
+        <GlobalHeader 
+          title='Day Rentals' 
+          description='our day rental products come at affordable rates' 
+          buttonHref='/products' 
+          buttonText='View More'
+        />
+        <LoadingGrid cols={3} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className='container mx-auto px-4 py-12 bg-white'>
+        <GlobalHeader 
+          title='Day Rentals' 
+          description='our day rental products come at affordable rates' 
+          buttonHref='/products' 
+          buttonText='View More'
+        />
+        <div className="text-center py-12">
+          <p className="text-red-600">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='container mx-auto px-4 py-12 bg-white '>
-      <GlobalHeader title='Day Rentals' description='our day rental products come at affodable rates' buttonHref='/products' buttonText='View More'/>
+      <GlobalHeader 
+        title='Day Rentals' 
+        description='our day rental products come at affordable rates' 
+        buttonHref='/products' 
+        buttonText='View More'
+      />
+      
       {/* Mobile Scroll */}
       <div className='relative md:hidden'>
         <div className='flex overflow-x-auto gap-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4'>
-          {ProductData.map((item) => (
-          <Link key={item.id} href={`/projects/${item.Product_name}`}>
-            <ProductCard  image={item.img} title={item.Product_name} price={item.price} desc={item.desc}/>
-          </Link>
+          {products.map((item) => (
+            <Link key={item.id} href={`/projects/${item.name}`}>
+              <ProductCard  
+                image={item.images[0] || ''} 
+                title={item.name} 
+                price={item.price} 
+                desc={item.desc}
+              />
+            </Link>
           ))}
         </div>
       </div>
 
       {/* Desktop Grid */}
       <div className='hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto'>
-        {ProductData.map((item) => (
-          <Link key={item.id} href={`/product/${item.Product_name}`} className="group">
-            <ProductCard image={item.img} title={item.Product_name} price={item.price} desc={item.desc} />
+        {products.map((item) => (
+          <Link key={item.id} href={`/product/${item.name}`} className="group">
+            <ProductCard 
+              image={item.images[0] || ''} 
+              title={item.name} 
+              price={item.price} 
+              desc={item.desc} 
+            />
           </Link>
         ))}
       </div>
@@ -244,4 +351,4 @@ export const Cartegories = () => {
 };
 
 export default Products;
-export {ProductCard, ProductData};
+export { ProductCard };
