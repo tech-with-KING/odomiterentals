@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Users, Globe } from "lucide-react"
+import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Users, Globe, Link } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import MapIntegration from "@/components/map-intergration"
@@ -41,20 +41,25 @@ export default function ContactPage() {
         <div className="text-center mb-12 lg:mb-16">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 lg:mb-6">Get in Touch</h1>
           <p className="text-lg lg:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-            Ready to start your next project? We&apos;d love to hear from you. Reach out to discuss your development needs,
-            get a quote, or learn more about how DevConnect can help bring your ideas to life.
+            Planning an event? We’re here to help. Whether you need chairs, tents, or full event setup, Odomite Rentals has you covered. Reach out today to get a quote, check availability, or learn how we can help make your occasion unforgettable."
+
+Let me know if you want a more casual, formal, or playful tone
           </p>
         </div>
 
         {/* Quick Contact Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 lg:mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 lg:mb-16 ">
           <Card className="text-center hover:shadow-md transition-shadow">
             <CardContent className="p-6">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Phone className="w-6 h-6 text-blue-600" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Call Us</h3>
-              <p className="text-sm text-gray-600 mb-2">Mon-Fri 9AM-6PM PST</p>
+             <p className="text-sm text-gray-600 mb-2">Mon, Wed, Sat, Tue: 6 AM – 8:30 PM ET</p>
+              <p className="text-sm text-gray-600 mb-2">Thursday: 6 AM – 8 PM ET</p>
+              <p className="text-sm text-gray-600 mb-2">Friday: 8 AM – 9 PM ET</p>
+              <p className="text-sm text-gray-600 mb-2">Sunday: 9 AM – 8 PM ET</p>
+
               <a href="tel:+1-555-123-4567" className="text-blue-600 hover:text-blue-700 font-medium">
                 +1 (555) 123-4567
               </a>
@@ -62,14 +67,15 @@ export default function ContactPage() {
           </Card>
 
           <Card className="text-center hover:shadow-md transition-shadow">
+            
             <CardContent className="p-6">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Mail className="w-6 h-6 text-green-600" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Email Us</h3>
-              <p className="text-sm text-gray-600 mb-2">We&apos;ll respond within 24hrs</p>
-              <a href="mailto:hello@devconnect.com" className="text-green-600 hover:text-green-700 font-medium">
-                hello@devconnect.com
+              <p className="text-sm text-gray-600 mb-2">We&apos;ll respond within an hour</p>
+              <a href="mailto:odomitegroupsllc@gmail.com" className="text-green-600 hover:text-green-700 font-medium">
+            
               </a>
             </CardContent>
           </Card>
@@ -136,42 +142,44 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
-                    Company
-                  </label>
-                  <input
-                    type="text"
-                    id="company"
-                    name="company"
-                    value={formData.company}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    placeholder="Your Company"
-                  />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
+                      Your Name / Company
+                    </label>
+                    <input
+                      type="text"
+                      id="company"
+                      name="company"
+                      value={formData.company}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      placeholder="E.g. John Events or XYZ Planners"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="projectType" className="block text-sm font-medium text-gray-700 mb-2">
+                      Rental Type
+                    </label>
+                    <select
+                      id="projectType"
+                      name="projectType"
+                      value={formData.projectType}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    >
+                      <option value="">Select a rental type</option>
+                      <option value="chairs">Chairs</option>
+                      <option value="tables">Tables</option>
+                      <option value="tents">Tents/Canopies</option>
+                      <option value="coolers">Coolers</option>
+                      <option value="decor">Decor Items</option>
+                      <option value="combo">Full Event Package</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label htmlFor="projectType" className="block text-sm font-medium text-gray-700 mb-2">
-                    Project Type
-                  </label>
-                  <select
-                    id="projectType"
-                    name="projectType"
-                    value={formData.projectType}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  >
-                    <option value="">Select a type</option>
-                    <option value="web-development">Web Development</option>
-                    <option value="mobile-app">Mobile App</option>
-                    <option value="ai-ml">AI/Machine Learning</option>
-                    <option value="blockchain">Blockchain</option>
-                    <option value="devops">DevOps</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-              </div>
+
 
               <div>
                 <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
@@ -219,39 +227,17 @@ export default function ContactPage() {
           <div>
             <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-6">Our Offices</h2>
             <div className="space-y-6 mb-8">
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">San Francisco HQ</h3>
-                    <p className="text-gray-700 mb-2">
-                      123 Innovation Drive
-                      <br />
-                      San Francisco, CA 94105
-                      <br />
-                      United States
-                    </p>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Clock className="w-4 h-4" />
-                      <span>Mon-Fri: 9:00 AM - 6:00 PM PST</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <MapPin className="w-5 h-5 text-green-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">New York Office</h3>
+                    <h3 className="font-semibold text-gray-900 mb-1">New Jersey Address</h3>
                     <p className="text-gray-700 mb-2">
-                      456 Tech Avenue
+                      331 Seymour Ave
                       <br />
-                      New York, NY 10001
+                       Newark, NJ 07112
                       <br />
                       United States
                     </p>
@@ -264,21 +250,24 @@ export default function ContactPage() {
               </div>
 
               <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Globe className="w-5 h-5 text-purple-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Remote First</h3>
-                    <p className="text-gray-700 mb-2">
-                      We&apos;re a distributed team with developers and staff working from 50+ countries worldwide.
-                    </p>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Clock className="w-4 h-4" />
-                      <span>24/7 Support Available</span>
-                    </div>
-                  </div>
-                </div>
+         <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6">
+  <div className="flex items-start gap-4">
+    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+      <Globe className="w-5 h-5 text-purple-600" />
+    </div>
+    <div>
+      <h3 className="font-semibold text-gray-900 mb-1">Serving New Jersey Area</h3>
+      <p className="text-gray-700 mb-2">
+        Odomite Rentals delivers and sets up event essentials across New Jersey, call and we’ll be there.
+      </p>
+      <div className="flex items-center gap-2 text-sm text-gray-600">
+        <Clock className="w-4 h-4" />
+        <span>Timely Setup & Support</span>
+      </div>
+    </div>
+  </div>
+</div>
+
               </div>
             </div>
 
@@ -290,43 +279,39 @@ export default function ContactPage() {
             <MapIntegration />
         </div>
         {/* FAQ Section */}
-        <section className="mb-12 lg:mb-16">
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8 text-center">Frequently Asked Questions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gray-50 rounded-xl p-6">
-              <h3 className="font-semibold text-gray-900 mb-2">How quickly can you start my project?</h3>
-              <p className="text-gray-700 text-sm leading-relaxed">
-                Most projects can begin within 1-2 weeks of finalizing requirements. For urgent projects, we offer
-                expedited matching services to get you started within 48-72 hours.
-              </p>
-            </div>
+<section className="mb-12 lg:mb-16">
+  <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8 text-center">Frequently Asked Questions</h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="bg-gray-50 rounded-xl p-6">
+      <h3 className="font-semibold text-gray-900 mb-2">How soon can I get my rental items delivered?</h3>
+      <p className="text-gray-700 text-sm leading-relaxed">
+        Most orders can be delivered within 24-48 hours, depending on availability and location. We also accommodate same-day or next-day rentals for urgent events.
+      </p>
+    </div>
 
-            <div className="bg-gray-50 rounded-xl p-6">
-              <h3 className="font-semibold text-gray-900 mb-2">What&apos;s your developer vetting process?</h3>
-              <p className="text-gray-700 text-sm leading-relaxed">
-                We have a rigorous 5-step vetting process including technical assessments, portfolio reviews,
-                communication tests, and reference checks. Only the top 3% of applicants join our network.
-              </p>
-            </div>
+    <div className="bg-gray-50 rounded-xl p-6">
+      <h3 className="font-semibold text-gray-900 mb-2">What items do you rent out?</h3>
+      <p className="text-gray-700 text-sm leading-relaxed">
+        We offer a wide range of party rentals including chairs, tables, tents, canopies, coolers, and decor. If you need something specific, feel free to ask—we’re always expanding our inventory.
+      </p>
+    </div>
 
-            <div className="bg-gray-50 rounded-xl p-6">
-              <h3 className="font-semibold text-gray-900 mb-2">Do you offer project management services?</h3>
-              <p className="text-gray-700 text-sm leading-relaxed">
-                Yes, we provide dedicated project managers for complex projects, along with our platform&apos;s built-in
-                project management tools, time tracking, and milestone management features.
-              </p>
-            </div>
+    <div className="bg-gray-50 rounded-xl p-6">
+      <h3 className="font-semibold text-gray-900 mb-2">Do you handle setup and takedown?</h3>
+      <p className="text-gray-700 text-sm leading-relaxed">
+        Yes! Our team offers full setup and takedown services for tents, chairs, and tables, so you can focus on your event while we handle the logistics.
+      </p>
+    </div>
 
-            <div className="bg-gray-50 rounded-xl p-6">
-              <h3 className="font-semibold text-gray-900 mb-2">What if I&apos;m not satisfied with the work?</h3>
-              <p className="text-gray-700 text-sm leading-relaxed">
-                We offer a satisfaction guarantee with our DevConnect Protection program, including milestone-based
-                payments, dispute resolution, and the ability to switch developers if needed.
-              </p>
-            </div>
-          </div>
-          
-        </section>   
+    <div className="bg-gray-50 rounded-xl p-6">
+      <h3 className="font-semibold text-gray-900 mb-2">What if something gets damaged or I need to cancel?</h3>
+      <p className="text-gray-700 text-sm leading-relaxed">
+        We understand that plans can change. Cancellations made 48 hours in advance are fully refundable. Minor damages are covered under our rental protection plan, and we’re always here to work with you on any issues.
+      </p>
+    </div>
+  </div>
+</section>
+
       </div>
       <NewsletterSection />
     </div>

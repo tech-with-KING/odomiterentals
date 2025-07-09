@@ -50,6 +50,53 @@ function MobileNav() {
             <SheetTitle>Menu</SheetTitle>
           </SheetHeader>
 
+          {/* Search Bar for Mobile */}
+          <div className="mt-4 px-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                type="search"
+                placeholder="Search"
+                className="pl-10 bg-gray-50 border-gray-200 rounded-full h-10 w-full"
+              />
+            </div>
+          </div>
+
+          {/* Action Buttons for Mobile */}
+          <div className="flex items-center justify-between px-3 mt-4 space-x-2">
+            {/* Contact Us */}
+            <Link
+              href="/contact"
+              onClick={handleLinkClick}
+              className="flex items-center justify-center p-2 rounded-full hover:bg-accent transition-colors"
+            >
+              <Phone className="h-5 w-5 text-gray-600" />
+              <span className="sr-only">Contact us</span>
+            </Link>
+
+            {/* Cart */}
+            <Link
+              href="/cart"
+              onClick={handleLinkClick}
+              className="flex items-center justify-center p-2 rounded-full relative bg-[#bcd1e5] hover:bg-[#a8c4db] transition-colors"
+            >
+              <ShoppingCart className="h-5 w-5 text-gray-600" />
+              <span className="sr-only">Cart</span>
+              <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                2
+              </span>
+            </Link>
+
+            {/* Get Quote */}
+            <Link
+              href="/quote"
+              onClick={handleLinkClick}
+              className="flex-1 text-center bg-blue-500 hover:bg-blue-600 text-white rounded-full px-4 py-2 text-sm font-medium transition-colors"
+            >
+              Get A Quote
+            </Link>
+          </div>
+
           {/* Main Navigation */}
           <nav className="flex-1 mt-6">
             <div className="flex flex-col space-y-1">
@@ -68,6 +115,7 @@ function MobileNav() {
               >
                 Catalogue
               </Link>
+              
               {/* Categories Dropdown */}
               <div className="space-y-1">
                 <button
@@ -103,8 +151,6 @@ function MobileNav() {
               >
                 About
               </Link>
-
-              
             </div>
           </nav>
           
@@ -121,20 +167,21 @@ function MobileNav() {
                   </SignInButton>
                 </div>
               </SignedOut>
-              {/* Admin Link - Only show if user is admin */}
+              
               <SignedIn>
+                {/* Admin Link - Only show if user is admin */}
                 {isAdmin && (
                   <Link
                     href="/admin"
                     onClick={handleLinkClick}
-                    className="flex items-center px-3 py-3 text-base font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-primary"
+                    className="flex items-center px-3 py-3 text-base font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-primary mb-3"
                   >
                     <Shield size={18} className="mr-2" />
                     Admin Dashboard
                   </Link>
                 )}
-              </SignedIn>
-              <SignedIn>
+                
+                {/* User Info */}
                 <div className="flex items-center space-x-3 p-3 rounded-md bg-accent/50">
                   <UserButton
                     appearance={{
@@ -193,6 +240,7 @@ function DesktopNav() {
               Catalogue
             </NavigationMenuLink>
           </NavigationMenuItem>
+          
           <NavigationMenuItem>
             <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
             <NavigationMenuContent>
@@ -224,8 +272,6 @@ function DesktopNav() {
               About
             </NavigationMenuLink>
           </NavigationMenuItem>
-
-          {/* Admin Link - Only show if user is admin */}
         </NavigationMenuList>
       </NavigationMenu>
     </div>
@@ -246,24 +292,30 @@ function SearchBar() {
       </div>
 
       {/* Contact Us Icon */}
-      <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full">
-        <Phone className="h-5 w-5 text-gray-600" />
-        <span className="sr-only">Contact us</span>
-      </Button>
+      <Link href="/contact">
+        <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full">
+          <Phone className="h-5 w-5 text-gray-600" />
+          <span className="sr-only">Contact us</span>
+        </Button>
+      </Link>
 
       {/* Cart Icon */}
-      <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full relative bg-[#bcd1e5]">
-        <ShoppingCart className="h-5 w-5 text-gray-600" />
-        <span className="sr-only">Cart</span>
-        <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-          2
-        </span>
-      </Button>
+      <Link href="/cart">
+        <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full relative bg-[#bcd1e5]">
+          <ShoppingCart className="h-5 w-5 text-gray-600" />
+          <span className="sr-only">Cart</span>
+          <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            2
+          </span>
+        </Button>
+      </Link>
 
       {/* Get Quote Button */}
-      <Button className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-4 h-10">
-        Get A Quote
-      </Button>
+      <Link href="/quote">
+        <Button className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-4 h-10">
+          Get A Quote
+        </Button>
+      </Link>
     </div>
   )
 }
@@ -292,19 +344,17 @@ function Header() {
             
             {/* Auth Section for Desktop */}
             <div className="hidden md:flex items-center space-x-2">
-            <SignedIn>
-            {isAdmin && (
-              
-                <Link 
-                  href="/admin" 
-                  className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 text-primary"
-                >
-                  <Shield size={16} className="mr-1" />
-                  Admin
-                </Link>
-              
-            )}
-          </SignedIn>
+              <SignedIn>
+                {isAdmin && (
+                  <Link 
+                    href="/admin" 
+                    className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 text-primary"
+                  >
+                    <Shield size={16} className="mr-1" />
+                    Admin
+                  </Link>
+                )}
+              </SignedIn>
               <SignedOut>
                 <SignInButton mode="modal">
                   <button className="px-4 py-2 text-sm font-medium text-primary hover:bg-accent rounded-md transition-colors">
