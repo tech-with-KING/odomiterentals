@@ -41,7 +41,7 @@ export default function Footer() {
                   <InteractiveLink href="/shop">Catalogue</InteractiveLink>
                 </li>
                 <li>
-                  <InteractiveLink href="/resources">Resources</InteractiveLink>
+                  <InteractiveLink href="/resources">Get Quote</InteractiveLink>
                 </li>
                 <li>
                   <InteractiveLink href="/contact">Get In Touch</InteractiveLink>
@@ -56,11 +56,11 @@ export default function Footer() {
               Contact Information
             </h3>
             <div className="flex flex-col gap-4">
-              <ContactItem icon={Mail} href="info@kizushconstructions.com" type="email">
+              <ContactItem icon={Mail} href="mailto:odomitegroupsllc@gmail.com" type="email">
                 odomitegroupsllc@gmail.com
               </ContactItem>
-              <ContactItem icon={Phone} href="+123456789" type="phone">
-                416-300-4040
+              <ContactItem icon={Phone} href="tell:+18622306639" type="phone">
+                +18622306639
               </ContactItem>
             </div>
           </div>
@@ -74,9 +74,8 @@ export default function Footer() {
               <p className="text-sm m-0">Follow us for updates and project showcases</p>
               <div className="flex gap-4 flex-wrap">
                 <SocialIcon icon={Facebook} href="#" label="Facebook" hoverColor="#1877f2" />
-                <SocialIcon icon={Twitter} href="#" label="Twitter" hoverColor="#1da1f2" />
                 <SocialIcon icon={Instagram} href="#" label="Instagram" hoverColor="#e4405f" />
-                <SocialIcon icon={Linkedin} href="#" label="LinkedIn" hoverColor="#0077b5" />
+
               </div>
             </div>
           </div>
@@ -85,11 +84,11 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="flex justify-between items-center flex-wrap gap-4 pt-8 border-t border-white/10">
           <p className="text-sm">© 2025 OdomiteRentals.com. All rights reserved.</p>
-          <div className="flex gap-8 flex-wrap">
+{/*           <div className="flex gap-8 flex-wrap">
             <BottomLink href="/privacy">Privacy Policy</BottomLink>
             <BottomLink href="/terms">Terms of Service</BottomLink>
             <BottomLink href="/sitemap">Sitemap</BottomLink>
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>
