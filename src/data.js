@@ -1,77 +1,36 @@
-// Product discount on chair covers is 35% when the chairs are rented from us . Add this to the promotion page
-//
-export const device = 
-[
-    {
-        id:"0",
-        cartegory:'Chair',
-        Product_name:'',
-        spec: '6',
-        price:"$10",
-        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1710257844/OdomiteRentals/Hero_Images/banner_v3bbwc.jpg     '
-    },
+export const categories = [
+  {
+    name: 'Chairs',
+    desc: 'A wide variety of chairs including stackables, padded, and folding for all event styles.',
+    img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452771/Products/20240126_212436_aq25zk.jpg' // White Stackable Chairs
+  },
+  {
+    name: 'Tables',
+    desc: 'Durable rectangular and round tables suitable for banquets, meetings, and more.',
+    img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452760/Products/20240126_212145_awz8yv.jpg' // Rectangular 6ft Table
+  },
+  {
+    name: 'Tents',
+    desc: 'High-quality tents available in various sizes to provide cover and elegance at your event.',
+    img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452768/Products/20240126_212027_vgksxo.jpg' // 10 by 10 Tent White
+  },
+  {
+    name: 'Table Covers',
+    desc: 'Stylish table covers including damask and sequin options to complete your table setup.',
+    img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452772/Products/20240126_212342_npmxlg.jpg' // Gold Damask Table Cover
+  },
+  {
+    name: 'Equipment',
+    desc: 'Essential event accessories and equipment for lighting, sound, and functionality.',
+    img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452771/Products/20240126_212114_zhogg6.jpg' // Reused one to represent equipment due to lack of distinct item
+  },
+  {
+    name: 'Lighting',
+    desc: 'Ambient and decorative lighting to brighten up your indoor or outdoor events.',
+    img: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706452765/Products/20240126_211713_ww0fol.jpg' // Used to symbolize lighting (can be updated if real lighting image is added)
+  }
+];
 
-    {
-        id:"1",
-        name:'Table',
-        device_nam:'',
-        spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
-        price:"$45",
-        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
-    },
-    {
-        id:"2",  
-        name:'Chair',
-        device_nam:'',
-        spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
-        price:"$40",
-        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/xpubptglh75mwrsbzrpb.jpg'
-
-    },
-    {
-        id:"3",
-        name:'',
-        device_nam:'Round Table',
-        spec:'Pro - Mondrian (Ti56 + 8',
-        price:"$30",
-        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283744/OdomiteRentals/Hero_Images/tm3iujzssxkcpjgpr6tg.jpg'
-    },
-    {
-        id:"4",
-        name:'Chair',
-        device_name:'',
-        spec: '6.5-Inch Super Retina (Gold',
-        price:"$10",
-        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283745/OdomiteRentals/Hero_Images/shovnzles3mjavzqwlnt.jpg'
-    },
-
-    {
-        id:"5",
-        name:'Table',
-        device_nam:'',
-        spec:'16.2 inch" - 32GB - 1TB - 10 Cores - M1 Max - Silver',
-        price:"$45",
-        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283743/OdomiteRentals/Hero_Images/afkrmy6xyemspz81pjiv.jpg'
-    },
-    {
-        id:"6",
-        name:'Chair',
-        device_nam:'',
-        spec:'Dual SIM - 12GB RAM - 512GB - 5G - Burgundy',
-        price:"$40",
-        img:''
-
-    },
-    {
-        id:"7",
-        name:'',
-        device_nam:'Round Table',
-        spec:'Pro - Mondrian (Ti56 + 8',
-        price:"$30",
-        img:'https://res.cloudinary.com/dpcvlheu9/image/upload/v1706283742/OdomiteRentals/Hero_Images/m9yy0en3cdrhezj6d0wo.jpg'
-    }
-  
-]
 export const products = [
         {
             id:0,

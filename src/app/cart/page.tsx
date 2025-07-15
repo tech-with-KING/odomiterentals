@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useContext, createContext } from "react"
 import { ShoppingCart, Plus, Minus, Trash2, Edit3, Check, X, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,8 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 
+// Firebase imports (you'll need to uncomment these in your actual implementation)
+// import { collection, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot } from "firebase/firestore"
+// import { db } from "@/lib/firebase"
+
 interface CartItem {
-  id: number
+  id: string
   name: string
   image: string
   quantity: number
@@ -17,61 +21,233 @@ interface CartItem {
   unitPrice: number
   total: number
   category: string
+  productId: string
+}
+
+interface CartContextType {
+  cartItems: CartItem[]
+  addToCart: (product: any, quantity?: number, duration?: number) => void
+  removeFromCart: (itemId: string) => void
+  updateQuantity: (itemId: string, quantity: number) => void
+  updateDuration: (itemId: string, duration: number) => void
+  clearCart: () => void
+  cartTotal: number
+  cartCount: number
+}
+
+// Create Cart Context
+const CartContext = createContext<CartContextType | undefined>(undefined)
+
+// Cart Provider Component
+export const CartProvider = ({ children, userId }: { children: React.ReactNode, userId?: string }) => {
+  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // Initialize cart from Firebase or localStorage
+  useEffect(() => {
+    const initializeCart = async () => {
+      if (userId) {
+        // Load from Firebase for authenticated users
+        try {
+          // Uncomment for Firebase implementation
+          // const cartRef = doc(db, 'carts', userId)
+          // const cartSnap = await getDoc(cartRef)
+          // if (cartSnap.exists()) {
+          //   setCartItems(cartSnap.data().items || [])
+          // }
+        } catch (error) {
+          console.error('Error loading cart from Firebase:', error)
+          // Fallback to localStorage
+          loadCartFromStorage()
+        }
+      } else {
+        // Load from localStorage for guest users
+        loadCartFromStorage()
+      }
+      setLoading(false)
+    }
+
+    initializeCart()
+  }, [userId])
+
+  // Load cart from localStorage
+  const loadCartFromStorage = () => {
+    try {
+      const savedCart = localStorage.getItem('cart')
+      if (savedCart) {
+        setCartItems(JSON.parse(savedCart))
+      }
+    } catch (error) {
+      console.error('Error loading cart from localStorage:', error)
+    }
+  }
+
+  // Save cart to Firebase or localStorage
+  const saveCart = async (items: CartItem[]) => {
+    if (userId) {
+      // Save to Firebase for authenticated users
+      try {
+        // Uncomment for Firebase implementation
+        // const cartRef = doc(db, 'carts', userId)
+        // await setDoc(cartRef, { 
+        //   items, 
+        //   updatedAt: new Date(),
+        //   userId 
+        // }, { merge: true })
+      } catch (error) {
+        console.error('Error saving cart to Firebase:', error)
+        // Fallback to localStorage
+        localStorage.setItem('cart', JSON.stringify(items))
+      }
+    } else {
+      // Save to localStorage for guest users
+      localStorage.setItem('cart', JSON.stringify(items))
+    }
+  }
+
+  // Add item to cart
+  const addToCart = (product: any, quantity = 1, duration = 1) => {
+    const existingItemIndex = cartItems.findIndex(item => item.productId === product.id)
+    
+    if (existingItemIndex > -1) {
+      // Update existing item
+      const updatedItems = [...cartItems]
+      updatedItems[existingItemIndex].quantity += quantity
+      updatedItems[existingItemIndex].total = 
+        updatedItems[existingItemIndex].quantity * 
+        updatedItems[existingItemIndex].duration * 
+        updatedItems[existingItemIndex].unitPrice
+      
+      setCartItems(updatedItems)
+      saveCart(updatedItems)
+    } else {
+      // Add new item
+      const newItem: CartItem = {
+        id: `${product.id}-${Date.now()}`,
+        productId: product.id,
+        name: product.name,
+        image: product.images?.[0] || '',
+        quantity,
+        duration,
+        unitPrice: parseFloat(product.price.toString()),
+        total: quantity * duration * parseFloat(product.price.toString()),
+        category: product.categories?.[0] || 'General'
+      }
+      
+      const updatedItems = [...cartItems, newItem]
+      setCartItems(updatedItems)
+      saveCart(updatedItems)
+    }
+  }
+
+  // Remove item from cart
+  const removeFromCart = (itemId: string) => {
+    const updatedItems = cartItems.filter(item => item.id !== itemId)
+    setCartItems(updatedItems)
+    saveCart(updatedItems)
+  }
+
+  // Update quantity
+  const updateQuantity = (itemId: string, quantity: number) => {
+    const updatedItems = cartItems.map(item => {
+      if (item.id === itemId) {
+        const newQuantity = Math.max(1, quantity)
+        return {
+          ...item,
+          quantity: newQuantity,
+          total: newQuantity * item.duration * item.unitPrice
+        }
+      }
+      return item
+    })
+    setCartItems(updatedItems)
+    saveCart(updatedItems)
+  }
+
+  // Update duration
+  const updateDuration = (itemId: string, duration: number) => {
+    const updatedItems = cartItems.map(item => {
+      if (item.id === itemId) {
+        const newDuration = Math.max(1, duration)
+        return {
+          ...item,
+          duration: newDuration,
+          total: item.quantity * newDuration * item.unitPrice
+        }
+      }
+      return item
+    })
+    setCartItems(updatedItems)
+    saveCart(updatedItems)
+  }
+
+  // Clear cart
+  const clearCart = () => {
+    setCartItems([])
+    saveCart([])
+  }
+
+  // Calculate totals
+  const cartTotal = cartItems.reduce((sum, item) => sum + item.total, 0)
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
+
+  const value = {
+    cartItems,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    updateDuration,
+    clearCart,
+    cartTotal,
+    cartCount
+  }
+
+  return (
+    <CartContext.Provider value={value}>
+      {children}
+    </CartContext.Provider>
+  )
+}
+
+// Hook to use cart context
+export const useCart = () => {
+  const context = useContext(CartContext)
+  if (context === undefined) {
+    throw new Error('useCart must be used within a CartProvider')
+  }
+  return context
 }
 
 type EditableField = "name" | "duration" | "unitPrice" | "category"
 
 export default function ShoppingCartPage() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: "Professional Camera",
-      image: "/placeholder.svg?height=80&width=80",
-      quantity: 1,
-      duration: 5,
-      unitPrice: 30,
-      total: 150,
-      category: "Photography",
-    },
-    {
-      id: 2,
-      name: "Lighting Kit",
-      image: "/placeholder.svg?height=80&width=80",
-      quantity: 2,
-      duration: 1,
-      unitPrice: 100,
-      total: 200,
-      category: "Photography",
-    },
-  ])
+  const {
+    cartItems,
+    removeFromCart,
+    updateQuantity,
+    updateDuration,
+    cartTotal,
+    cartCount
+  } = useCart()
 
   const [editingField, setEditingField] = useState<string | null>(null)
   const [editValue, setEditValue] = useState("")
 
-  const startEditing = (itemId: number, field: EditableField, currentValue: string | number) => {
+  const startEditing = (itemId: string, field: EditableField, currentValue: string | number) => {
     setEditingField(`${itemId}-${field}`)
     setEditValue(currentValue.toString())
   }
 
-  const saveEdit = (itemId: number, field: EditableField): void => {
-    const newValue: string | number = field === "name" ? editValue : Number.parseFloat(editValue) || 0
-
-    setCartItems((items: CartItem[]) =>
-      items.map((item: CartItem) => {
-        if (item.id === itemId) {
-          const updatedItem: CartItem = { 
-            ...item, 
-            [field]: field === "name" || field === "category" ? newValue : Number(newValue)
-          }
-          if (field !== "name" && field !== "category") {
-            updatedItem.total = updatedItem.quantity * updatedItem.duration * updatedItem.unitPrice
-          }
-          return updatedItem
-        }
-        return item
-      }),
-    )
-
+  const saveEdit = (itemId: string, field: EditableField): void => {
+    if (field === "duration") {
+      const newDuration = Math.max(1, parseInt(editValue) || 1)
+      updateDuration(itemId, newDuration)
+    } else if (field === "unitPrice") {
+      // For unit price, you might want to restrict editing or handle differently
+      // This is just an example - in real apps, prices usually shouldn't be editable
+      console.log("Price editing not implemented for security reasons")
+    }
+    
     setEditingField(null)
     setEditValue("")
   }
@@ -81,35 +257,20 @@ export default function ShoppingCartPage() {
     setEditValue("")
   }
 
-  const updateQuantity = (itemId: number, change: number): void => {
-    setCartItems((items: CartItem[]) =>
-      items.map((item: CartItem) => {
-        if (item.id === itemId) {
-          const newQuantity = Math.max(1, item.quantity + change)
-          return {
-            ...item,
-            quantity: newQuantity,
-            total: newQuantity * item.duration * item.unitPrice,
-          }
-        }
-        return item
-      }),
-    )
+  const handleQuantityChange = (itemId: string, change: number): void => {
+    const currentItem = cartItems.find(item => item.id === itemId)
+    if (currentItem) {
+      updateQuantity(itemId, currentItem.quantity + change)
+    }
   }
 
-  const removeItem = (itemId: number): void => {
-    setCartItems((items: CartItem[]) => items.filter((item: CartItem) => item.id !== itemId))
-  }
-
-  const subtotal = cartItems.reduce((sum, item) => sum + item.total, 0)
-  const taxes = 25
-  const shipping = 0
+  const subtotal = cartTotal
+  const taxes = Math.round(subtotal * 0.08) // 8% tax
+  const shipping = subtotal > 100 ? 0 : 25 // Free shipping over $100
   const total = subtotal + taxes + shipping
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Header */}
-
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
@@ -123,7 +284,7 @@ export default function ShoppingCartPage() {
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-slate-900 mb-2">Shopping Cart</h2>
           <p className="text-slate-600">
-            {cartItems.length} {cartItems.length === 1 ? "item" : "items"} in your cart
+            {cartCount} {cartCount === 1 ? "item" : "items"} in your cart
           </p>
         </div>
 
@@ -148,39 +309,9 @@ export default function ShoppingCartPage() {
                     <div className="flex-1 space-y-3">
                       <div className="flex items-start justify-between">
                         <div className="space-y-1">
-                          {editingField === `${item.id}-name` ? (
-                            <div className="flex items-center space-x-2">
-                              <Input
-                                value={editValue}
-                                onChange={(e) => setEditValue(e.target.value)}
-                                className="font-semibold text-lg"
-                                autoFocus
-                              />
-                              <Button size="sm" onClick={() => saveEdit(item.id, "name")} className="h-8 w-8 p-0">
-                                <Check className="w-4 h-4" />
-                              </Button>
-                              <Button size="sm" variant="outline" onClick={cancelEdit} className="h-8 w-8 p-0">
-                                <X className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          ) : (
-                            <div className="flex items-center space-x-2">
-                              <h3
-                                className="font-semibold text-lg text-slate-900 cursor-pointer hover:text-blue-600 transition-colors"
-                                onClick={() => startEditing(item.id, "name", item.name)}
-                              >
-                                {item.name}
-                              </h3>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => startEditing(item.id, "name", item.name)}
-                                className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                <Edit3 className="w-3 h-3" />
-                              </Button>
-                            </div>
-                          )}
+                          <h3 className="font-semibold text-lg text-slate-900">
+                            {item.name}
+                          </h3>
                           <Badge variant="secondary" className="text-xs">
                             {item.category}
                           </Badge>
@@ -188,7 +319,7 @@ export default function ShoppingCartPage() {
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => removeItem(item.id)}
+                          onClick={() => removeFromCart(item.id)}
                           className="text-red-500 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -204,7 +335,7 @@ export default function ShoppingCartPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => updateQuantity(item.id, -1)}
+                              onClick={() => handleQuantityChange(item.id, -1)}
                               disabled={item.quantity <= 1}
                               className="h-8 w-8 p-0"
                             >
@@ -214,7 +345,7 @@ export default function ShoppingCartPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => updateQuantity(item.id, 1)}
+                              onClick={() => handleQuantityChange(item.id, 1)}
                               className="h-8 w-8 p-0"
                             >
                               <Plus className="w-3 h-3" />
@@ -260,34 +391,9 @@ export default function ShoppingCartPage() {
                           <label className="text-xs font-medium text-slate-600 uppercase tracking-wide">
                             Price/Day
                           </label>
-                          {editingField === `${item.id}-unitPrice` ? (
-                            <div className="flex items-center space-x-1">
-                              <span className="text-sm">$</span>
-                              <Input
-                                type="number"
-                                value={editValue}
-                                onChange={(e) => setEditValue(e.target.value)}
-                                className="h-8 w-20 text-sm"
-                                min="0"
-                                step="0.01"
-                                autoFocus
-                              />
-                              <Button size="sm" onClick={() => saveEdit(item.id, "unitPrice")} className="h-6 w-6 p-0">
-                                <Check className="w-3 h-3" />
-                              </Button>
-                              <Button size="sm" variant="outline" onClick={cancelEdit} className="h-6 w-6 p-0">
-                                <X className="w-3 h-3" />
-                              </Button>
-                            </div>
-                          ) : (
-                            <div
-                              className="flex items-center space-x-1 cursor-pointer hover:text-blue-600 transition-colors"
-                              onClick={() => startEditing(item.id, "unitPrice", item.unitPrice)}
-                            >
-                              <span className="font-medium">${item.unitPrice}</span>
-                              <Edit3 className="w-3 h-3 text-slate-400" />
-                            </div>
-                          )}
+                          <div className="flex items-center space-x-1">
+                            <span className="font-medium">${item.unitPrice}</span>
+                          </div>
                         </div>
 
                         {/* Total */}
@@ -380,3 +486,4 @@ export default function ShoppingCartPage() {
     </div>
   )
 }
+

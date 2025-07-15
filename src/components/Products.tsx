@@ -5,12 +5,16 @@ import React, { useEffect, useState } from 'react';
 import GlobalHeader, { HeaderThree } from './GlobalHeader';
 import { collection, doc, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase'; // Adjust the import path to your Firebase config
+import { CartProvider, useCart } from '@/app/cart/page';
+import { BookNowPopup } from './ui/BookNowPopUp';
 
 type ProductCardProps = {
-  image: string;
-  title: string;
+  id: string | number;
+  images: string[];
+  name: string;
   price: number | string;
   desc: string;
+  categories?: string[];
 };
 
 type ServiceCardProps = {
@@ -60,27 +64,48 @@ function ServiceCard({ image, title }: ServiceCardProps) {
   );
 }
 
-function ProductCard({ image, title, price }: ProductCardProps) {
+function ProductCard({ images, name, price, id, categories, desc}: ProductCardProps) {
+  const product = {
+  id: id ,
+  name: name,
+  price: price,
+  images: images,
+  desc: desc,
+  categories: categories
+  }
+  const {addToCart} =  useCart()
+    const handleAddToCart = () => {
+    addToCart(product, 1, 5) // quantity: 1, duration: 5 days
+  }
+
   return (
     <div className="bg-white rounded-xl overflow-hidden max-w-sm mx-auto">
       <div className="relative rounded-2xl">
         <Image 
-          src={image} 
-          alt={title}
+          src={images[0]} 
+          alt={name}
           width={400}
           height={256}
           className="w-full h-45 md:h-64 object-cover rounded-2xl transition-transform duration-300 transform hover:scale-105"
         />
-        <button className="absolute top-3 right-3 bg-white text-gray-800 px-2 py-1 text-xs rounded-full font-medium hover:bg-gray-100 transition-colors">
-          Book Now
-        </button>
+      <BookNowPopup 
+          product={product}
+          trigger={
+            <button className="absolute top-3 right-3 bg-white text-gray-800 px-2 py-1 text-xs rounded-full font-medium hover:bg-gray-100 transition-colors">
+              Book Now
+            </button>
+          }
+          />
       </div>
       <div className="p-1 sm:p-3 md:flex md: md:flex-1 md:justify-between">
-        <h3 className="text-[16px] sm:text-sm sm:font-semibold font-medium text-gray-900">{title}</h3>
+        <h3 className="text-[16px] sm:text-sm sm:font-semibold font-medium text-gray-900">{name}</h3>
         <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
-           <span className="text-blue-900">${price}</span> a unit
+           <span className="text-blue-500 font-bold m-2 ">${price}</span> a unit
         </p>
       </div>
+      <Link key={id} href={`/shop/${id}`} className="group">
+        <h3 className="text-[16px] sm:text-sm sm:font-semibold font-medium text-gray-900 hover:text-blue-600 ml-2">View Details</h3>
+      </Link>
     </div>
   );
 }
@@ -155,7 +180,7 @@ const useServices = () => {
     const fetchServices = async () => {
       try {
         setLoading(true);
-        const servicesCollection = collection(db, 'services');
+        const servicesCollection = collection(db, 'categories');
         const servicesSnapshot = await getDocs(servicesCollection);
         
         const servicesData: Service[] = servicesSnapshot.docs.map(doc => ({
@@ -221,14 +246,14 @@ export const Products = () => {
       <HeaderThree title='Day Rentals' />
       <div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2  md:gap-6  mx-auto'>
         {products.map((item: Product) => (
-          <Link key={item.id} href={`/shop/${item.id}`} className="group">
             <ProductCard 
-              image={item.images[0] || ''} 
-              title={item.name} 
+              images={item.images || ''} 
+              name={item.name} 
               price={item.price} 
+              categories={item.categories}
+              id={item.id}
               desc={item.desc} 
             />
-          </Link>
         ))}
       </div>
     </div>
@@ -323,8 +348,9 @@ export const Categories = () => {
           {products.map((item) => (
             <Link key={item.id} href={`/projects/${item.name}`}>
               <ProductCard  
-                image={item.images[0] || ''} 
-                title={item.name} 
+                id={item.id}
+                images={item.images || []} 
+                name={item.name} 
                 price={item.price} 
                 desc={item.desc}
               />
@@ -338,8 +364,9 @@ export const Categories = () => {
         {products.map((item) => (
           <Link key={item.id} href={`/product/${item.name}`} className="group">
             <ProductCard 
-              image={item.images[0] || ''} 
-              title={item.name} 
+              id={item.id}
+              images={item.images || []} 
+              name={item.name} 
               price={item.price} 
               desc={item.desc} 
             />

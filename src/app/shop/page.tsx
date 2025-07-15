@@ -207,14 +207,16 @@ console.log('Filtered products:', filteredProducts);
           {!loading && !error && (
           <div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-6 mx-auto'>
             {filteredProducts.map((item: Product) => (
-              <Link key={item.id} href={`/shop/${item.id}`} className="group">
+              
                 <ProductCard 
-                  image={item.images[0] || ''} 
-                  title={item.name} 
+                  images={item.images || []} 
+                  name={item.name} 
                   price={item.price} 
                   desc={item.desc} 
+                  categories={item.categories}
+                  id={item.id}
                 />
-              </Link>
+              
             ))}
           </div>
         )}
