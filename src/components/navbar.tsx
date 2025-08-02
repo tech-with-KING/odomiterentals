@@ -17,12 +17,14 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
 import { useAdminCheck } from "@/context/admin"
+import { useCart } from "@/app/cart/page"
 
 function MobileNav() {
   const [isMoreOpen, setIsMoreOpen] = useState(false)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const { user } = useUser()
   const { isAdmin } = useAdminCheck()
+  const { cartCount } = useCart()
   
   const categoryItems = [
     { name: "Tables", href: "/shop" },
@@ -82,9 +84,11 @@ function MobileNav() {
             >
               <ShoppingCart className="h-5 w-5 text-gray-600" />
               <span className="sr-only">Cart</span>
-              <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                2
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
             </Link>
 
             {/* Get Quote */}
@@ -279,6 +283,8 @@ function DesktopNav() {
 }
 
 function SearchBar() {
+  const { cartCount } = useCart()
+  
   return (
     <div className="hidden md:flex items-center gap-3">
       {/* Search Section */}
@@ -304,9 +310,11 @@ function SearchBar() {
         <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full relative bg-[#bcd1e5]">
           <ShoppingCart className="h-5 w-5 text-gray-600" />
           <span className="sr-only">Cart</span>
-          <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-            2
-          </span>
+          {cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              {cartCount}
+            </span>
+          )}
         </Button>
       </Link>
 

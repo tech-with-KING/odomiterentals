@@ -8,6 +8,7 @@ import { useEffect } from "react"
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: Home },
   { name: "Inventory", href: "/admin/inventory", icon: Package },
+  { name: "Orders", href: "/admin/orders", icon: FileText },
   { name: "Email Suscribers", href: "/admin/subscriber", icon: Users },
 ]
 
@@ -19,15 +20,16 @@ interface SidebarProps {
 export function Sidebar({ open, setOpen }: SidebarProps) {
   const pathname = usePathname()
 
-  // Close sidebar on escape key (desktop only)
+  // Close sidebar on escape key (mobile only)
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && window.innerWidth >= 1024) {
+      if (e.key === "Escape" && window.innerWidth < 1024) {
         setOpen(false)
       }
     }
 
-    if (open && window.innerWidth >= 1024) {
+    // Only prevent scrolling on mobile when sidebar is open
+    if (open && window.innerWidth < 1024) {
       document.addEventListener("keydown", handleEscape)
       document.body.style.overflow = "hidden"
     } else {
@@ -65,31 +67,31 @@ export function Sidebar({ open, setOpen }: SidebarProps) {
         </nav>
       </div>
 
-      {/* Desktop sidebar overlay (when hamburger is clicked) */}
+      {/* Mobile overlay (when sidebar is open on mobile) */}
       {open && (
-        <div className="fixed inset-0 z-50 hidden lg:block">
+        <div className="fixed inset-0 z-40 lg:hidden">
           {/* Backdrop */}
           <div
-            className={cn(
-              "fixed inset-0 bg-gray-900/80 transition-opacity duration-300",
-              open ? "opacity-100" : "opacity-0",
-            )}
+            className="fixed inset-0 bg-gray-900/80 transition-opacity duration-300"
             onClick={() => setOpen(false)}
           />
         </div>
       )}
 
-      {/* Desktop sidebar - Keep original vertical layout */}
+      {/* Desktop sidebar - Always visible when open, persistent */}
       <div className={cn(
-        "hidden lg:flex lg:w-72 lg:flex-col lg:shrink-0 lg:fixed lg:inset-y-0 lg:z-50 lg:transition-transform lg:duration-300",
-        open ? "lg:translate-x-0" : "lg:-translate-x-full"
+        // Desktop: Fixed sidebar, always visible when open, with top margin for nav
+        "hidden lg:flex lg:w-72 lg:flex-col lg:shrink-0 lg:fixed lg:top-30   lg:bottom-0 lg:left-0 lg:z-30 lg:transition-transform lg:duration-300",
+        // Mobile: Overlay sidebar
+        "fixed inset-y-0 left-0 z-50 w-72 flex-col lg:z-30",
+        open ? "flex lg:translate-x-0" : "hidden lg:-translate-x-full"
       )}>
         <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
           <div className="flex h-16 shrink-0 items-center justify-between">
             <h1 className="text-xl font-bold text-gray-900">Admin Panel</h1>
             <button
               type="button"
-              className="lg:flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 lg:hidden"
               onClick={() => setOpen(false)}
             >
               <span className="sr-only">Close sidebar</span>
@@ -104,7 +106,12 @@ export function Sidebar({ open, setOpen }: SidebarProps) {
                     <li key={item.name}>
                       <Link
                         href={item.href}
-                        onClick={() => setOpen(false)}
+                        onClick={() => {
+                          // Only close sidebar on mobile
+                          if (window.innerWidth < 1024) {
+                            setOpen(false)
+                          }
+                        }}
                         className={cn(
                           pathname === item.href
                             ? "bg-gray-50 text-blue-600"

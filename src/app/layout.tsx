@@ -2,6 +2,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import  Header from '@/components/navbar'
 import Footer from "@/components/footer";
+import { CartProvider } from "./cart/page";
 
 
 export default function RootLayout({
@@ -11,6 +12,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
+      <CartProvider >
       <html lang="en">
         <body className="display-flex flex-col min-h-screen items-center justify-center bg-white text-gray-900 antialiased">
           <Header />
@@ -22,6 +24,7 @@ export default function RootLayout({
           <Footer />
         </body>
       </html>
+      </CartProvider>
     </ClerkProvider>
   );
 } 

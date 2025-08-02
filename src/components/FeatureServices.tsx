@@ -39,7 +39,7 @@ const services = [
     id: 4,
     title: "Rentals",
     description: "Post-event cleanup handled with care",
-    image: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484411/services/cleanup_pwv9lj.jpg',
+    image: 'https://res.cloudinary.com/dpcvlheu9/image/upload/v1707484410/services/odomiterentals_itjcft.jpg',
     category: 'Product'
   }
 ];
