@@ -189,7 +189,7 @@ export const CartProvider = ({ children, userId }: { children: React.ReactNode, 
 
   // Calculate totals
   const cartTotal = cartItems.reduce((sum, item) => sum + item.total, 0)
-  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
+  const cartCount = cartItems.length // Count unique items instead of total quantity
 
   const value = {
     cartItems,
@@ -451,6 +451,7 @@ export default function ShoppingCartPage() {
                   <Button
                     className="w-full h-12 text-base font-semibold bg-blue-600"
                     disabled={cartItems.length === 0}
+                    onClick={() => window.location.href = '/checkout'}
                   >
                     <ShoppingCart className="w-5 h-5 mr-2" />
                     Proceed to Checkout

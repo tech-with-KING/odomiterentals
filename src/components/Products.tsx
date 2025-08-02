@@ -36,26 +36,30 @@ interface Product {
 
 interface Service {
   id: string | number;
-  images: string[];
+  img: string[];
   name: string;
   desc: string;
-  categories?: string[];
 }
 
 function ServiceCard({ image, title }: ServiceCardProps) {
+  // Convert title to URL-friendly format for category filtering
+  const categorySlug = title.toLowerCase().replace(/\s+/g, '-');
+  
   return (
     <div className="bg-white rounded-xl overflow-hidden max-w-sm mx-auto">
       <div className="relative rounded-2xl">
         <Image 
           src={image} 
           alt={title}
-          width={400}
+          width={300}
           height={256}
           className="w-full h-68 md:h-64 object-cover rounded-2xl transition-transform duration-300 transform hover:scale-105"
         />
-        <button className="absolute top-3 right-3 bg-white text-gray-800 px-2 py-1 text-xs rounded-full font-medium hover:bg-gray-100 transition-colors">
-          {`view ${title}`} 
-        </button>
+        <Link href={`/shop/cartegory/${categorySlug}`}>
+          <button className="absolute top-3 right-3 bg-white text-gray-800 px-2 py-1 text-xs rounded-full font-medium hover:bg-gray-100 transition-colors">
+            {`view ${title}`} 
+          </button>
+        </Link>
       </div>
       <div className="p-1 sm:p-3 md:flprice, descex md: md:flex-1 md:justify-between">
         <h3 className="text-[22px] sm:text-sm sm:font-semibold font-medium text-gray-900">{title}</h3>
@@ -172,7 +176,44 @@ const useProducts = () => {
 };
 
 const useServices = () => {
-  const [services, setServices] = useState<Service[]>([]);
+  const [services, setServices] = useState<Service[]>([
+  {
+    id: 'chairs',
+    name: 'Chairs',
+    desc: 'A wide variety of chairs including stackables, padded, and folding for all event styles.',
+    img: ['https://res.cloudinary.com/algopinile/image/upload/v1750259937/projects/zpyqv0b23khpzwxgvfz2.png'] // White Stackable Chairs
+  },
+  {
+    id: 'tables',
+    name: 'Tables',
+    desc: 'Durable rectangular and round tables suitable for banquets, meetings, and more.',
+    img: ['https://res.cloudinary.com/algopinile/image/upload/v1750270533/products/giu3lm3ojqtknkjda03c.png'] // Rectangular 6ft Table
+  },
+  {
+    id: 'tents',
+    name: 'Tents',
+    desc: 'High-quality tents available in various sizes to provide cover and elegance at your event.',
+    img: ['https://res.cloudinary.com/algopinile/image/upload/v1750262022/samples/zyzq9mvkggecloxbleie.png'] // 10 by 10 Tent White
+  },
+  {
+    id: 'table-covers',
+    name: 'Table Covers',
+    desc: 'Stylish table covers including damask and sequin options to complete your table setup.',
+    img: ['https://res.cloudinary.com/dpcvlheu9/image/upload/v1754159285/black_table_covers_m89oif.webp']
+  },
+  {
+    id: 'equipment',
+    name: 'Equipment',
+    desc: 'Essential event accessories and equipment for lighting, sound, and functionality.',
+    img: ['https://res.cloudinary.com/algopinile/image/upload/v1750259937/projects/p823v78rftljyvcxgabm.png'] 
+  },
+  {
+    id: 'Kids Rentals',
+    name: 'Kids Rentals',
+    desc: 'Ambient and decorative lighting to brighten up your indoor or outdoor events.',
+    img: ['https://res.cloudinary.com/dpcvlheu9/image/upload/v1754044209/kids_chair_alt_wk7frd.webp'] 
+  }
+]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -183,16 +224,23 @@ const useServices = () => {
         const servicesCollection = collection(db, 'categories');
         const servicesSnapshot = await getDocs(servicesCollection);
         
-        const servicesData: Service[] = servicesSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data() as Omit<Service, 'id'>
-        }));
-        
-        setServices(servicesData);
+        if (servicesSnapshot.docs.length > 0) {
+          const servicesData: Service[] = servicesSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data() as Omit<Service, 'id'>
+          }));
+          
+          setServices(servicesData);
+          console.log('Fetched services from Firebase:', servicesData);
+        } else {
+          console.log('No services found in Firebase, using default services');
+          // Keep the hardcoded services as fallback
+        }
         setError(null);
       } catch (err) {
         console.error('Error fetching services:', err);
-        setError('Failed to load services');
+        console.log('Using default services due to error');
+        setError(null); // Don't show error, just use default services
       } finally {
         setLoading(false);
       }
@@ -247,6 +295,7 @@ export const Products = () => {
       <div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2  md:gap-6  mx-auto'>
         {products.map((item: Product) => (
             <ProductCard 
+              key={item.id}
               images={item.images || ''} 
               name={item.name} 
               price={item.price} 
@@ -286,14 +335,14 @@ export const Services = () => {
   return (
     <div className='container mx-auto px-1 py-12 bg-white '>
       <HeaderThree title='Featured Categories' />
-      <div className='w-full grid gap-8 sm:grid-col-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4 mx-auto'>
+      <div className='w-full grid gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4 mx-auto'>
         {services.map((item) => (
-          <Link key={item.id} href={`/product/${item.name}`} className="group">
+          <div key={item.id}>
             <ServiceCard 
-              image={item.images[0] || ''} 
+              image={item.img[0] || ''} 
               title={item.name} 
             />
-          </Link>
+          </div>
         ))}
       </div>
     </div>

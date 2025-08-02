@@ -1,7 +1,7 @@
 "use client"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { Save, Plus, X } from "lucide-react"
+import { Save, Plus, X, Upload, Loader2 } from "lucide-react"
 import Image from "next/image"
 import { collection, addDoc } from "firebase/firestore"
 import { db } from "@/lib/firebase"
@@ -23,6 +23,18 @@ interface ProductData {
 
 const AddProductPage = () => {
   const router = useRouter()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Cloudinary configuration
+  const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+  const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+
+  console.log('Cloudinary Config:', {
+    cloudName: CLOUDINARY_CLOUD_NAME,
+    uploadPreset: CLOUDINARY_UPLOAD_PRESET,
+    hasCloudName: !!CLOUDINARY_CLOUD_NAME,
+    hasUploadPreset: !!CLOUDINARY_UPLOAD_PRESET
+  })
 
   const [product, setProduct] = useState<ProductData>({
     name: "",
@@ -40,6 +52,7 @@ const AddProductPage = () => {
   })
 
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [activeImageIndex, setActiveImageIndex] = useState(0)
   const [newImageUrl, setNewImageUrl] = useState("")
 
@@ -47,13 +60,146 @@ const AddProductPage = () => {
     setProduct({ ...product, [field]: value })
   }
 
+  const uploadToCloudinary = async (file: File): Promise<string> => {
+    // Check if configuration is available
+    if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
+      console.error('Cloudinary configuration missing:', {
+        cloudName: !!CLOUDINARY_CLOUD_NAME,
+        uploadPreset: !!CLOUDINARY_UPLOAD_PRESET
+      })
+      throw new Error('Cloudinary configuration is missing. Please check your environment variables.')
+    }
+
+    console.log('Uploading file:', {
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type,
+      cloudName: CLOUDINARY_CLOUD_NAME,
+      uploadPreset: CLOUDINARY_UPLOAD_PRESET
+    })
+
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET)
+
+    // Log form data contents
+    console.log('FormData contents:')
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, typeof value === 'string' ? value : `File: ${file.name}`)
+    }
+
+    const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`
+    console.log('Upload URL:', uploadUrl)
+
+    try {
+      const response = await fetch(uploadUrl, {
+        method: 'POST',
+        body: formData,
+      })
+
+      console.log('Upload response status:', response.status)
+      console.log('Upload response headers:', Object.fromEntries(response.headers.entries()))
+
+      const responseText = await response.text()
+      console.log('Upload response text:', responseText)
+
+      if (!response.ok) {
+        let errorMessage = `Upload failed with status ${response.status}`
+        try {
+          const errorData = JSON.parse(responseText)
+          errorMessage = errorData.error?.message || errorData.message || errorMessage
+          console.error('Cloudinary error details:', errorData)
+        } catch {
+          console.error('Raw response:', responseText)
+        }
+        throw new Error(errorMessage)
+      }
+
+      const data = JSON.parse(responseText)
+      console.log('Upload successful:', {
+        publicId: data.public_id,
+        secureUrl: data.secure_url,
+        format: data.format,
+        bytes: data.bytes
+      })
+      
+      return data.secure_url
+    } catch (error) {
+      console.error('Cloudinary upload error:', error)
+      if (error instanceof Error) {
+        throw new Error(`Failed to upload image: ${error.message}`)
+      }
+      throw new Error('Failed to upload image: Unknown error')
+    }
+  }
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (!files || files.length === 0) return
+
+    // Validate file sizes (limit to 10MB per file)
+    const maxSize = 10 * 1024 * 1024 // 10MB in bytes
+    const invalidFiles = Array.from(files).filter(file => file.size > maxSize)
+    
+    if (invalidFiles.length > 0) {
+      alert(`Some files are too large. Maximum size is 10MB per file.`)
+      return
+    }
+
+    // Validate file types
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+    const invalidTypes = Array.from(files).filter(file => !allowedTypes.includes(file.type))
+    
+    if (invalidTypes.length > 0) {
+      alert('Please select only valid image files (JPEG, PNG, GIF, WebP)')
+      return
+    }
+
+    setUploading(true)
+    try {
+      const uploadPromises = Array.from(files).map(file => uploadToCloudinary(file))
+      const imageUrls = await Promise.all(uploadPromises)
+      
+      setProduct({
+        ...product,
+        images: [...product.images, ...imageUrls]
+      })
+      
+      // Clear the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+      
+      alert(`Successfully uploaded ${imageUrls.length} image(s)!`)
+    } catch (error) {
+      console.error('Upload error:', error)
+      alert('Failed to upload images. Please try again.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
   const handleAddImage = () => {
     if (!newImageUrl.trim()) return
-    setProduct({
-      ...product,
-      images: [...product.images, newImageUrl.trim()],
-    })
-    setNewImageUrl("")
+    
+    // Basic URL validation
+    try {
+      new URL(newImageUrl.trim())
+      
+      // Check if the URL is already in the list
+      if (product.images.includes(newImageUrl.trim())) {
+        alert("This image URL is already added")
+        return
+      }
+      
+      setProduct({
+        ...product,
+        images: [...product.images, newImageUrl.trim()],
+      })
+      setNewImageUrl("")
+    } catch (error) {
+      alert("Please enter a valid URL")
+    }
   }
 
   const handleRemoveImage = (index: number) => {
@@ -68,7 +214,7 @@ const AddProductPage = () => {
   }
 
   const handleSave = async () => {
-    // Basic validation
+    // Enhanced validation
     if (!product.name.trim()) {
       alert("Product name is required")
       return
@@ -81,12 +227,38 @@ const AddProductPage = () => {
       alert("At least one image is required")
       return
     }
+    if (product.price <= 0) {
+      alert("Price must be greater than 0")
+      return
+    }
+    if (product.unitsleft < 0) {
+      alert("Units available cannot be negative")
+      return
+    }
 
     setSaving(true)
     try {
-      const docRef = await addDoc(collection(db, "products"), product)
+      // Clean the product data before saving
+      const productToSave = {
+        ...product,
+        name: product.name.trim(),
+        category: product.category.trim(),
+        subcategory: product.subcategory.trim(),
+        short_description: product.short_description.trim(),
+        description: product.description.trim(),
+        features: product.features.trim(),
+        dimensions: product.dimensions.trim(),
+        material: product.material.trim(),
+        // Add timestamp
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+
+      const docRef = await addDoc(collection(db, "products"), productToSave)
       alert("Product added successfully!")
-      router.push(`/products/${docRef.id}`) // Redirect to the new product page
+      
+      // Redirect to inventory page instead of non-existent products page
+      router.push("/admin/inventory")
     } catch (err) {
       console.error("Error adding product:", err)
       alert("Failed to add product. Please try again.")
@@ -236,21 +408,58 @@ const AddProductPage = () => {
               </div>
             )}
 
-            <div className="flex gap-2">
-              <input
-                type="url"
-                value={newImageUrl}
-                onChange={(e) => setNewImageUrl(e.target.value)}
-                placeholder="Enter image URL"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-              <button
-                onClick={handleAddImage}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
-              >
-                <Plus size={16} className="mr-2" />
-                Add Image
-              </button>
+            {/* Upload Section */}
+            <div className="space-y-4">
+              {/* File Upload */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Upload Images</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                    className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                  >
+                    {uploading ? (
+                      <Loader2 size={16} className="mr-2 animate-spin" />
+                    ) : (
+                      <Upload size={16} className="mr-2" />
+                    )}
+                    {uploading ? "Uploading..." : "Upload Images"}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Select multiple images to upload to Cloudinary
+                </p>
+              </div>
+
+              {/* URL Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Or Add Image URL</label>
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    value={newImageUrl}
+                    onChange={(e) => setNewImageUrl(e.target.value)}
+                    placeholder="Enter image URL"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <button
+                    onClick={handleAddImage}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                  >
+                    <Plus size={16} className="mr-2" />
+                    Add URL
+                  </button>
+                </div>
+              </div>
             </div>
             {product.images.length === 0 && (
               <p className="text-sm text-gray-500 mt-2">At least one image is required</p>

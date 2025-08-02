@@ -11,7 +11,7 @@ export default function DashBoard() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
             <Link
-              href="admin/inventory/add-product"
+              href="admin/inventory/add_product"
               className="flex items-center justify-center p-8 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow group"
             >
               <div className="text-center">

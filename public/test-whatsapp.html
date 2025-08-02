@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Integration Test - Odomite Rentals</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .whatsapp-btn:hover {
+            background: #1DA851;
+        }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .test-btn:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+        .success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .message-preview {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        input[type="tel"] {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🟢 WhatsApp Integration Test</h1>
+            <p>Test your WhatsApp messaging integration for Odomite Rentals</p>
+        </div>
+
+        <div class="test-section">
+            <h3>📱 Quick Test</h3>
+            <p>Click the button below to test WhatsApp with your business number:</p>
+            <button class="test-btn" onclick="testWhatsApp()">Test WhatsApp Integration</button>
+            <div id="quickTestResult"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🎯 Custom Phone Test</h3>
+            <p>Test with a specific phone number:</p>
+            <input type="tel" id="testPhone" placeholder="+1234567890" value="+2349167542539">
+            <button class="test-btn" onclick="testWithCustomPhone()">Generate Test URL</button>
+            <div id="customTestResult"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📋 Configuration Status</h3>
+            <button class="test-btn" onclick="checkConfig()">Check Configuration</button>
+            <div id="configResult"></div>
+        </div>
+    </div>
+
+    <script>
+        async function testWhatsApp() {
+            const resultDiv = document.getElementById('quickTestResult');
+            resultDiv.innerHTML = '<p>Testing WhatsApp integration...</p>';
+
+            try {
+                const response = await fetch('/api/test-whatsapp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <h4>✅ WhatsApp Test Successful!</h4>
+                            <p><strong>Business Number:</strong> ${data.data.businessWhatsAppNumber}</p>
+                            <a href="${data.data.urls.businessWhatsApp}" target="_blank" class="whatsapp-btn">
+                                📱 Open WhatsApp Test Message
+                            </a>
+                            <div class="message-preview">
+                                <strong>Message Preview:</strong><br>
+                                ${data.data.messagePreview}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            <h4>❌ Test Failed</h4>
+                            <p><strong>Error:</strong> ${data.error}</p>
+                            <pre>${JSON.stringify(data.details, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h4>❌ Request Failed</h4>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testWithCustomPhone() {
+            const phoneInput = document.getElementById('testPhone');
+            const resultDiv = document.getElementById('customTestResult');
+            const phoneNumber = phoneInput.value.trim();
+
+            if (!phoneNumber) {
+                resultDiv.innerHTML = '<div class="result error">Please enter a phone number</div>';
+                return;
+            }
+
+            resultDiv.innerHTML = '<p>Generating test URL...</p>';
+
+            try {
+                const response = await fetch('/api/test-whatsapp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        testPhoneNumber: phoneNumber
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <h4>✅ Test URL Generated!</h4>
+                            <p><strong>Test Number:</strong> ${data.data.testPhoneNumber}</p>
+                            <a href="${data.data.urls.testPhone}" target="_blank" class="whatsapp-btn">
+                                📱 Open Test WhatsApp Message
+                            </a>
+                            <a href="${data.data.urls.businessWhatsApp}" target="_blank" class="whatsapp-btn">
+                                🏢 Open Business WhatsApp Message
+                            </a>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            <h4>❌ Test Failed</h4>
+                            <p>${data.error}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h4>❌ Request Failed</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function checkConfig() {
+            const resultDiv = document.getElementById('configResult');
+            resultDiv.innerHTML = '<p>Checking configuration...</p>';
+
+            try {
+                const response = await fetch('/api/test-whatsapp');
+                const data = await response.json();
+
+                resultDiv.innerHTML = `
+                    <div class="result">
+                        <h4>📋 Configuration Status</h4>
+                        <p><strong>Business WhatsApp:</strong> ${data.currentConfig.businessWhatsApp}</p>
+                        <div class="message-preview">
+                            <strong>Usage:</strong><br>
+                            Method: ${data.usage.method}<br>
+                            Description: ${data.description}
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h4>❌ Configuration Check Failed</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Auto-check configuration on page load
+        window.addEventListener('load', checkConfig);
+    </script>
+</body>
+</html>
