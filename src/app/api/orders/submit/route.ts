@@ -266,6 +266,32 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    // Send push notification to admin devices
+    try {
+      console.log('Sending push notification to admin devices')
+      const notificationResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/send-notification`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderId,
+          customerName: `${customerInfo.firstName} ${customerInfo.lastName}`,
+          total: pricing.total,
+          itemCount: items.length
+        })
+      })
+
+      if (notificationResponse.ok) {
+        const notificationResult = await notificationResponse.json()
+        console.log('Push notification sent successfully:', notificationResult)
+      } else {
+        console.error('Failed to send push notification:', await notificationResponse.text())
+      }
+    } catch (notificationError) {
+      console.error('Error sending push notification:', notificationError)
+    }
+
     return NextResponse.json({
       success: true,
       orderId,

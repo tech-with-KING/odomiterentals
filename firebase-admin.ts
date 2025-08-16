@@ -7,6 +7,7 @@ import {
 } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
+import { getMessaging } from 'firebase-admin/messaging';
 const serviceKey = require('@/service_key.json');
 let app: App;
 
@@ -19,5 +20,6 @@ else {
     app = getApp();
 }
 const adminDb = getFirestore(app);
+const adminMessaging = getMessaging(app);
 
-export {app as adminApp, adminDb as adminDb};
+export {app as adminApp, adminDb as adminDb, adminMessaging};

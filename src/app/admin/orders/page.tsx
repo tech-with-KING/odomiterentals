@@ -28,7 +28,8 @@ import {
   XCircle,
   DollarSign,
   MessageCircle,
-  Mail
+  Mail,
+  Bell
 } from "lucide-react"
 
 export default function AdminOrdersPage() {
@@ -133,6 +134,27 @@ export default function AdminOrdersPage() {
     return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
   }
 
+  const sendTestNotification = async () => {
+    try {
+      const response = await fetch('/api/test-notification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      const result = await response.json();
+      if (result.success) {
+        alert('Test notification sent successfully!');
+      } else {
+        alert('Failed to send test notification');
+      }
+    } catch (error) {
+      console.error('Error sending test notification:', error);
+      alert('Error sending test notification');
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -147,8 +169,20 @@ export default function AdminOrdersPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">Order Management</h1>
-        <p className="text-slate-600 mt-2">Manage customer orders and track rentals</p>
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">Order Management</h1>
+            <p className="text-slate-600 mt-2">Manage customer orders and track rentals</p>
+          </div>
+          <Button
+            variant="outline"
+            onClick={sendTestNotification}
+            className="flex items-center space-x-2"
+          >
+            <Bell className="w-4 h-4" />
+            <span>Test Notification</span>
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}

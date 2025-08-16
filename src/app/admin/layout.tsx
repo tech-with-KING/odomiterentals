@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useUser } from "@clerk/nextjs"
 import { useAdminCheck } from "@/context/admin"
 import { Sidebar } from "@/components/admin/sidebar"
+import NotificationSetup from "@/components/admin/NotificationSetup"
 import { cn } from "@/lib/utils"
 
 export default function AdminLayout({
@@ -73,7 +74,7 @@ export default function AdminLayout({
         <main className="py-6">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             {/* Hamburger menu button for mobile */}
-            <div className="mb-4 lg:hidden">
+            <div className="mb-4 lg:hidden flex items-center justify-between">
               <button
                 type="button"
                 className="inline-flex items-center justify-center rounded-md p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
@@ -84,6 +85,14 @@ export default function AdminLayout({
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>
               </button>
+              <NotificationSetup userEmail={user?.primaryEmailAddress?.emailAddress} />
+            </div>
+            
+            {/* Notification setup for desktop */}
+            <div className="hidden lg:block mb-4">
+              <div className="flex justify-end">
+                <NotificationSetup userEmail={user?.primaryEmailAddress?.emailAddress} />
+              </div>
             </div>
             {children}
           </div>
