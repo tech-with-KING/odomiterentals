@@ -1,5 +1,7 @@
 import { initializeApp, getApp, getApps } from "firebase/app";
-import { getFirestore } from "firebase/firestore";          
+import { getFirestore } from "firebase/firestore";
+import { getMessaging, isSupported } from "firebase/messaging";          
+
 const firebaseConfig = {
   apiKey: "AIzaSyBY6bo3g1V-uDtGOamGgM0WZ_ekf3BnlGM",
   authDomain: "notion-clone-134fd.firebaseapp.com",
@@ -12,3 +14,15 @@ const firebaseConfig = {
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+
+// Initialize Firebase Messaging
+let messaging: any = null;
+if (typeof window !== 'undefined') {
+  isSupported().then((supported) => {
+    if (supported) {
+      messaging = getMessaging(app);
+    }
+  });
+}
+
+export { messaging };
