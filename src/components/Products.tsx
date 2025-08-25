@@ -3,8 +3,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import GlobalHeader, { HeaderThree } from './GlobalHeader';
-import { collection, doc, getDocs } from 'firebase/firestore';
-import { db } from '@/lib/firebase'; // Adjust the import path to your Firebase config
 import { CartProvider, useCart } from '@/app/cart/page';
 import { BookNowPopup } from './ui/BookNowPopUp';
 
@@ -124,11 +122,16 @@ const useProducts = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const productsCollection = collection(db, 'products');
-        const productsSnapshot = await getDocs(productsCollection);
         
-        const productsData: Product[] = productsSnapshot.docs.map(doc => {
-          const data = doc.data();
+        // Use API route instead of direct Firestore access
+        const response = await fetch('/api/products');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        
+        const { products: rawProducts } = await response.json();
+        
+        const productsData: Product[] = rawProducts.map((data: any) => {
           let images: string[] = [];
           if (data.images && Array.isArray(data.images)) {
             images = data.images;
@@ -148,7 +151,7 @@ const useProducts = () => {
           }
           
           return {
-            id: doc.id,
+            id: data.id,
             images,
             name,
             price: data.price || 0,
@@ -158,8 +161,7 @@ const useProducts = () => {
         });
         
         setProducts(productsData);
-        console.log('Fetched products:', productsData);
-        console.log('Raw Firestore data:', productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        console.log('Fetched products via API:', productsData);
         setError(null);
       } catch (err) {
         console.error('Error fetching products:', err);
@@ -221,19 +223,29 @@ const useServices = () => {
     const fetchServices = async () => {
       try {
         setLoading(true);
-        const servicesCollection = collection(db, 'categories');
-        const servicesSnapshot = await getDocs(servicesCollection);
         
-        if (servicesSnapshot.docs.length > 0) {
-          const servicesData: Service[] = servicesSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data() as Omit<Service, 'id'>
-          }));
+        // Use API route instead of direct Firestore access
+        const response = await fetch('/api/categories');
+        
+        if (response.ok) {
+          const { categories } = await response.json();
           
-          setServices(servicesData);
-          console.log('Fetched services from Firebase:', servicesData);
+          if (categories.length > 0) {
+            const servicesData: Service[] = categories.map((data: any) => ({
+              id: data.id,
+              image: data.image || '',
+              title: data.title || data.name || '',
+              description: data.description || ''
+            }));
+            
+            setServices(servicesData);
+            console.log('Fetched services from API:', servicesData);
+          } else {
+            console.log('No services found in API, using default services');
+            // Keep the hardcoded services as fallback
+          }
         } else {
-          console.log('No services found in Firebase, using default services');
+          console.log('Failed to fetch services from API, using default services');
           // Keep the hardcoded services as fallback
         }
         setError(null);

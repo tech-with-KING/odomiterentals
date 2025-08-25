@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { ProductCard } from '@/components/Products';
 import { HeaderThree } from '@/components/GlobalHeader';
 
@@ -54,13 +52,18 @@ export default function CategoryPage() {
       
       try {
         setLoading(true);
-        const productsCollection = collection(db, 'products');
-        const productsSnapshot = await getDocs(productsCollection);
+        
+        // Use API route instead of direct Firestore access
+        const response = await fetch('/api/products');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        
+        const { products: allProducts } = await response.json();
         
         // Filter products by category
-        const filteredProducts: Product[] = productsSnapshot.docs
-          .map(doc => {
-            const data = doc.data();
+        const filteredProducts: Product[] = allProducts
+          .map((data: any) => {
             let images: string[] = [];
             if (data.images && Array.isArray(data.images)) {
               images = data.images;
@@ -81,7 +84,7 @@ export default function CategoryPage() {
             }
             
             return {
-              id: doc.id,
+              id: data.id,
               images,
               name,
               price: data.price || 0,
@@ -89,12 +92,12 @@ export default function CategoryPage() {
               categories
             };
           })
-          .filter(product => {
+          .filter((product: Product) => {
             // Check if product matches the category
             if (!product.categories || product.categories.length === 0) return false;
             
             // Check for exact match or partial match (case insensitive)
-            return product.categories.some(cat => 
+            return product.categories.some((cat: string) => 
               cat.toLowerCase().includes(categoryName.toLowerCase()) ||
               categoryName.toLowerCase().includes(cat.toLowerCase()) ||
               cat.toLowerCase().replace(/s$/, '') === categoryName.toLowerCase().replace(/s$/, '') // Handle plural/singular

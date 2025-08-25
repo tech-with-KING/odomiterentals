@@ -2,8 +2,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ProductCard } from '@/components/Products';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/lib/firebase'; // Adjust the import path to your Firebase config
 import { HeaderThree } from '@/components/GlobalHeader';
 
 // Define proper types for your product data
@@ -36,18 +34,23 @@ const ShopPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch products from Firestore
+  // Fetch products from API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const productsCollection = collection(db, 'products');
-        const productsSnapshot = await getDocs(productsCollection);
         
-        console.log('Raw Firestore data:', productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        // Use API route instead of direct Firestore access
+        const response = await fetch('/api/products');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
         
-        const productsData: Product[] = productsSnapshot.docs.map(doc => {
-          const data = doc.data();
+        const { products: rawProducts } = await response.json();
+        
+        console.log('Raw API data:', rawProducts);
+        
+        const productsData: Product[] = rawProducts.map((data: any) => {
           let images: string[] = [];
           if (data.images && Array.isArray(data.images)) {
             images = data.images;
@@ -71,7 +74,7 @@ const ShopPage = () => {
           }
           
           return {
-            id: doc.id,
+            id: data.id,
             images,
             name,
             price: data.price || 0,

@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { ShoppingCart, MessageSquare } from 'lucide-react';
 import Image from 'next/image';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 
 interface ProductData {
   id: string;
@@ -41,14 +39,26 @@ const ShopPage = () => {
       }
 
       try {
-        const productRef = doc(db, 'products', productId);
-        const productSnap = await getDoc(productRef);
-
-        if (productSnap.exists()) {
-          const productData = productSnap.data() as Omit<ProductData, 'id'>;
+        // Use API route instead of direct Firestore access
+        const response = await fetch(`/api/products/${productId}`);
+        
+        if (response.ok) {
+          const { product: productData } = await response.json();
           setProduct({
-            id: productSnap.id,
-            ...productData
+            id: productData.id,
+            name: productData.name || productData.Product_name || 'Unnamed Product',
+            short_description: productData.short_description || productData.desc || productData.description || '',
+            description: productData.description || productData.desc || '',
+            images: Array.isArray(productData.images) ? productData.images : (productData.img ? [productData.img] : (productData.image ? [productData.image] : [])),
+            dimensions: productData.dimensions || '',
+            material: productData.material || '',
+            features: productData.features || '',
+            category: productData.category || '',
+            subcategory: productData.subcategory || '',
+            rating: productData.rating || 0,
+            instock: productData.instock !== undefined ? productData.instock : true,
+            unitsleft: productData.unitsleft || 0,
+            price: productData.price || 0
           });
         } else {
           setError('Product not found');

@@ -6,8 +6,6 @@ import Image from "next/image"
 import { Plus, Minus, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { collection, getDocs } from 'firebase/firestore'
-import { db } from '@/lib/firebase' // Adjust the import path to your Firebase config
 import { HeaderThree } from '@/components/GlobalHeader'
 
 interface Product {
@@ -140,53 +138,25 @@ export default function GetQuotePage() {
   const [error, setError] = useState<string | null>(null)
   const [quantities, setQuantities] = useState<Record<string | number, number>>({})
 
-  // Fetch products from Firestore - same as ShopPage
+  // Fetch products from API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true)
-        const productsCollection = collection(db, 'products')
-        const productsSnapshot = await getDocs(productsCollection)
+        const response = await fetch('/api/products')
         
-        console.log('Raw Firestore data:', productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
+        if (!response.ok) {
+          throw new Error('Failed to fetch products')
+        }
         
-        const productsData: Product[] = productsSnapshot.docs.map(doc => {
-          const data = doc.data()
-          let images: string[] = []
-          if (data.images && Array.isArray(data.images)) {
-            images = data.images
-          } else if (data.img && typeof data.img === 'string') {
-            images = [data.img]
-          } else if (data.image && typeof data.image === 'string') {
-            images = [data.image]
-          }
-          
-          // Handle different possible field names for name
-          const name = data.name || data.Product_name || data.title || 'Unnamed Product'
-          
-          // Handle different possible field names for categories
-          let categories: string[] = []
-          if (data.categories && Array.isArray(data.categories)) {
-            categories = data.categories
-          } else if (data.category && Array.isArray(data.category)) {
-            categories = data.category
-          } else if (typeof data.category === 'string') {
-            categories = [data.category]
-          }
-          
-          return {
-            id: doc.id,
-            images,
-            name,
-            price: data.price || 0,
-            desc: data.desc || data.description || '',
-            categories
-          }
-        })
+        const productsData: Product[] = await response.json()
+        
+        console.log('Products from API:', productsData)
         
         setProducts(productsData)
         setError(null)
       } catch (err) {
+        console.error('Error fetching products:', err)
         setError('Failed to load products. Please try again later.')
       } finally {
         setLoading(false)
@@ -264,9 +234,6 @@ export default function GetQuotePage() {
           {!loading && !error && products.length === 0 && (
             <div className="text-center py-12">
               <p className="text-gray-600 mb-4">No products available at the moment.</p>
-              <p className="text-sm text-gray-500">
-                Debug: Check browser console for Firestore data structure
-              </p>
             </div>
           )}
         </div>

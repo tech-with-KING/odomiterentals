@@ -1,16 +1,4 @@
 // lib/cartService.ts
-import { 
-  collection, 
-  doc, 
-  setDoc, 
-  getDoc, 
-  updateDoc, 
-  deleteDoc, 
-  onSnapshot,
-  serverTimestamp,
-  writeBatch
-} from 'firebase/firestore'
-import { db } from '@/lib/firebase'
 
 export interface CartItem {
   id: string
@@ -44,51 +32,49 @@ export class CartService {
     return CartService.instance
   }
 
-  // Get cart reference
-  private getCartRef(userId: string) {
-    return doc(db, 'carts', userId)
-  }
-
-  // Load cart from Firebase
+  // Load cart from API
   async loadCart(userId: string): Promise<CartItem[]> {
     try {
-      const cartRef = this.getCartRef(userId)
-      const cartSnap = await getDoc(cartRef)
+      const response = await fetch('/api/cart', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
       
-      if (cartSnap.exists()) {
-        const data = cartSnap.data() as CartData
-        return data.items || []
+      if (!response.ok) {
+        throw new Error('Failed to load cart')
       }
-      return []
+      
+      const items = await response.json()
+      return items || []
     } catch (error) {
       console.error('Error loading cart:', error)
       throw error
     }
   }
 
-  // Save cart to Firebase
+  // Save cart to API
   async saveCart(userId: string, items: CartItem[]): Promise<void> {
     try {
-      const cartRef = this.getCartRef(userId)
-      const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
-      const totalAmount = items.reduce((sum, item) => sum + item.total, 0)
-
-      const cartData: CartData = {
-        userId,
-        items,
-        updatedAt: new Date(),
-        totalItems,
-        totalAmount
+      const response = await fetch('/api/cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ items })
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to save cart')
       }
-
-      await setDoc(cartRef, cartData, { merge: true })
     } catch (error) {
       console.error('Error saving cart:', error)
       throw error
     }
   }
 
-  // Add item to cart
+  // Add item to cart via API
   async addToCart(
     userId: string, 
     product: any, 
@@ -96,134 +82,143 @@ export class CartService {
     duration: number = 1
   ): Promise<void> {
     try {
-      const currentItems = await this.loadCart(userId)
-      const existingItemIndex = currentItems.findIndex(item => item.productId === product.id)
-
-      if (existingItemIndex > -1) {
-        // Update existing item
-        currentItems[existingItemIndex].quantity += quantity
-        currentItems[existingItemIndex].total = 
-          currentItems[existingItemIndex].quantity * 
-          currentItems[existingItemIndex].duration * 
-          currentItems[existingItemIndex].unitPrice
-      } else {
-        // Add new item
-        const newItem: CartItem = {
-          id: `${product.id}-${Date.now()}`,
+      const response = await fetch('/api/cart/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           productId: product.id,
-          name: product.name,
-          image: product.images?.[0] || '',
           quantity,
-          duration,
-          unitPrice: parseFloat(product.price.toString()),
-          total: quantity * duration * parseFloat(product.price.toString()),
-          category: product.categories?.[0] || 'General',
-          addedAt: new Date()
-        }
-        currentItems.push(newItem)
+          duration
+        })
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to add to cart')
       }
-
-      await this.saveCart(userId, currentItems)
     } catch (error) {
       console.error('Error adding to cart:', error)
       throw error
     }
   }
  
-  // Remove item from cart
+  // Remove item from cart via API
   async removeFromCart(userId: string, itemId: string): Promise<void> {
     try {
-      const currentItems = await this.loadCart(userId)
-      const updatedItems = currentItems.filter(item => item.id !== itemId)
-      await this.saveCart(userId, updatedItems)
+      const response = await fetch(`/api/cart/update?itemId=${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to remove from cart')
+      }
     } catch (error) {
       console.error('Error removing from cart:', error)
       throw error
     }
   }
 
-  // Update item quantity
+  // Update item quantity via API
   async updateQuantity(userId: string, itemId: string, quantity: number): Promise<void> {
     try {
-      const currentItems = await this.loadCart(userId)
-      const updatedItems = currentItems.map(item => {
-        if (item.id === itemId) {
-          const newQuantity = Math.max(1, quantity)
-          return {
-            ...item,
-            quantity: newQuantity,
-            total: newQuantity * item.duration * item.unitPrice
-          }
-        }
-        return item
+      const response = await fetch('/api/cart/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          itemId,
+          quantity
+        })
       })
-      await this.saveCart(userId, updatedItems)
+      
+      if (!response.ok) {
+        throw new Error('Failed to update quantity')
+      }
     } catch (error) {
       console.error('Error updating quantity:', error)
       throw error
     }
   }
 
-  // Update item duration
+  // Update item duration via API
   async updateDuration(userId: string, itemId: string, duration: number): Promise<void> {
     try {
-      const currentItems = await this.loadCart(userId)
-      const updatedItems = currentItems.map(item => {
-        if (item.id === itemId) {
-          const newDuration = Math.max(1, duration)
-          return {
-            ...item,
-            duration: newDuration,
-            total: item.quantity * newDuration * item.unitPrice
-          }
-        }
-        return item
+      const response = await fetch('/api/cart/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          itemId,
+          duration
+        })
       })
-      await this.saveCart(userId, updatedItems)
+      
+      if (!response.ok) {
+        throw new Error('Failed to update duration')
+      }
     } catch (error) {
       console.error('Error updating duration:', error)
       throw error
     }
   }
 
-  // Clear cart
+  // Clear cart via API
   async clearCart(userId: string): Promise<void> {
     try {
-      await this.saveCart(userId, [])
+      const response = await fetch('/api/cart', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to clear cart')
+      }
     } catch (error) {
       console.error('Error clearing cart:', error)
       throw error
     }
   }
 
-  // Listen to cart changes in real-time
+  // Listen to cart changes - for now, we'll use polling instead of real-time
+  // In a production app, you might use WebSockets or Server-Sent Events
   subscribeToCart(userId: string, callback: (items: CartItem[]) => void): () => void {
-    const cartRef = this.getCartRef(userId)
-    
-    const unsubscribe = onSnapshot(cartRef, (doc) => {
-      if (doc.exists()) {
-        const data = doc.data() as CartData
-        callback(data.items || [])
-      } else {
+    const pollInterval = setInterval(async () => {
+      try {
+        const items = await this.loadCart(userId)
+        callback(items)
+      } catch (error) {
+        console.error('Error polling cart:', error)
         callback([])
       }
-    }, (error) => {
-      console.error('Error listening to cart changes:', error)
-      callback([])
-    })
+    }, 5000) // Poll every 5 seconds
 
-    // Store the unsubscribe function
-    this.cartListeners.set(userId, unsubscribe)
+    // Return cleanup function
+    const cleanup = () => {
+      clearInterval(pollInterval)
+      this.cartListeners.delete(userId)
+    }
+
+    this.cartListeners.set(userId, cleanup)
     
-    return unsubscribe
+    // Also load initial data
+    this.loadCart(userId).then(callback).catch(() => callback([]))
+    
+    return cleanup
   }
 
   // Cleanup cart listener
   unsubscribeFromCart(userId: string): void {
-    const unsubscribe = this.cartListeners.get(userId)
-    if (unsubscribe) {
-      unsubscribe()
-      this.cartListeners.delete(userId)
+    const cleanup = this.cartListeners.get(userId)
+    if (cleanup) {
+      cleanup()
     }
   }
 
@@ -232,30 +227,17 @@ export class CartService {
     try {
       if (guestCartItems.length === 0) return
 
-      const userCartItems = await this.loadCart(userId)
-      const mergedItems = [...userCartItems]
-
-      // Merge guest items
+      // For simplicity, we'll add each guest item individually
+      // In a more sophisticated implementation, you might create a dedicated API endpoint
       for (const guestItem of guestCartItems) {
-        const existingIndex = mergedItems.findIndex(item => item.productId === guestItem.productId)
-        
-        if (existingIndex > -1) {
-          // Combine quantities
-          mergedItems[existingIndex].quantity += guestItem.quantity
-          mergedItems[existingIndex].total = 
-            mergedItems[existingIndex].quantity * 
-            mergedItems[existingIndex].duration * 
-            mergedItems[existingIndex].unitPrice
-        } else {
-          // Add new item
-          mergedItems.push({
-            ...guestItem,
-            id: `${guestItem.productId}-${Date.now()}`
-          })
-        }
+        await this.addToCart(userId, {
+          id: guestItem.productId,
+          name: guestItem.name,
+          price: guestItem.unitPrice,
+          images: [guestItem.image],
+          categories: [guestItem.category]
+        }, guestItem.quantity, guestItem.duration)
       }
-
-      await this.saveCart(userId, mergedItems)
     } catch (error) {
       console.error('Error merging guest cart:', error)
       throw error
