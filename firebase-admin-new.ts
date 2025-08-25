@@ -8,11 +8,12 @@ import {
 } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
+import { getMessaging } from 'firebase-admin/messaging';
 
 // Initialize Firebase Admin SDK immediately
 let app: App;
 
-function initializeFirebaseAdmin(): { app: App; adminDb: any } {
+function initializeFirebaseAdmin(): { app: App; adminDb: any; adminMessaging: any } {
    if (getApps().length === 0) {
        let credential;
        
@@ -47,11 +48,13 @@ function initializeFirebaseAdmin(): { app: App; adminDb: any } {
    }
 
    const adminDb = getFirestore(app);
+   const adminMessaging = getMessaging(app);
 
    // Verify the database is accessible
    console.log('Firebase Admin DB initialized:', !!adminDb);
+   console.log('Firebase Admin Messaging initialized:', !!adminMessaging);
 
-   return { app, adminDb };
+   return { app, adminDb, adminMessaging };
 }
 
 // Initialize immediately when module is loaded
@@ -59,3 +62,4 @@ const firebaseAdmin = initializeFirebaseAdmin();
 
 export const adminApp = firebaseAdmin.app;
 export const adminDb = firebaseAdmin.adminDb;
+export const adminMessaging = firebaseAdmin.adminMessaging;

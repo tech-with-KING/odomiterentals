@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '../../../../../firebase-admin';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const orderId = params.id;
+    const { id: orderId } = await params;
     const { searchParams } = new URL(request.url);
     const userEmail = searchParams.get('userEmail');
     const userId = searchParams.get('userId');
@@ -65,9 +65,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const orderId = params.id;
+    const { id: orderId } = await params;
     const body = await request.json();
     const { userEmail, updates } = body;
 
@@ -120,9 +120,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const orderId = params.id;
+    const { id: orderId } = await params;
     const { searchParams } = new URL(request.url);
     const userEmail = searchParams.get('userEmail');
 

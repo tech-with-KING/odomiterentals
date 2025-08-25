@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
 
     if (!snapshot.empty) {
       const batch = adminDb.batch();
-      snapshot.docs.forEach(doc => {
+      snapshot.docs.forEach((doc: any) => {
         batch.update(doc.ref, { active: false });
       });
       await batch.commit();

@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const tokens = tokensSnapshot.docs.map(doc => doc.data().token);
+    const tokens = tokensSnapshot.docs.map((doc: any) => doc.data().token);
 
     // Prepare the notification message
     const message = {
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     // Handle failed tokens (remove them from database)
     if (response.failureCount > 0) {
       const failedTokens: string[] = [];
-      response.responses.forEach((resp, idx) => {
+      response.responses.forEach((resp: any, idx: number) => {
         if (!resp.success) {
           failedTokens.push(tokens[idx]);
           console.error('Failed to send to token:', tokens[idx], resp.error);
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
         
         for (const failedToken of failedTokens) {
           const tokenSnapshot = await tokensRef.where('token', '==', failedToken).get();
-          tokenSnapshot.docs.forEach(doc => {
+          tokenSnapshot.docs.forEach((doc: any) => {
             batch.update(doc.ref, { active: false });
           });
         }

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '../../../../../firebase-admin';
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const productId = params.id;
+    const { id: productId } = await params;
     const body = await request.json();
     const { userEmail, productData } = body;
 
@@ -61,9 +61,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const productId = params.id;
+    const { id: productId } = await params;
     
     const productRef = adminDb.collection('products').doc(productId);
     const productDoc = await productRef.get();
