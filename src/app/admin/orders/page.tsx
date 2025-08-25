@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { OrderService, Order } from "@/lib/orderService"
+import { useUser } from "@clerk/nextjs"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -29,10 +30,12 @@ import {
   DollarSign,
   MessageCircle,
   Mail,
-  Bell
+  Bell,
+  Send
 } from "lucide-react"
 
 export default function AdminOrdersPage() {
+  const { user } = useUser()
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
@@ -48,9 +51,13 @@ export default function AdminOrdersPage() {
   const orderService = OrderService.getInstance()
 
   useEffect(() => {
-    loadOrders()
-    loadStats()
-  }, [])
+    if (user?.emailAddresses?.[0]?.emailAddress) {
+      // Set the admin email for authenticated requests
+      orderService.setUserEmail(user.emailAddresses[0].emailAddress)
+      loadOrders()
+      loadStats()
+    }
+  }, [user])
 
   const loadOrders = async () => {
     try {
@@ -145,13 +152,40 @@ export default function AdminOrdersPage() {
       
       const result = await response.json();
       if (result.success) {
-        alert('Test notification sent successfully!');
+        const workingSystems = result.summary.working.join(', ');
+        const failingSystems = result.summary.failing.join(', ');
+        let message = `✅ Test completed!\n\nWorking: ${workingSystems}`;
+        if (failingSystems) {
+          message += `\n❌ Not working: ${failingSystems}`;
+        }
+        alert(message);
       } else {
-        alert('Failed to send test notification');
+        alert(`❌ Notification test failed: ${result.message}`);
       }
     } catch (error) {
       console.error('Error sending test notification:', error);
-      alert('Error sending test notification');
+      alert('❌ Error sending test notification');
+    }
+  }
+
+  const sendTestEmail = async () => {
+    try {
+      const response = await fetch('/api/test-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      const result = await response.json();
+      if (result.success) {
+        alert(`✅ Test emails sent successfully!\n\nSent to ${result.totalSent} admin email(s):\n${result.adminEmails.join('\n')}`);
+      } else {
+        alert(`❌ Email test failed: ${result.error || result.message}`);
+      }
+    } catch (error) {
+      console.error('Error sending test email:', error);
+      alert('❌ Error sending test email');
     }
   }
 
@@ -174,14 +208,24 @@ export default function AdminOrdersPage() {
             <h1 className="text-3xl font-bold text-slate-900">Order Management</h1>
             <p className="text-slate-600 mt-2">Manage customer orders and track rentals</p>
           </div>
-          <Button
-            variant="outline"
-            onClick={sendTestNotification}
-            className="flex items-center space-x-2"
-          >
-            <Bell className="w-4 h-4" />
-            <span>Test Notification</span>
-          </Button>
+          <div className="flex space-x-3">
+            <Button
+              variant="outline"
+              onClick={sendTestEmail}
+              className="flex items-center space-x-2"
+            >
+              <Send className="w-4 h-4" />
+              <span>Test Email</span>
+            </Button>
+            <Button
+              variant="outline"
+              onClick={sendTestNotification}
+              className="flex items-center space-x-2"
+            >
+              <Bell className="w-4 h-4" />
+              <span>Test All Notifications</span>
+            </Button>
+          </div>
         </div>
       </div>
 

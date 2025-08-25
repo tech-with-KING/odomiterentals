@@ -1,10 +1,11 @@
 'use client';
 import { useState, useEffect, useRef } from "react"
+import { categories } from "@/data"
 import { useParams, useRouter } from "next/navigation"
 import { Save, X, Plus, Upload, Loader2 } from "lucide-react"
 import Image from "next/image"
-import { doc, getDoc, updateDoc } from "firebase/firestore"
-import { db } from "@/lib/firebase"
+import { useUser } from "@clerk/nextjs"
+import { validateImageFiles, getImageAcceptTypes, getSupportedFormatsString } from "@/lib/imageUtils"
 
 interface ProductData {
   id: string
@@ -29,6 +30,7 @@ interface ProductData {
 const EditProductPage = () => {
   const params = useParams()
   const router = useRouter()
+  const { user } = useUser()
   const productId = params?.id as string
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -54,37 +56,37 @@ const EditProductPage = () => {
 
       try {
         console.log('Fetching product with ID:', productId)
-        const productRef = doc(db, "products", productId)
-        const productSnap = await getDoc(productRef)
-
-        if (productSnap.exists()) {
-          const rawData = productSnap.data()
-          console.log('Raw product data:', rawData)
-          
-          // Handle data mapping similar to your shop page
-          const productData: ProductData = {
-            id: productSnap.id,
-            name: rawData.name || rawData.Product_name || 'Unnamed Product',
-            short_description: rawData.short_description || rawData.desc || rawData.description || '',
-            description: rawData.description || rawData.desc || '',
-            images: Array.isArray(rawData.images) ? rawData.images : (rawData.img ? [rawData.img] : (rawData.image ? [rawData.image] : [])),
-            dimensions: rawData.dimensions || '',
-            material: rawData.material || '',
-            features: rawData.features || '',
-            category: rawData.category || '',
-            subcategory: rawData.subcategory || '',
-            instock: rawData.instock !== undefined ? rawData.instock : true,
-            unitsleft: rawData.unitsleft || 0,
-            price: rawData.price || 0,
-            rating: rawData.rating || 0
-          }
-          
-          console.log('Mapped product data:', productData)
-          setProduct(productData)
-        } else {
-          setError("Product not found")
-          console.error('Product document does not exist')
+        
+        // Use API route to fetch product
+        const response = await fetch(`/api/products/${productId}`)
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch product')
         }
+        
+        const { product: rawData } = await response.json()
+        console.log('Raw product data:', rawData)
+        
+        // Handle data mapping similar to your shop page
+        const productData: ProductData = {
+          id: rawData.id,
+          name: rawData.name || rawData.Product_name || 'Unnamed Product',
+          short_description: rawData.short_description || rawData.desc || rawData.description || '',
+          description: rawData.description || rawData.desc || '',
+          images: Array.isArray(rawData.images) ? rawData.images : (rawData.img ? [rawData.img] : (rawData.image ? [rawData.image] : [])),
+          dimensions: rawData.dimensions || '',
+          material: rawData.material || '',
+          features: rawData.features || '',
+          category: rawData.category || '',
+          subcategory: rawData.subcategory || '',
+          instock: rawData.instock !== undefined ? rawData.instock : true,
+          unitsleft: rawData.unitsleft || 0,
+          price: rawData.price || 0,
+          rating: rawData.rating || 0
+        }
+        
+        console.log('Mapped product data:', productData)
+        setProduct(productData)
       } catch (err) {
         console.error("Error fetching product:", err)
         setError("Failed to load product")
@@ -132,6 +134,13 @@ const EditProductPage = () => {
     const files = event.target.files
     if (!files || files.length === 0 || !product) return
 
+    // Validate files using utility function
+    const validation = validateImageFiles(files)
+    if (!validation.isValid) {
+      alert(validation.errors.join('\n'))
+      return
+    }
+
     setUploading(true)
     try {
       const uploadPromises = Array.from(files).map(file => uploadToCloudinary(file))
@@ -176,12 +185,14 @@ const EditProductPage = () => {
   }
 
   const handleSave = async () => {
-    if (!product) return
+    if (!product || !user?.emailAddresses?.[0]?.emailAddress) {
+      alert("User email not found. Please make sure you're logged in.")
+      return
+    }
 
     setSaving(true)
     try {
       console.log('Saving product:', product)
-      const productRef = doc(db, "products", product.id)
       
       // Prepare the data to save (exclude the id field)
       const { id, ...productDataToSave } = product
@@ -200,13 +211,28 @@ const EditProductPage = () => {
         instock: Boolean(productDataToSave.instock),
         unitsleft: Number(productDataToSave.unitsleft) || 0,
         price: Number(productDataToSave.price) || 0,
-        rating: Number(productDataToSave.rating) || 0,
-        // Add timestamp for last update
-        lastUpdated: new Date().toISOString()
+        rating: Number(productDataToSave.rating) || 0
       }
-     
       
-      await updateDoc(productRef, cleanedData)
+      // Use API route to update product
+      const response = await fetch(`/api/products/${product.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userEmail: user.emailAddresses[0].emailAddress,
+          productData: cleanedData
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to update product')
+      }
+
+      const result = await response.json()
+      console.log('Update result:', result)
       
       alert("Product updated successfully!")
       // Optionally redirect back to inventory
@@ -303,12 +329,16 @@ const EditProductPage = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                <input
-                  type="text"
+                <select
                   value={product.category}
                   onChange={(e) => handleInputChange("category", e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
+                >
+                  <option value="">Select a category</option>
+                  {categories.map((cat) => (
+                    <option key={cat.name} value={cat.name}>{cat.name}</option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Subcategory</label>
@@ -407,7 +437,7 @@ const EditProductPage = () => {
                     ref={fileInputRef}
                     type="file"
                     multiple
-                    accept="image/*"
+                    accept={getImageAcceptTypes()}
                     onChange={handleFileUpload}
                     className="hidden"
                   />
@@ -425,7 +455,7 @@ const EditProductPage = () => {
                   </button>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">
-                  Select multiple images to upload to Cloudinary
+                  Select multiple images to upload to Cloudinary. Supported formats: {getSupportedFormatsString()} (Max 10MB per file)
                 </p>
               </div>
 

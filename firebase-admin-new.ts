@@ -18,11 +18,12 @@ function initializeFirebaseAdmin(): { app: App; adminDb: any } {
        
        console.log('Initializing Firebase Admin SDK...');
        
-       // Always use the service account file for reliability
+       // Always use the service account file to avoid environment variable conflicts
        try {
          console.log('Using service account file for Firebase Admin');
          const serviceKey = require('./src/service_key.json');
          console.log('Service account project ID:', serviceKey.project_id);
+         console.log('Service account client email:', serviceKey.client_email);
          credential = cert(serviceKey);
        } catch (error) {
          console.error('Could not load service account key:', error);
@@ -32,7 +33,7 @@ function initializeFirebaseAdmin(): { app: App; adminDb: any } {
        try {
          app = initializeApp({
             credential,
-            projectId: 'odomiterentals-api', // Use the correct project ID directly
+            projectId: 'odomiterentals-api', // Use the correct project ID from service account
          });
          console.log('Firebase Admin SDK initialized successfully');
        } catch (error) {

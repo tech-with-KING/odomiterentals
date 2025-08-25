@@ -7,13 +7,13 @@ importScripts('https://www.gstatic.com/firebasejs/9.22.2/firebase-messaging-comp
 // Initialize the Firebase app in the service worker by passing in
 // your app's Firebase config object.
 firebase.initializeApp({
-  apiKey: "AIzaSyBY6bo3g1V-uDtGOamGgM0WZ_ekf3BnlGM",
-  authDomain: "notion-clone-134fd.firebaseapp.com",
-  projectId: "notion-clone-134fd",
-  storageBucket: "notion-clone-134fd.firebasestorage.app",
-  messagingSenderId: "175324826250",
-  appId: "1:175324826250:web:14cf8478b9451b764dfb73",
-  measurementId: "G-NSXXY05S2T"
+  apiKey: "AIzaSyD2xqiRkhShxh06RJaaANiSC0ttnAUmmBo",
+  authDomain: "odomiterentals-api.firebaseapp.com",
+  projectId: "odomiterentals-api",
+  storageBucket: "odomiterentals-api.firebasestorage.app",
+  messagingSenderId: "414302898852",
+  appId: "1:414302898852:web:af4605de2c94338332f431",
+  measurementId: "1:414302898852:web:af4605de2c94338332f431"
 });
 
 // Retrieve an instance of Firebase Messaging so that it can handle background

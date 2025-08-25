@@ -3,7 +3,7 @@ import { getToken, onMessage } from 'firebase/messaging';
 
 export class NotificationService {
   private static instance: NotificationService;
-  private static readonly VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || 'BKd8zx8QcyWNJpgx-5XYvLGPO_9QgQzGJHJ_QgQzGJHJ_QgQzGJHJ_QgQzGJHJ_QgQzGJHJ_QgQzGJHJ_QgQzG'; // Replace with your actual VAPID key
+  private static readonly VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || 'BOJd2gvF5f_Ee3wBp4ANQoUULTlEj9NLUz40KBv26W_ckS9rIEnSFT35kxAh4GulR59uLqL7lrT7NVkDWxEWboA'; 
 
   static getInstance(): NotificationService {
     if (!NotificationService.instance) {

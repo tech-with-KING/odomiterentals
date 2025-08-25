@@ -67,9 +67,9 @@ export default function OrderSuccessPage() {
                     <span className="text-white font-semibold text-sm">2</span>
                   </div>
                   <div className="text-left">
-                    <h4 className="font-semibold text-blue-900">WhatsApp Contact</h4>
+                    <h4 className="font-semibold text-blue-900">Email Contact</h4>
                     <p className="text-blue-800 text-sm">
-                      We'll contact you via WhatsApp to confirm details and availability
+                      We'll contact you via email to confirm details and availability
                     </p>
                   </div>
                 </div>
@@ -95,19 +95,13 @@ export default function OrderSuccessPage() {
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center space-x-3">
-                  <MessageCircle className="w-5 h-5 text-green-600" />
-                  <div>
-                    <p className="font-medium text-slate-900">WhatsApp</p>
-                    <p className="text-sm text-slate-600">We'll message you soon</p>
-                  </div>
-                </div>
+                {/* WhatsApp contact removed. Only email shown. */}
                 
                 <div className="flex items-center space-x-3">
                   <Mail className="w-5 h-5 text-blue-600" />
                   <div>
                     <p className="font-medium text-slate-900">Email</p>
-                    <p className="text-sm text-slate-600">Check your inbox</p>
+                    <p className="text-sm text-slate-600">We'll message you soon. Check your inbox for updates.</p>
                   </div>
                 </div>
               </div>
@@ -136,7 +130,7 @@ export default function OrderSuccessPage() {
             {/* Additional Note */}
             <div className="pt-4 border-t border-slate-200">
               <p className="text-sm text-slate-600">
-                <strong>Note:</strong> Please check your email and WhatsApp for updates. 
+                <strong>Note:</strong> Please check your email for updates. 
                 We typically respond within 1-2 hours during business hours.
               </p>
             </div>

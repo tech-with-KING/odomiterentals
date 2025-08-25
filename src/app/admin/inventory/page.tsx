@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Edit, Package, Search, Plus } from 'lucide-react';
 import Image from 'next/image';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import Link from 'next/link';
 
 interface ProductData {
@@ -37,15 +35,19 @@ const InventoryPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const productsRef = collection(db, 'products');
-        const q = query(productsRef, orderBy('name', 'asc'));
-        const querySnapshot = await getDocs(q);
+        // Use API route to fetch products
+        const response = await fetch('/api/products')
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch products')
+        }
+        
+        const { products: rawProducts } = await response.json()
         
         // Using the same mapping approach as your shop page
-        const productsData: ProductData[] = querySnapshot.docs.map((doc) => {
-          const data = doc.data();
+        const productsData: ProductData[] = rawProducts.map((data: any) => {
           return {
-            id: doc.id, // Firebase document ID - same as shop page
+            id: data.id, // Firebase document ID - same as shop page
             name: data.name || data.Product_name || 'Unnamed Product',
             short_description: data.short_description || data.desc || data.description || '',
             description: data.description || data.desc || '',

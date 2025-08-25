@@ -1,18 +1,4 @@
-import { 
-  collection, 
-  doc, 
-  addDoc, 
-  getDoc, 
-  getDocs,
-  updateDoc, 
-  deleteDoc, 
-  query,
-  where,
-  orderBy,
-  limit,
-  serverTimestamp 
-} from 'firebase/firestore'
-import { db } from '@/lib/firebase'
+// Updated OrderService to use API routes instead of direct Firestore access
 
 export interface OrderItem {
   id: string
@@ -60,6 +46,7 @@ export interface Order {
 
 export class OrderService {
   private static instance: OrderService
+  private userEmail: string | null = null
 
   static getInstance(): OrderService {
     if (!OrderService.instance) {
@@ -68,15 +55,32 @@ export class OrderService {
     return OrderService.instance
   }
 
+  // Set admin email for authenticated requests
+  setUserEmail(email: string) {
+    this.userEmail = email
+  }
+
   // Create a new order
   async createOrder(orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
     try {
-      const orderRef = await addDoc(collection(db, 'orders'), {
-        ...orderData,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderData,
+          userEmail: this.userEmail
+        }),
       })
-      return orderRef.id
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to create order')
+      }
+
+      const result = await response.json()
+      return result.orderId
     } catch (error) {
       console.error('Error creating order:', error)
       throw error
@@ -84,18 +88,25 @@ export class OrderService {
   }
 
   // Get order by ID
-  async getOrder(orderId: string): Promise<Order | null> {
+  async getOrder(orderId: string, userId?: string): Promise<Order | null> {
     try {
-      const orderRef = doc(db, 'orders', orderId)
-      const orderSnap = await getDoc(orderRef)
+      const params = new URLSearchParams()
+      if (this.userEmail) params.append('userEmail', this.userEmail)
+      if (userId) params.append('userId', userId)
+
+      const response = await fetch(`/api/orders/${orderId}?${params.toString()}`)
       
-      if (orderSnap.exists()) {
-        return {
-          id: orderSnap.id,
-          ...orderSnap.data()
-        } as Order
+      if (response.status === 404) {
+        return null
       }
-      return null
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to fetch order')
+      }
+
+      const result = await response.json()
+      return result.order
     } catch (error) {
       console.error('Error getting order:', error)
       throw error
@@ -105,17 +116,19 @@ export class OrderService {
   // Get orders by user ID
   async getOrdersByUser(userId: string): Promise<Order[]> {
     try {
-      const q = query(
-        collection(db, 'orders'),
-        where('userId', '==', userId),
-        orderBy('createdAt', 'desc')
-      )
+      const params = new URLSearchParams()
+      params.append('userId', userId)
+      if (this.userEmail) params.append('userEmail', this.userEmail)
+
+      const response = await fetch(`/api/orders?${params.toString()}`)
       
-      const querySnapshot = await getDocs(q)
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Order[]
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to fetch user orders')
+      }
+
+      const result = await response.json()
+      return result.orders
     } catch (error) {
       console.error('Error getting user orders:', error)
       throw error
@@ -125,20 +138,19 @@ export class OrderService {
   // Get all orders (for admin)
   async getAllOrders(limitCount?: number): Promise<Order[]> {
     try {
-      let q = query(
-        collection(db, 'orders'),
-        orderBy('createdAt', 'desc')
-      )
+      const params = new URLSearchParams()
+      if (this.userEmail) params.append('userEmail', this.userEmail)
+      if (limitCount) params.append('limit', limitCount.toString())
+
+      const response = await fetch(`/api/orders?${params.toString()}`)
       
-      if (limitCount) {
-        q = query(q, limit(limitCount))
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to fetch orders')
       }
-      
-      const querySnapshot = await getDocs(q)
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Order[]
+
+      const result = await response.json()
+      return result.orders
     } catch (error) {
       console.error('Error getting all orders:', error)
       throw error
@@ -152,17 +164,24 @@ export class OrderService {
     notes?: string
   ): Promise<void> {
     try {
-      const orderRef = doc(db, 'orders', orderId)
-      const updateData: any = {
-        status,
-        updatedAt: serverTimestamp()
+      const updates: any = { status }
+      if (notes) updates.notes = notes
+
+      const response = await fetch(`/api/orders/${orderId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userEmail: this.userEmail,
+          updates
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to update order status')
       }
-      
-      if (notes) {
-        updateData.notes = notes
-      }
-      
-      await updateDoc(orderRef, updateData)
     } catch (error) {
       console.error('Error updating order status:', error)
       throw error
@@ -175,11 +194,21 @@ export class OrderService {
     paymentStatus: Order['paymentStatus']
   ): Promise<void> {
     try {
-      const orderRef = doc(db, 'orders', orderId)
-      await updateDoc(orderRef, {
-        paymentStatus,
-        updatedAt: serverTimestamp()
+      const response = await fetch(`/api/orders/${orderId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userEmail: this.userEmail,
+          updates: { paymentStatus }
+        }),
       })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to update payment status')
+      }
     } catch (error) {
       console.error('Error updating payment status:', error)
       throw error
@@ -189,17 +218,19 @@ export class OrderService {
   // Get orders by status
   async getOrdersByStatus(status: Order['status']): Promise<Order[]> {
     try {
-      const q = query(
-        collection(db, 'orders'),
-        where('status', '==', status),
-        orderBy('createdAt', 'desc')
-      )
+      const params = new URLSearchParams()
+      params.append('status', status)
+      if (this.userEmail) params.append('userEmail', this.userEmail)
+
+      const response = await fetch(`/api/orders?${params.toString()}`)
       
-      const querySnapshot = await getDocs(q)
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Order[]
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to fetch orders by status')
+      }
+
+      const result = await response.json()
+      return result.orders
     } catch (error) {
       console.error('Error getting orders by status:', error)
       throw error
@@ -215,19 +246,18 @@ export class OrderService {
     totalRevenue: number
   }> {
     try {
-      const orders = await this.getAllOrders()
+      const params = new URLSearchParams()
+      if (this.userEmail) params.append('userEmail', this.userEmail)
+
+      const response = await fetch(`/api/orders/stats?${params.toString()}`)
       
-      const stats = {
-        total: orders.length,
-        pending: orders.filter(o => o.status === 'pending').length,
-        confirmed: orders.filter(o => o.status === 'confirmed').length,
-        completed: orders.filter(o => o.status === 'completed').length,
-        totalRevenue: orders
-          .filter(o => o.paymentStatus === 'paid')
-          .reduce((sum, o) => sum + o.pricing.total, 0)
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to fetch order statistics')
       }
-      
-      return stats
+
+      const result = await response.json()
+      return result.stats
     } catch (error) {
       console.error('Error getting order stats:', error)
       throw error
@@ -237,8 +267,17 @@ export class OrderService {
   // Delete order (admin only)
   async deleteOrder(orderId: string): Promise<void> {
     try {
-      const orderRef = doc(db, 'orders', orderId)
-      await deleteDoc(orderRef)
+      const params = new URLSearchParams()
+      if (this.userEmail) params.append('userEmail', this.userEmail)
+
+      const response = await fetch(`/api/orders/${orderId}?${params.toString()}`, {
+        method: 'DELETE'
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to delete order')
+      }
     } catch (error) {
       console.error('Error deleting order:', error)
       throw error

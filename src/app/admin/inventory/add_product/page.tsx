@@ -1,10 +1,11 @@
 "use client"
 import { useState, useRef } from "react"
+import { categories } from "@/data"
 import { useRouter } from "next/navigation"
 import { Save, Plus, X, Upload, Loader2 } from "lucide-react"
 import Image from "next/image"
-import { collection, addDoc } from "firebase/firestore"
-import { db } from "@/lib/firebase"
+import { useUser } from "@clerk/nextjs"
+import { validateImageFiles, getImageAcceptTypes, getSupportedFormatsString } from "@/lib/imageUtils"
 
 interface ProductData {
   name: string
@@ -23,6 +24,7 @@ interface ProductData {
 
 const AddProductPage = () => {
   const router = useRouter()
+  const { user } = useUser()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Cloudinary configuration
@@ -137,21 +139,10 @@ const AddProductPage = () => {
     const files = event.target.files
     if (!files || files.length === 0) return
 
-    // Validate file sizes (limit to 10MB per file)
-    const maxSize = 10 * 1024 * 1024 // 10MB in bytes
-    const invalidFiles = Array.from(files).filter(file => file.size > maxSize)
-    
-    if (invalidFiles.length > 0) {
-      alert(`Some files are too large. Maximum size is 10MB per file.`)
-      return
-    }
-
-    // Validate file types
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
-    const invalidTypes = Array.from(files).filter(file => !allowedTypes.includes(file.type))
-    
-    if (invalidTypes.length > 0) {
-      alert('Please select only valid image files (JPEG, PNG, GIF, WebP)')
+    // Validate files using utility function
+    const validation = validateImageFiles(files)
+    if (!validation.isValid) {
+      alert(validation.errors.join('\n'))
       return
     }
 
@@ -236,6 +227,11 @@ const AddProductPage = () => {
       return
     }
 
+    if (!user?.emailAddresses?.[0]?.emailAddress) {
+      alert("User email not found. Please make sure you're logged in.")
+      return
+    }
+
     setSaving(true)
     try {
       // Clean the product data before saving
@@ -248,20 +244,40 @@ const AddProductPage = () => {
         description: product.description.trim(),
         features: product.features.trim(),
         dimensions: product.dimensions.trim(),
-        material: product.material.trim(),
-        // Add timestamp
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        material: product.material.trim()
       }
 
-      const docRef = await addDoc(collection(db, "products"), productToSave)
+      // Use API route to create product
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userEmail: user.emailAddresses[0].emailAddress,
+          productData: productToSave
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to create product')
+      }
+
+      const result = await response.json()
+      console.log('Create result:', result)
+      
       alert("Product added successfully!")
       
-      // Redirect to inventory page instead of non-existent products page
+      // Redirect to inventory page
       router.push("/admin/inventory")
     } catch (err) {
       console.error("Error adding product:", err)
-      alert("Failed to add product. Please try again.")
+      if (err instanceof Error) {
+        alert(`Failed to add product: ${err.message}`)
+      } else {
+        alert("Failed to add product. Please try again.")
+      }
     } finally {
       setSaving(false)
     }
@@ -308,13 +324,16 @@ const AddProductPage = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Category *</label>
-                <input
-                  type="text"
+                <select
                   value={product.category}
                   onChange={(e) => handleInputChange("category", e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="e.g., Furniture, Decor"
-                />
+                >
+                  <option value="">Select a category</option>
+                  {categories.map((cat) => (
+                    <option key={cat.name} value={cat.name}>{cat.name}</option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Subcategory</label>
@@ -418,7 +437,7 @@ const AddProductPage = () => {
                     ref={fileInputRef}
                     type="file"
                     multiple
-                    accept="image/*"
+                    accept={getImageAcceptTypes()}
                     onChange={handleFileUpload}
                     className="hidden"
                   />
@@ -436,7 +455,7 @@ const AddProductPage = () => {
                   </button>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">
-                  Select multiple images to upload to Cloudinary
+                  Select multiple images to upload to Cloudinary. Supported formats: {getSupportedFormatsString()} (Max 10MB per file)
                 </p>
               </div>
 
