@@ -23,10 +23,25 @@ function initializeFirebaseAdmin(): { app: App; adminDb: any; adminMessaging: an
        try {
          if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
            console.log('Using environment variables for Firebase Admin');
+           
+           // More robust private key handling
+           let privateKey = process.env.FIREBASE_PRIVATE_KEY;
+           
+           // Handle different formatting scenarios
+           if (privateKey.includes('\\n')) {
+             privateKey = privateKey.replace(/\\n/g, '\n');
+           }
+           
+           // Ensure proper formatting
+           if (!privateKey.includes('\n')) {
+             // If no actual newlines, it might be base64 encoded or incorrectly formatted
+             console.warn('Private key doesn\'t contain newlines, this might cause issues');
+           }
+           
            credential = cert({
              projectId: process.env.FIREBASE_PROJECT_ID,
              clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-             privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+             privateKey: privateKey,
            });
            console.log('Service account from env - project ID:', process.env.FIREBASE_PROJECT_ID);
          } else {
