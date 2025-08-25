@@ -178,90 +178,46 @@ const useProducts = () => {
 };
 
 const useServices = () => {
-  const [services, setServices] = useState<Service[]>([
-  {
-    id: 'chairs',
-    name: 'Chairs',
-    desc: 'A wide variety of chairs including stackables, padded, and folding for all event styles.',
-    img: ['https://res.cloudinary.com/algopinile/image/upload/v1750259937/projects/zpyqv0b23khpzwxgvfz2.png'] // White Stackable Chairs
-  },
-  {
-    id: 'tables',
-    name: 'Tables',
-    desc: 'Durable rectangular and round tables suitable for banquets, meetings, and more.',
-    img: ['https://res.cloudinary.com/algopinile/image/upload/v1750270533/products/giu3lm3ojqtknkjda03c.png'] // Rectangular 6ft Table
-  },
-  {
-    id: 'tents',
-    name: 'Tents',
-    desc: 'High-quality tents available in various sizes to provide cover and elegance at your event.',
-    img: ['https://res.cloudinary.com/algopinile/image/upload/v1750262022/samples/zyzq9mvkggecloxbleie.png'] // 10 by 10 Tent White
-  },
-  {
-    id: 'table-covers',
-    name: 'Table Covers',
-    desc: 'Stylish table covers including damask and sequin options to complete your table setup.',
-    img: ['https://res.cloudinary.com/dpcvlheu9/image/upload/v1754159285/black_table_covers_m89oif.webp']
-  },
-  {
-    id: 'equipment',
-    name: 'Equipment',
-    desc: 'Essential event accessories and equipment for lighting, sound, and functionality.',
-    img: ['https://res.cloudinary.com/algopinile/image/upload/v1750259937/projects/p823v78rftljyvcxgabm.png'] 
-  },
-  {
-    id: 'Kids Rentals',
-    name: 'Kids Rentals',
-    desc: 'Ambient and decorative lighting to brighten up your indoor or outdoor events.',
-    img: ['https://res.cloudinary.com/dpcvlheu9/image/upload/v1754044209/kids_chair_alt_wk7frd.webp'] 
-  }
-]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const services: Service[] = [
+    {
+      id: 'chairs',
+      name: 'Chairs',
+      desc: 'A wide variety of chairs including stackables, padded, and folding for all event styles.',
+      img: ['https://res.cloudinary.com/algopinile/image/upload/v1750259937/projects/zpyqv0b23khpzwxgvfz2.png'] // White Stackable Chairs
+    },
+    {
+      id: 'tables',
+      name: 'Tables',
+      desc: 'Durable rectangular and round tables suitable for banquets, meetings, and more.',
+      img: ['https://res.cloudinary.com/algopinile/image/upload/v1750270533/products/giu3lm3ojqtknkjda03c.png'] // Rectangular 6ft Table
+    },
+    {
+      id: 'tents',
+      name: 'Tents',
+      desc: 'High-quality tents available in various sizes to provide cover and elegance at your event.',
+      img: ['https://res.cloudinary.com/algopinile/image/upload/v1750262022/samples/zyzq9mvkggecloxbleie.png'] // 10 by 10 Tent White
+    },
+    {
+      id: 'table-covers',
+      name: 'Table Covers',
+      desc: 'Stylish table covers including damask and sequin options to complete your table setup.',
+      img: ['https://res.cloudinary.com/dpcvlheu9/image/upload/v1754159285/black_table_covers_m89oif.webp']
+    },
+    {
+      id: 'equipment',
+      name: 'Equipment',
+      desc: 'Essential event accessories and equipment for lighting, sound, and functionality.',
+      img: ['https://res.cloudinary.com/algopinile/image/upload/v1750259937/projects/p823v78rftljyvcxgabm.png'] 
+    },
+    {
+      id: 'Kids Rentals',
+      name: 'Kids Rentals',
+      desc: 'Ambient and decorative lighting to brighten up your indoor or outdoor events.',
+      img: ['https://res.cloudinary.com/dpcvlheu9/image/upload/v1754044209/kids_chair_alt_wk7frd.webp'] 
+    }
+  ];
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        setLoading(true);
-        
-        // Use API route instead of direct Firestore access
-        const response = await fetch('/api/categories');
-        
-        if (response.ok) {
-          const { categories } = await response.json();
-          
-          if (categories.length > 0) {
-            const servicesData: Service[] = categories.map((data: any) => ({
-              id: data.id,
-              image: data.image || '',
-              title: data.title || data.name || '',
-              description: data.description || ''
-            }));
-            
-            setServices(servicesData);
-            console.log('Fetched services from API:', servicesData);
-          } else {
-            console.log('No services found in API, using default services');
-            // Keep the hardcoded services as fallback
-          }
-        } else {
-          console.log('Failed to fetch services from API, using default services');
-          // Keep the hardcoded services as fallback
-        }
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching services:', err);
-        console.log('Using default services due to error');
-        setError(null); // Don't show error, just use default services
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchServices();
-  }, []);
-
-  return { services, loading, error };
+  return { services, loading: false, error: null };
 };
 
 const LoadingGrid = ({ cols = 4 }: { cols?: number }) => (

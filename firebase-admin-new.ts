@@ -19,15 +19,25 @@ function initializeFirebaseAdmin(): { app: App; adminDb: any; adminMessaging: an
        
        console.log('Initializing Firebase Admin SDK...');
        
-       // Always use the service account file to avoid environment variable conflicts
+       // Try environment variables first, then fall back to service account file
        try {
-         console.log('Using service account file for Firebase Admin');
-         const serviceKey = require('./src/service_key.json');
-         console.log('Service account project ID:', serviceKey.project_id);
-         console.log('Service account client email:', serviceKey.client_email);
-         credential = cert(serviceKey);
+         if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
+           console.log('Using environment variables for Firebase Admin');
+           credential = cert({
+             projectId: process.env.FIREBASE_PROJECT_ID,
+             clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+             privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+           });
+           console.log('Service account from env - project ID:', process.env.FIREBASE_PROJECT_ID);
+         } else {
+           console.log('Using service account file for Firebase Admin');
+           const serviceKey = require('./src/service_key.json');
+           console.log('Service account project ID:', serviceKey.project_id);
+           console.log('Service account client email:', serviceKey.client_email);
+           credential = cert(serviceKey);
+         }
        } catch (error) {
-         console.error('Could not load service account key:', error);
+         console.error('Could not load Firebase credentials:', error);
          throw new Error('Firebase Admin SDK could not be initialized. Please check your service account configuration.');
        }
 

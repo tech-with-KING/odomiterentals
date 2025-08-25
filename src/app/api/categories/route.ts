@@ -3,15 +3,42 @@ import { adminDb } from '../../../../firebase-admin';
 
 export async function GET(request: NextRequest) {
   try {
-    const categoriesRef = adminDb.collection('categories');
-    const snapshot = await categoriesRef.get();
+    // Get all products to extract categories from them
+    const productsRef = adminDb.collection('products');
+    const snapshot = await productsRef.get();
     
-    const categories = snapshot.docs.map((doc: any) => ({
-      id: doc.id,
-      ...doc.data()
+    const categoriesSet = new Set<string>();
+    
+    // Extract categories from products
+    snapshot.docs.forEach((doc: any) => {
+      const data = doc.data();
+      
+      // Handle different possible field names for categories
+      let productCategories: string[] = [];
+      if (data.categories && Array.isArray(data.categories)) {
+        productCategories = data.categories;
+      } else if (data.category && Array.isArray(data.category)) {
+        productCategories = data.category;
+      } else if (typeof data.category === 'string') {
+        productCategories = [data.category];
+      }
+      
+      // Add each category to the set (removes duplicates automatically)
+      productCategories.forEach((category: string) => {
+        if (category && category.trim()) {
+          categoriesSet.add(category.trim());
+        }
+      });
+    });
+
+    // Convert set to array of category objects
+    const categories = Array.from(categoriesSet).map(category => ({
+      id: category.toLowerCase().replace(/[^a-z0-9]/g, '-'), // Create a URL-friendly ID
+      name: category,
+      slug: category.toLowerCase().replace(/[^a-z0-9]/g, '-')
     }));
 
-    return NextResponse.json({ categories });
+    return NextResponse.json(categories);
 
   } catch (error) {
     console.error('Error fetching categories:', error);
@@ -24,53 +51,17 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { userEmail, categoryData } = body;
-
-    if (!userEmail) {
-      return NextResponse.json(
-        { error: 'User email is required' },
-        { status: 400 }
-      );
-    }
-
-    if (!categoryData) {
-      return NextResponse.json(
-        { error: 'Category data is required' },
-        { status: 400 }
-      );
-    }
-
-    // Check if user is admin
-    const adminRef = adminDb.collection('admin');
-    const adminSnapshot = await adminRef.where('email', '==', userEmail).get();
-    
-    if (adminSnapshot.empty) {
-      return NextResponse.json(
-        { error: 'Unauthorized: Admin access required' },
-        { status: 403 }
-      );
-    }
-
-    // Add timestamps to category data
-    const categoryWithTimestamps = {
-      ...categoryData,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-
-    const docRef = await adminDb.collection('categories').add(categoryWithTimestamps);
-    
-    return NextResponse.json({ 
-      success: true,
-      message: 'Category created successfully',
-      categoryId: docRef.id 
-    });
+    return NextResponse.json(
+      { 
+        error: 'Categories cannot be added directly. Categories are managed through product data. Please add categories when creating or updating products.' 
+      },
+      { status: 400 }
+    );
 
   } catch (error) {
-    console.error('Error creating category:', error);
+    console.error('Error in categories POST:', error);
     return NextResponse.json(
-      { error: 'Failed to create category', details: error instanceof Error ? error.message : 'Unknown error' },
+      { error: 'Failed to process request' },
       { status: 500 }
     );
   }
