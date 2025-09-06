@@ -433,17 +433,35 @@ export default function ShoppingCartPage() {
                     <span>${subtotal}</span>
                   </div>
                   <div className="flex justify-between text-slate-600">
-                    <span>Shipping</span>
-                    <span className="text-green-600 font-medium">{shipping === 0 ? "Free" : `$${shipping}`}</span>
-                  </div>
-                  <div className="flex justify-between text-slate-600">
-                    <span>Taxes & Fees</span>
-                    <span>${taxes}</span>
+                    <span>Security Deposit</span>
+                    <span>$50.00</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between text-lg font-bold text-slate-900">
                     <span>Total</span>
-                    <span>${total}</span>
+                    <span>${subtotal + 50}</span>
+                  </div>
+                  {/* Security Deposit Message */}
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mt-3">
+                    <div className="flex items-start space-x-2">
+                      <span className="text-yellow-600 font-bold text-lg">&#9888;</span>
+                      <div className="text-sm text-yellow-800">
+                        <p className="font-medium">Security Deposit Policy</p>
+                        <p>This is a security deposit which will be refunded to you when all our items are returned clean and without damage.<br />
+                        Should you cancel, you may forfeit this amount or an amount equal to your rental item price if lower.</p>
+                        <p className="mt-2 text-yellow-700">A $50 security deposit is required for all rentals.</p>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Transportation Note */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3">
+                    <div className="flex items-start space-x-2">
+                      <span className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0">🚚</span>
+                      <div className="text-sm text-blue-800">
+                        <p className="font-medium">Transportation & Delivery</p>
+                        <p className="text-blue-600">Delivery is not free. Delivery charges will be determined by us based on your location and discussed with you when we reach out for more information after you submit your order.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -468,10 +486,6 @@ export default function ShoppingCartPage() {
                     <div className="flex items-center space-x-2">
                       <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                       <span>Secure checkout</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span>Free returns within 30 days</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <div className="w-2 h-2 bg-green-500 rounded-full"></div>

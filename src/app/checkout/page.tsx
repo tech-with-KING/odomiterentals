@@ -407,9 +407,9 @@ export default function CheckoutPage() {
                 </Button>
 
                 {/* Note */}
-                <div className="p-4 bg-blue-50 rounded-lg">
+                <div className="p-4 my-4 bg-blue-50 rounded-lg">
                   <p className="text-sm text-blue-800">
-                    <strong>Note:</strong> After submitting your order, we'll contact you via email to confirm details and arrange payment. No payment is required at this time.
+                    <strong>Note:</strong> After submitting your order, we'll contact you to confirm details and arrange payment. No payment is required at this time.
                   </p>
                 </div>
               </CardContent>
