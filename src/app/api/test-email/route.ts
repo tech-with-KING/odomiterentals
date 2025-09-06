@@ -5,7 +5,7 @@ function createTransporter() {
   return nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL_FROM,
+      user: process.env.GMAIL_AUTH_USER || process.env.EMAIL_FROM, // Use separate auth user if available
       pass: process.env.EMAIL_PASSWORD,
     },
   })

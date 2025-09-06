@@ -507,10 +507,6 @@ export default function AdminOrdersPage() {
                       <span>${selectedOrder.pricing.subtotal.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Delivery Fee:</span>
-                      <span>{selectedOrder.pricing.shipping === 0 ? 'Free' : '$' + selectedOrder.pricing.shipping.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between">
                       <span>Taxes & Fees:</span>
                       <span>${selectedOrder.pricing.taxes.toFixed(2)}</span>
                     </div>

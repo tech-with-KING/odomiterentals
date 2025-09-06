@@ -79,9 +79,9 @@ export default function CheckoutPage() {
   }
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.total, 0)
-  const shipping = subtotal > 100 ? 0 : 15
-  const taxes = subtotal * 0.08
-  const total = subtotal + shipping + taxes
+  const securityDeposit = 50;
+  const taxes = 0; // No tax charged
+  const total = subtotal + securityDeposit;
 
   const validateForm = (): boolean => {
     const required = ['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'rentalStartDate']
@@ -107,8 +107,7 @@ export default function CheckoutPage() {
         items: cartItems,
         pricing: {
           subtotal,
-          shipping,
-          taxes,
+          securityDeposit,
           total
         },
         orderDate: new Date().toISOString(),
@@ -358,19 +357,35 @@ export default function CheckoutPage() {
                     <span>${subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-slate-600">
-                    <span>Delivery Fee</span>
-                    <span className={shipping === 0 ? "text-green-600 font-medium" : ""}>
-                      {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-slate-600">
-                    <span>Taxes & Fees</span>
-                    <span>${taxes.toFixed(2)}</span>
+                    <span>Security Deposit</span>
+                    <span>${securityDeposit.toFixed(2)}</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between text-lg font-bold text-slate-900">
                     <span>Total</span>
                     <span>${total.toFixed(2)}</span>
+                  </div>
+                  {/* Security Deposit Message */}
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mt-3">
+                    <div className="flex items-start space-x-2">
+                      <span className="text-yellow-600 font-bold text-lg">&#9888;</span>
+                      <div className="text-sm text-yellow-800">
+                        <p className="font-medium">Security Deposit Policy</p>
+                        <p>This is a security deposit and it will be refunded to you when all our items are returned clean and without damage.<br />
+                        Should you cancel, you may forfeit this amount or an amount equal to your rented items value if lower.</p>
+                        <p className="mt-2 text-yellow-700">We do not charge tax on orders, but a $50 security deposit is required for all rentals.</p>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Transportation Note */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3">
+                    <div className="flex items-start space-x-2">
+                      <MapPin className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <div className="text-sm text-blue-800">
+                        <p className="font-medium">Transportation & Delivery</p>
+                        <p className="text-blue-600">Transportation costs will be discussed directly with you via phone call after order submission.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 

@@ -64,7 +64,7 @@ interface OrderData {
   }>
   pricing: {
     subtotal: number
-    shipping: number
+    shipping?: number // Make shipping optional since we're removing it
     taxes: number
     total: number
   }
@@ -74,19 +74,18 @@ interface OrderData {
 
 // Create email transporter with better error handling
 const createTransporter = () => {
-  console.log("Creating email transporter with config:", {
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    user: process.env.EMAIL_FROM,
+  console.log('Email configuration check:', {
+    user: process.env.GMAIL_AUTH_USER || process.env.EMAIL_FROM,
     hasPassword: !!process.env.EMAIL_PASSWORD,
-  })
+    emailFrom: process.env.EMAIL_FROM,
+  });
 
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST || "smtp.gmail.com",
     port: Number.parseInt(process.env.SMTP_PORT || "587"),
     secure: false, // true for 465, false for other ports
     auth: {
-      user: process.env.EMAIL_FROM,
+      user: process.env.GMAIL_AUTH_USER || process.env.EMAIL_FROM, // Use separate auth user if available
       pass: process.env.EMAIL_PASSWORD,
     },
     debug: true, // Enable debug output
@@ -321,10 +320,6 @@ const generateCustomerEmailHTML = (orderData: OrderData, orderId: string) => {
                         <span>$${pricing.subtotal.toFixed(2)}</span>
                     </div>
                     <div class="total-row">
-                        <span>Delivery Fee:</span>
-                        <span>${pricing.shipping === 0 ? "Free" : "$" + pricing.shipping.toFixed(2)}</span>
-                    </div>
-                    <div class="total-row">
                         <span>Taxes & Fees:</span>
                         <span>$${pricing.taxes.toFixed(2)}</span>
                     </div>
@@ -403,6 +398,7 @@ export async function POST(request: NextRequest) {
     // Send email to customer with better error handling
     try {
       console.log("Attempting to send customer email to:", customerInfo.email)
+      
       const transporter = createTransporter()
 
       // Verify transporter configuration
@@ -758,10 +754,6 @@ export async function POST(request: NextRequest) {
                               <div class="pricing-row">
                                   <span>Subtotal:</span>
                                   <span>$${pricing.subtotal.toFixed(2)}</span>
-                              </div>
-                              <div class="pricing-row">
-                                  <span>Delivery Fee:</span>
-                                  <span>${pricing.shipping === 0 ? "Free 🎉" : "$" + pricing.shipping.toFixed(2)}</span>
                               </div>
                               <div class="pricing-row">
                                   <span>Taxes & Fees:</span>

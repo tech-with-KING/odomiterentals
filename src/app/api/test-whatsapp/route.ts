@@ -24,7 +24,6 @@ ZIP: 12345
 
 💰 *Order Total:*
 Subtotal: $350.00
-Delivery: Free
 Taxes: $28.00
 *Total: $378.00*
 

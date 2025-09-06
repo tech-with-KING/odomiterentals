@@ -5,8 +5,8 @@ export async function POST(request: NextRequest) {
     console.log('Testing Cloudinary configuration...')
     
     // Check environment variables
-    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME
+  const uploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET
     
     console.log('Environment variables:', {
       cloudName: cloudName ? 'Set' : 'Not set',

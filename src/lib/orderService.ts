@@ -31,7 +31,7 @@ export interface Order {
   items: OrderItem[]
   pricing: {
     subtotal: number
-    shipping: number
+    shipping?: number // Make shipping optional
     taxes: number
     total: number
   }
