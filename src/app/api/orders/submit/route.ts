@@ -405,7 +405,15 @@ export async function POST(request: NextRequest) {
       await transporter.verify()
       console.log("Email transporter verified successfully")
 
-      const customerEmailHTML = generateCustomerEmailHTML(orderData, orderId)
+            let customerEmailHTML = generateCustomerEmailHTML(orderData, orderId)
+            // Patch in new security deposit and delivery message
+            customerEmailHTML = customerEmailHTML.replace(
+                /Security Deposit Policy[\s\S]*?We do not charge tax on orders, but a \$50 security deposit is required for all rentals\./,
+                `Security Deposit Policy</p><p>This is a security deposit which will be refunded to you when all our items are returned clean and without damage.<br />Should you cancel, you may forfeit this amount or an amount equal to your rental item price if lower.</p><p class="mt-2 text-yellow-700">A $50 security deposit is required for all rentals.</p>`
+            ).replace(
+                /Transportation & Delivery[\s\S]*?Transportation costs will be discussed directly with you via phone call after order submission\./,
+                `Transportation & Delivery</p><p class="text-blue-600">Delivery is not free. Delivery charges will be determined by us based on your location and discussed with you when we reach out for more information after you submit your order.</p>`
+            )
 
       const mailOptions = {
         from: process.env.EMAIL_FROM,
@@ -792,12 +800,18 @@ export async function POST(request: NextRequest) {
         const emailResults = []
         for (const adminEmail of uniqueAdminEmails) {
           try {
-            const adminMailOptions = {
-              from: process.env.EMAIL_FROM,
-              to: adminEmail,
-              subject: `🛍️ NEW ORDER ODOMITERENTALS!!! ${customerInfo.firstName} ${customerInfo.lastName} ($${pricing.total.toFixed(2)})`,
-              html: adminEmailHTML,
-            }
+                    const adminMailOptions = {
+                        from: process.env.EMAIL_FROM,
+                        to: adminEmail,
+                        subject: `🛍️ NEW ORDER ODOMITERENTALS!!! ${customerInfo.firstName} ${customerInfo.lastName} ($${pricing.total.toFixed(2)})`,
+                        html: adminEmailHTML.replace(
+                            /Security Deposit Policy[\s\S]*?We do not charge tax on orders, but a \$50 security deposit is required for all rentals\./,
+                            `Security Deposit Policy</p><p>This is a security deposit which will be refunded to you when all our items are returned clean and without damage.<br />Should you cancel, you may forfeit this amount or an amount equal to your rental item price if lower.</p><p class="mt-2 text-yellow-700">A $50 security deposit is required for all rentals.</p>`
+                        ).replace(
+                            /Transportation & Delivery[\s\S]*?Transportation costs will be discussed directly with you via phone call after order submission\./,
+                            `Transportation & Delivery</p><p class="text-blue-600">Delivery is not free. Delivery charges will be determined by us based on your location and discussed with you when we reach out for more information after you submit your order.</p>`
+                        ),
+                    }
 
             console.log(`Sending order notification to: ${adminEmail}`)
             const result = await transporter.sendMail(adminMailOptions)
