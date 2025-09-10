@@ -3,25 +3,20 @@ import nodemailer from 'nodemailer'
 
 function createTransporter() {
   return nodemailer.createTransport({
-    service: 'gmail',
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: Number.parseInt(process.env.SMTP_PORT || '587'),
+    secure: Number.parseInt(process.env.SMTP_PORT || '587') === 465, // true for 465, false for other ports
     auth: {
       user: process.env.GMAIL_AUTH_USER || process.env.EMAIL_FROM, // Use separate auth user if available
       pass: process.env.EMAIL_PASSWORD,
     },
+  // debug/logger removed for production
   })
 }
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('Testing email configuration...')
-    
-    // Check environment variables
-    console.log('Environment variables:', {
-      EMAIL_FROM: process.env.EMAIL_FROM ? 'Set' : 'Not set',
-      EMAIL_PASSWORD: process.env.EMAIL_PASSWORD ? 'Set' : 'Not set',
-      BUSINESS_EMAIL: process.env.BUSINESS_EMAIL ? 'Set' : 'Not set',
-      ADMIN_EMAIL: process.env.ADMIN_EMAIL ? 'Set' : 'Not set'
-    })
+    // Diagnostics removed for production - keep minimal checks
     
     if (!process.env.EMAIL_FROM || !process.env.EMAIL_PASSWORD) {
       return NextResponse.json({
@@ -36,9 +31,15 @@ export async function POST(request: NextRequest) {
     const transporter = createTransporter()
     
     // Test connection
-    console.log('Testing SMTP connection...')
-    await transporter.verify()
-    console.log('SMTP connection verified successfully')
+    try {
+      await transporter.verify()
+    } catch (verifyErr) {
+      console.error('SMTP verification failed:', verifyErr)
+      return NextResponse.json({
+        error: 'SMTP verification failed',
+        details: verifyErr instanceof Error ? verifyErr.message : String(verifyErr),
+      }, { status: 500 })
+    }
     
     // Get admin emails
     const adminEmails = [
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
     // Remove duplicates
     const uniqueAdminEmails = [...new Set(adminEmails)];
     
-    console.log('Sending test emails to admin addresses:', uniqueAdminEmails);
+  // Sending test emails to admin addresses
     
     if (uniqueAdminEmails.length === 0) {
       return NextResponse.json({
@@ -71,7 +72,7 @@ export async function POST(request: NextRequest) {
     // Send test email to each admin
     for (const adminEmail of uniqueAdminEmails) {
       try {
-        console.log(`Sending test email to: ${adminEmail}`);
+  // sending to each admin
         const result = await transporter.sendMail({
           from: process.env.EMAIL_FROM,
           to: adminEmail,
@@ -119,7 +120,7 @@ export async function POST(request: NextRequest) {
           messageId: result.messageId
         });
         
-        console.log(`Test email sent successfully to ${adminEmail}:`, result.messageId);
+  // success
         
       } catch (emailError) {
         console.error(`Failed to send test email to ${adminEmail}:`, emailError);

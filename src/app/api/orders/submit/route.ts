@@ -74,23 +74,19 @@ interface OrderData {
 
 // Create email transporter with better error handling
 const createTransporter = () => {
-  console.log('Email configuration check:', {
-    user: process.env.GMAIL_AUTH_USER || process.env.EMAIL_FROM,
-    hasPassword: !!process.env.EMAIL_PASSWORD,
-    emailFrom: process.env.EMAIL_FROM,
-  });
+    // Minimal email configuration check
+    // (detailed diagnostics removed for production)
 
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST || "smtp.gmail.com",
-    port: Number.parseInt(process.env.SMTP_PORT || "587"),
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: process.env.GMAIL_AUTH_USER || process.env.EMAIL_FROM, // Use separate auth user if available
-      pass: process.env.EMAIL_PASSWORD,
-    },
-    debug: true, // Enable debug output
-    logger: true, // Log information in console
-  })
+    return nodemailer.createTransport({
+        host: process.env.SMTP_HOST || "smtp.gmail.com",
+        port: Number.parseInt(process.env.SMTP_PORT || "587"),
+        secure: Number.parseInt(process.env.SMTP_PORT || "587") === 465,
+        auth: {
+            user: process.env.GMAIL_AUTH_USER || process.env.EMAIL_FROM,
+            pass: process.env.EMAIL_PASSWORD,
+        },
+        // debug/logger removed for production
+    })
 }
 
 // WhatsApp integration removed. Only email notifications are sent.
@@ -300,14 +296,14 @@ const generateCustomerEmailHTML = (orderData: OrderData, orderId: string) => {
                 ${items
                   .map(
                     (item) => `
-                    <div class="order-item">
+                        <div class="order-item">
                         <img src="${item.image}" alt="${item.name}" class="product-image" onerror="this.style.display='none'">
                         <div class="item-details">
                             <h4>${item.name}</h4>
                             <p><strong>Category:</strong> ${item.category}</p>
                             <p><strong>Quantity:</strong> ${item.quantity} × ${item.duration} days</p>
                         </div>
-                        <div class="item-price">$${item.total.toFixed(2)}</div>
+                        <div class="item-price">$${Number(item.total ?? 0).toFixed(2)}</div>
                     </div>
                 `,
                   )
@@ -317,15 +313,15 @@ const generateCustomerEmailHTML = (orderData: OrderData, orderId: string) => {
                     <h3>Order Summary</h3>
                     <div class="total-row">
                         <span>Subtotal:</span>
-                        <span>$${pricing.subtotal.toFixed(2)}</span>
+                        <span>$${Number(pricing.subtotal ?? 0).toFixed(2)}</span>
                     </div>
                     <div class="total-row">
                         <span>Taxes & Fees:</span>
-                        <span>$${pricing.taxes.toFixed(2)}</span>
+                        <span>$${Number(pricing.taxes ?? 0).toFixed(2)}</span>
                     </div>
                     <div class="total-row final">
                         <span>Total:</span>
-                        <span>$${pricing.total.toFixed(2)}</span>
+                        <span>$${Number(pricing.total ?? 0).toFixed(2)}</span>
                     </div>
                 </div>
                 
@@ -397,7 +393,7 @@ export async function POST(request: NextRequest) {
 
     // Send email to customer with better error handling
     try {
-      console.log("Attempting to send customer email to:", customerInfo.email)
+    // Attempt to send customer email
       
       const transporter = createTransporter()
 
@@ -422,14 +418,7 @@ export async function POST(request: NextRequest) {
         html: customerEmailHTML,
       }
 
-      console.log("Sending email with options:", {
-        from: mailOptions.from,
-        to: mailOptions.to,
-        subject: mailOptions.subject,
-      })
-
-      const result = await transporter.sendMail(mailOptions)
-      console.log("Customer email sent successfully:", result.messageId)
+    const result = await transporter.sendMail(mailOptions)
     } catch (emailError) {
       console.error("Detailed customer email error:", {
         error: emailError,
@@ -442,31 +431,29 @@ export async function POST(request: NextRequest) {
 
     // Send email notifications to all admin emails
     try {
-      console.log("Attempting to send admin notification emails")
-      const transporter = createTransporter()
+    const transporter = createTransporter()
 
       // Get all admin emails
-      const adminEmails = [process.env.ADMIN_EMAIL, process.env.BUSINESS_EMAIL, process.env.EMAIL_FROM].filter(
-        (email) => email && email.trim() !== "",
-      )
+                const adminEmails = [process.env.ADMIN_EMAIL, process.env.BUSINESS_EMAIL, process.env.EMAIL_FROM]
+                    .filter((email) => email && email.trim() !== "")
 
-      // Add extra admin emails if configured
-      if (process.env.EXTRA_ADMIN_EMAILS) {
-        const extraEmails = process.env.EXTRA_ADMIN_EMAILS.split(",")
-          .map((email) => email.trim())
-          .filter((email) => email !== "")
-        adminEmails.push(...extraEmails)
-      }
+                // Add extra admin emails if configured
+                if (process.env.EXTRA_ADMIN_EMAILS) {
+                    const extraEmails = process.env.EXTRA_ADMIN_EMAILS.split(",")
+                        .map((email) => email.trim())
+                        .filter((email) => email !== "")
+                    adminEmails.push(...extraEmails)
+                }
 
-      // Remove duplicates
-      const uniqueAdminEmails = [...new Set(adminEmails)]
+                // Remove duplicates and empty
+                const uniqueAdminEmails = [...new Set(adminEmails.filter(Boolean))]
 
-      console.log("Sending order notifications to admin emails:", uniqueAdminEmails)
+                // Sending order notifications to admin emails
 
-      if (uniqueAdminEmails.length === 0) {
-        console.warn("No admin emails configured for notifications")
-      } else {
-        const adminEmailHTML = `
+                if (uniqueAdminEmails.length === 0) {
+                    console.warn("No admin emails configured for notifications")
+                } else {
+                    const adminEmailHTML = `
           <!DOCTYPE html>
           <html>
           <head>
@@ -747,9 +734,9 @@ export async function POST(request: NextRequest) {
                                       <h4>${item.name}</h4>
                                       <p><strong>Category:</strong> ${item.category}</p>
                                       <p><strong>Quantity:</strong> ${item.quantity} × ${item.duration} days</p>
-                                      <p><strong>Unit Price:</strong> $${item.unitPrice.toFixed(2)}</p>
                                   </div>
-                                  <div class="item-price">$${item.total.toFixed(2)}</div>
+                                      <p><strong>Unit Price:</strong> $${Number(item.unitPrice ?? 0).toFixed(2)}</p>
+                                  <div class="item-price">$${Number(item.total ?? 0).toFixed(2)}</div>
                               </div>
                           `,
                             )
@@ -758,18 +745,18 @@ export async function POST(request: NextRequest) {
                       
                       <div class="section pricing">
                           <h3>💰 Pricing Breakdown</h3>
-                          <div class="pricing-breakdown">
+                              <div class="pricing-breakdown">
                               <div class="pricing-row">
                                   <span>Subtotal:</span>
-                                  <span>$${pricing.subtotal.toFixed(2)}</span>
+                                  <span>$${Number(pricing.subtotal ?? 0).toFixed(2)}</span>
                               </div>
                               <div class="pricing-row">
                                   <span>Taxes & Fees:</span>
-                                  <span>$${pricing.taxes.toFixed(2)}</span>
+                                  <span>$${Number(pricing.taxes ?? 0).toFixed(2)}</span>
                               </div>
                               <div class="pricing-row total">
                                   <span>💎 Total Amount:</span>
-                                  <span>$${pricing.total.toFixed(2)}</span>
+                                  <span>$${Number(pricing.total ?? 0).toFixed(2)}</span>
                               </div>
                           </div>
                       </div>
@@ -796,45 +783,54 @@ export async function POST(request: NextRequest) {
           </html>
         `
 
-        // Send to each admin email
-        const emailResults = []
-        for (const adminEmail of uniqueAdminEmails) {
-          try {
-                    const adminMailOptions = {
-                        from: process.env.EMAIL_FROM,
-                        to: adminEmail,
-                        subject: `🛍️ NEW ORDER ODOMITERENTALS!!! ${customerInfo.firstName} ${customerInfo.lastName} ($${pricing.total.toFixed(2)})`,
-                        html: adminEmailHTML.replace(
-                            /Security Deposit Policy[\s\S]*?We do not charge tax on orders, but a \$50 security deposit is required for all rentals\./,
-                            `Security Deposit Policy</p><p>This is a security deposit which will be refunded to you when all our items are returned clean and without damage.<br />Should you cancel, you may forfeit this amount or an amount equal to your rental item price if lower.</p><p class="mt-2 text-yellow-700">A $50 security deposit is required for all rentals.</p>`
-                        ).replace(
-                            /Transportation & Delivery[\s\S]*?Transportation costs will be discussed directly with you via phone call after order submission\./,
-                            `Transportation & Delivery</p><p class="text-blue-600">Delivery is not free. Delivery charges will be determined by us based on your location and discussed with you when we reach out for more information after you submit your order.</p>`
-                        ),
+                // Send to each admin email
+                const emailResults: Array<any> = []
+
+                if (uniqueAdminEmails.length === 0) {
+                    console.warn('No admin emails configured for notifications')
+                } else {
+                    try {
+                        // Try sending one combined email to all admin addresses
+                        const combinedMailOptions = {
+                            from: process.env.EMAIL_FROM,
+                            to: uniqueAdminEmails.join(','),
+                            subject: `🛍️ NEW ORDER ODOMITERENTALS!!! ${customerInfo.firstName} ${customerInfo.lastName} ($${Number(pricing.total ?? 0).toFixed(2)})`,
+                            html: adminEmailHTML,
+                        }
+
+                          const combinedResult = await transporter.sendMail(combinedMailOptions)
+
+                        // Mark all as success if combined send succeeded
+                        uniqueAdminEmails.forEach((e) =>
+                            emailResults.push({ email: e, success: true, messageId: (combinedResult && (combinedResult as any).messageId) || undefined })
+                        )
+
+                        // combined send succeeded
+                    } catch (combinedErr) {
+                        console.error('Combined send failed, falling back to per-recipient sends:', combinedErr)
+
+                        // Fallback: send individually and record each result
+                        for (const adminEmail of uniqueAdminEmails) {
+                            try {
+                                const adminMailOptions = {
+                                    from: process.env.EMAIL_FROM,
+                                    to: adminEmail,
+                                    subject: `🛍️ NEW ORDER ODOMITERENTALS!!! ${customerInfo.firstName} ${customerInfo.lastName} ($${Number(pricing.total ?? 0).toFixed(2)})`,
+                                    html: adminEmailHTML,
+                                }
+
+                                    const result = await transporter.sendMail(adminMailOptions)
+                                    emailResults.push({ email: adminEmail, success: true, messageId: (result as any).messageId })
+                            } catch (emailError) {
+                                console.error(`Failed to send order notification to ${adminEmail}:`, emailError)
+                                emailResults.push({ email: adminEmail, success: false, error: emailError instanceof Error ? emailError.message : 'Unknown error' })
+                            }
+                        }
                     }
 
-            console.log(`Sending order notification to: ${adminEmail}`)
-            const result = await transporter.sendMail(adminMailOptions)
-
-            emailResults.push({
-              email: adminEmail,
-              success: true,
-              messageId: result.messageId,
-            })
-
-            console.log(`Order notification sent successfully to ${adminEmail}:`, result.messageId)
-          } catch (emailError) {
-            console.error(`Failed to send order notification to ${adminEmail}:`, emailError)
-            emailResults.push({
-              email: adminEmail,
-              success: false,
-              error: emailError instanceof Error ? emailError.message : "Unknown error",
-            })
-          }
-        }
-
-        const successCount = emailResults.filter((result) => result.success).length
-        console.log(`Admin email notifications: ${successCount}/${uniqueAdminEmails.length} sent successfully`)
+                    const successCount = emailResults.filter((result) => result.success).length
+                    // Admin email notifications summary: %d/%d
+                }
       }
     } catch (emailError) {
       console.error("Error sending admin email notifications:", {
