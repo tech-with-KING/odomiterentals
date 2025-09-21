@@ -73,11 +73,6 @@ function initializeFirebaseAdmin(): { app: App; adminDb: any; adminMessaging: an
 
    const adminDb = getFirestore(app);
    const adminMessaging = getMessaging(app);
-
-   // Verify the database is accessible
-   console.log('Firebase Admin DB initialized:', !!adminDb);
-   console.log('Firebase Admin Messaging initialized:', !!adminMessaging);
-
    return { app, adminDb, adminMessaging };
 }
 
