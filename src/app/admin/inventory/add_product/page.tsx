@@ -20,6 +20,7 @@ interface ProductData {
   instock: boolean
   unitsleft: number
   price: number
+  discount: number
 }
 
 const AddProductPage = () => {
@@ -51,6 +52,7 @@ const AddProductPage = () => {
     instock: true,
     unitsleft: 0,
     price: 0,
+    discount: 0,
   })
 
   const [saving, setSaving] = useState(false)
@@ -356,6 +358,24 @@ const AddProductPage = () => {
                   min="0"
                   step="0.01"
                 />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Discount (%)</label>
+                <input
+                  type="number"
+                  value={product.discount}
+                  onChange={(e) => handleInputChange("discount", Number.parseFloat(e.target.value) || 0)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="0"
+                  min="0"
+                  max="100"
+                  step="1"
+                />
+                {product.discount > 0 && product.price > 0 && (
+                  <p className="text-sm text-gray-500 mt-1">
+                    Discounted Price: ${(product.price * (1 - product.discount / 100)).toFixed(2)}
+                  </p>
+                )}
               </div>
             </div>
             <div className="mt-4">

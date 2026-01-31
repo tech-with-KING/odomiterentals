@@ -12,6 +12,8 @@ interface Product {
   price: number | string;
   desc: string;
   categories?: string[];
+  discount?: number;
+  discountedPrice?: number | string;
 }
 
 // Loading component
@@ -50,7 +52,16 @@ const ShopPage = () => {
         
         console.log('Raw API data:', rawProducts);
         
-        const productsData: Product[] = rawProducts.map((data: any) => {
+        const productsData: Product[] = rawProducts
+          .filter((data: any) => {
+            // Filter out products without valid IDs
+            if (!data.id || data.id === '0' || data.id === 0) {
+              console.warn('Product without valid ID found:', data);
+              return false;
+            }
+            return true;
+          })
+          .map((data: any) => {
           let images: string[] = [];
           if (data.images && Array.isArray(data.images)) {
             images = data.images;
@@ -73,13 +84,22 @@ const ShopPage = () => {
             categories = [data.category];
           }
           
+          // Calculate discounted price if discount exists
+          const discount = data.discount || 0;
+          let discountedPrice = data.price || 0;
+          if (discount > 0 && data.price) {
+            discountedPrice = data.price * (1 - discount / 100);
+          }
+          
           return {
             id: data.id,
             images,
             name,
             price: data.price || 0,
             desc: data.desc || data.description || '',
-            categories
+            categories,
+            discount,
+            discountedPrice
           };
         });
         
@@ -218,6 +238,8 @@ console.log('Filtered products:', filteredProducts);
                   desc={item.desc} 
                   categories={item.categories}
                   id={item.id}
+                  discount={item.discount}
+                  discountedPrice={item.discountedPrice}
                 />
               
             ))}

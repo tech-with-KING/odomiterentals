@@ -19,6 +19,8 @@ interface ProductData {
   instock: boolean;
   unitsleft: number;
   price: number;
+  discount?: number;
+  discountedPrice?: number;
 }
 
 const ShopPage = () => {
@@ -39,11 +41,31 @@ const ShopPage = () => {
       }
 
       try {
+        console.log('Fetching product with ID:', productId);
+        
         // Use API route instead of direct Firestore access
         const response = await fetch(`/api/products/${productId}`);
         
+        console.log('Response status:', response.status);
+        
         if (response.ok) {
           const { product: productData } = await response.json();
+          
+          console.log('Product data received:', productData);
+          
+          if (!productData) {
+            setError('Product data is empty');
+            setLoading(false);
+            return;
+          }
+          
+          // Calculate discounted price if discount exists
+          const discount = productData.discount || 0;
+          let discountedPrice = productData.price || 0;
+          if (discount > 0 && productData.price) {
+            discountedPrice = productData.price * (1 - discount / 100);
+          }
+          
           setProduct({
             id: productData.id,
             name: productData.name || productData.Product_name || 'Unnamed Product',
@@ -58,10 +80,14 @@ const ShopPage = () => {
             rating: productData.rating || 0,
             instock: productData.instock !== undefined ? productData.instock : true,
             unitsleft: productData.unitsleft || 0,
-            price: productData.price || 0
+            price: productData.price || 0,
+            discount,
+            discountedPrice
           });
         } else {
-          setError('Product not found');
+          const errorData = await response.json().catch(() => ({}));
+          console.error('Error response:', errorData);
+          setError(errorData.error || 'Product not found');
         }
       } catch (err) {
         console.error('Error fetching product:', err);
@@ -90,12 +116,21 @@ const ShopPage = () => {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 text-lg font-medium mb-4">{error || 'Product not found'}</p>
-          <button 
-            onClick={() => window.history.back()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Go Back
-          </button>
+          <p className="text-gray-500 text-sm mb-4">Product ID: {productId || 'Unknown'}</p>
+          <div className="flex gap-2 justify-center">
+            <button 
+              onClick={() => window.history.back()}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Go Back
+            </button>
+            <button 
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              Retry
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -120,8 +155,27 @@ const ShopPage = () => {
             <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
               {product.name}
             </h1>
+            <div className="flex items-center gap-3 mb-3">
+              {product.discount && product.discount > 0 ? (
+                <>
+                  <span className="text-2xl md:text-3xl font-bold text-blue-600">
+                    ${product.discountedPrice?.toFixed(2)}
+                  </span>
+                  <span className="text-lg text-gray-400 line-through">
+                    ${product.price.toFixed(2)}
+                  </span>
+                  <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    -{product.discount}% OFF
+                  </span>
+                </>
+              ) : (
+                <span className="text-2xl md:text-3xl font-bold text-blue-600">
+                  ${product.price.toFixed(2)}
+                </span>
+              )}
+            </div>
             <p className="text-gray-600 text-sm md:text-base max-w-2xl">
-              {product.description}
+              {product.short_description}
             </p>
           </div>
 

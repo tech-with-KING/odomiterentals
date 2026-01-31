@@ -65,8 +65,20 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const { id: productId } = await params;
     
+    console.log('API: Fetching product with ID:', productId);
+    
+    if (!productId || productId === 'undefined' || productId === 'null') {
+      console.error('API: Invalid product ID:', productId);
+      return NextResponse.json(
+        { error: 'Invalid product ID' },
+        { status: 400 }
+      );
+    }
+    
     const productRef = adminDb.collection('products').doc(productId);
     const productDoc = await productRef.get();
+    
+    console.log('API: Product exists:', productDoc.exists);
     
     if (!productDoc.exists) {
       return NextResponse.json(
@@ -79,6 +91,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       id: productDoc.id,
       ...productDoc.data()
     };
+    
+    console.log('API: Returning product data for ID:', productDoc.id);
     
     return NextResponse.json({ product: productData });
 

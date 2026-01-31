@@ -13,6 +13,8 @@ type ProductCardProps = {
   price: number | string;
   desc: string;
   categories?: string[];
+  discount?: number;
+  discountedPrice?: number | string;
 };
 
 type ServiceCardProps = {
@@ -30,6 +32,8 @@ interface Product {
   categories?: string[];
   instock?: boolean;
   unitsleft?: number;
+  discount?: number;
+  discountedPrice?: number | string;
 }
 
 interface Service {
@@ -66,19 +70,24 @@ function ServiceCard({ image, title }: ServiceCardProps) {
   );
 }
 
-function ProductCard({ images, name, price, id, categories, desc}: ProductCardProps) {
+function ProductCard({ images, name, price, id, categories, desc, discount, discountedPrice}: ProductCardProps) {
   const product = {
   id: id ,
   name: name,
   price: price,
   images: images,
   desc: desc,
-  categories: categories
+  categories: categories,
+  discount: discount,
+  discountedPrice: discountedPrice
   }
   const {addToCart} =  useCart()
     const handleAddToCart = () => {
     addToCart(product, 1, 5) // quantity: 1, duration: 5 days
   }
+
+  const hasDiscount = discount && discount > 0;
+  const displayPrice = hasDiscount ? discountedPrice : price;
 
   return (
     <div className="bg-white rounded-xl overflow-hidden max-w-sm mx-auto">
@@ -90,6 +99,11 @@ function ProductCard({ images, name, price, id, categories, desc}: ProductCardPr
           height={256}
           className="w-full h-45 md:h-64 object-cover rounded-2xl transition-transform duration-300 transform hover:scale-105"
         />
+      {hasDiscount && (
+        <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 text-xs rounded-full font-medium">
+          -{discount}%
+        </div>
+      )}
       <BookNowPopup 
           product={product}
           trigger={
@@ -102,7 +116,15 @@ function ProductCard({ images, name, price, id, categories, desc}: ProductCardPr
       <div className="p-1 sm:p-3 md:flex md: md:flex-1 md:justify-between">
         <h3 className="text-[16px] sm:text-sm sm:font-semibold font-medium text-gray-900">{name}</h3>
         <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
-           <span className="text-blue-500 font-bold m-2 ">${price}</span> a unit
+          {hasDiscount ? (
+            <span className="flex items-center gap-2">
+              <span className="text-gray-400 line-through text-xs">${price}</span>
+              <span className="text-blue-500 font-bold">${displayPrice}</span>
+            </span>
+          ) : (
+            <span className="text-blue-500 font-bold m-2">${price}</span>
+          )}
+          {' '}a unit
         </p>
       </div>
       <Link key={id} href={`/shop/${id}`} className="group">
@@ -131,7 +153,16 @@ const useProducts = () => {
         
         const { products: rawProducts } = await response.json();
         
-        const productsData: Product[] = rawProducts.map((data: any) => {
+        const productsData: Product[] = rawProducts
+          .filter((data: any) => {
+            // Filter out products without valid IDs
+            if (!data.id || data.id === '0' || data.id === 0) {
+              console.warn('Product without valid ID found:', data);
+              return false;
+            }
+            return true;
+          })
+          .map((data: any) => {
           let images: string[] = [];
           if (data.images && Array.isArray(data.images)) {
             images = data.images;
@@ -150,13 +181,22 @@ const useProducts = () => {
             categories = [data.category];
           }
           
+          // Calculate discounted price if discount exists
+          const discount = data.discount || 0;
+          let discountedPrice = data.price || 0;
+          if (discount > 0 && data.price) {
+            discountedPrice = data.price * (1 - discount / 100);
+          }
+
           return {
             id: data.id,
             images,
             name,
             price: data.price || 0,
             desc: data.desc || data.description || '',
-            categories
+            categories,
+            discount,
+            discountedPrice
           };
         });
         
@@ -269,7 +309,9 @@ export const Products = () => {
               price={item.price} 
               categories={item.categories}
               id={item.id}
-              desc={item.desc} 
+              desc={item.desc}
+              discount={item.discount}
+              discountedPrice={item.discountedPrice}
             />
         ))}
       </div>

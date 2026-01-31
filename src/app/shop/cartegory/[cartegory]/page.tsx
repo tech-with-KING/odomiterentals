@@ -14,6 +14,8 @@ interface Product {
   categories?: string[];
   instock?: boolean;
   unitsleft?: number;
+  discount?: number;
+  discountedPrice?: number | string;
 }
 
 const LoadingGrid = ({ cols = 4 }: { cols?: number }) => (
@@ -63,6 +65,14 @@ export default function CategoryPage() {
         
         // Filter products by category
         const filteredProducts: Product[] = allProducts
+          .filter((data: any) => {
+            // Filter out products without valid IDs
+            if (!data.id || data.id === '0' || data.id === 0) {
+              console.warn('Product without valid ID found:', data);
+              return false;
+            }
+            return true;
+          })
           .map((data: any) => {
             let images: string[] = [];
             if (data.images && Array.isArray(data.images)) {
@@ -83,13 +93,22 @@ export default function CategoryPage() {
               categories = [data.category];
             }
             
+            // Calculate discounted price if discount exists
+            const discount = data.discount || 0;
+            let discountedPrice = data.price || 0;
+            if (discount > 0 && data.price) {
+              discountedPrice = data.price * (1 - discount / 100);
+            }
+            
             return {
               id: data.id,
               images,
               name,
               price: data.price || 0,
               desc: data.desc || data.description || '',
-              categories
+              categories,
+              discount,
+              discountedPrice
             };
           })
           .filter((product: Product) => {
@@ -166,7 +185,9 @@ export default function CategoryPage() {
                 price={item.price} 
                 categories={item.categories}
                 id={item.id}
-                desc={item.desc} 
+                desc={item.desc}
+                discount={item.discount}
+                discountedPrice={item.discountedPrice}
               />
             ))}
           </div>

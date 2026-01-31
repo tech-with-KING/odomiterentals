@@ -21,6 +21,7 @@ interface ProductData {
   instock: boolean
   unitsleft: number
   price: number
+  discount: number
   // Add these fields to handle potential data structure variations
   desc?: string
   Product_name?: string
@@ -82,6 +83,7 @@ const EditProductPage = () => {
           instock: rawData.instock !== undefined ? rawData.instock : true,
           unitsleft: rawData.unitsleft || 0,
           price: rawData.price || 0,
+          discount: rawData.discount || 0,
           rating: rawData.rating || 0
         }
         
@@ -358,6 +360,23 @@ const EditProductPage = () => {
                   onChange={(e) => handleInputChange("price", parseFloat(e.target.value) || 0)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Discount (%)</label>
+                <input
+                  type="number"
+                  step="1"
+                  min="0"
+                  max="100"
+                  value={product.discount}
+                  onChange={(e) => handleInputChange("discount", parseFloat(e.target.value) || 0)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                {product.discount > 0 && product.price > 0 && (
+                  <p className="text-sm text-gray-500 mt-1">
+                    Discounted Price: ${(product.price * (1 - product.discount / 100)).toFixed(2)}
+                  </p>
+                )}
               </div>
             </div>
             <div className="mt-4">
