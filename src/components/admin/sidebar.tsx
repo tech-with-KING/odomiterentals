@@ -1,141 +1,108 @@
-"use client"
-import { usePathname } from "next/navigation"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
-import { Users, Package, BarChart3, Settings, Home, X, CreditCard, FileText } from "lucide-react"
-import { useEffect } from "react"
+'use client';
 
-const navigation = [
-  { name: "Dashboard", href: "/admin", icon: Home },
-  { name: "Inventory", href: "/admin/inventory", icon: Package },
-  { name: "Orders", href: "/admin/orders", icon: FileText },
-  { name: "Email Suscribers", href: "/admin/subscriber", icon: Users },
-]
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { ArrowUpRight, Plus } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { ADMIN_NAV, activeNavItem } from '@/components/admin/nav';
 
-interface SidebarProps {
-  open: boolean
-  setOpen: (open: boolean) => void
-}
-
-export function Sidebar({ open, setOpen }: SidebarProps) {
-  const pathname = usePathname()
-
-  // Close sidebar on escape key (mobile only)
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && window.innerWidth < 1024) {
-        setOpen(false)
-      }
-    }
-
-    // Only prevent scrolling on mobile when sidebar is open
-    if (open && window.innerWidth < 1024) {
-      document.addEventListener("keydown", handleEscape)
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = "unset"
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleEscape)
-      document.body.style.overflow = "unset"
-    }
-  }, [open, setOpen])
+/**
+ * Back-of-house navigation.
+ *
+ * The public site is warm paper; the admin inverts it — a dark ink rail so it
+ * is never mistaken for a customer-facing page. Desktop gets a fixed rail,
+ * mobile gets a bottom tab bar (four destinations fit, so there is no drawer
+ * to open and nothing hidden behind a hamburger).
+ */
+export function AdminSidebar() {
+  const pathname = usePathname();
+  const active = activeNavItem(pathname);
 
   return (
     <>
-      {/* Mobile bottom navigation bar - Always visible */}
-      <div className="fixed inset-x-0 bottom-0 z-40 lg:hidden bg-white border-t border-gray-200 shadow-lg">
-        <nav className="px-4 py-2">
-          <div className="grid grid-cols-3 gap-2">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  pathname === item.href
-                    ? "text-blue-600"
-                    : "text-gray-600 hover:text-blue-600",
-                  "flex flex-col items-center justify-center p-2 rounded-lg transition-colors text-center min-h-[60px]",
-                )}
-              >
-                <item.icon className="h-5 w-5 mb-1 shrink-0" aria-hidden="true" />
-                <span className="text-xs font-medium leading-tight">{item.name}</span>
-              </Link>
-            ))}
-          </div>
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col bg-[color:var(--ink)] lg:flex">
+        <div className="px-6 py-7">
+          <Link href="/admin" className="block">
+            <span className="font-serif text-xl text-white">Odomite</span>
+            <span className="mt-1 block text-[10px] uppercase tracking-[0.22em] text-[color:var(--brand)]">
+              Back of house
+            </span>
+          </Link>
+        </div>
+
+        <nav className="flex-1 px-3">
+          <ul className="space-y-1">
+            {ADMIN_NAV.map((item) => {
+              const isActive = active?.href === item.href;
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={cn(
+                      'relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors',
+                      isActive
+                        ? 'bg-white/[0.07] font-medium text-white'
+                        : 'text-white/55 hover:bg-white/[0.04] hover:text-white/90'
+                    )}
+                  >
+                    {isActive ? (
+                      <span
+                        className="absolute inset-y-2 left-0 w-0.5 rounded-full bg-[color:var(--brand)]"
+                        aria-hidden="true"
+                      />
+                    ) : null}
+                    <item.icon className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
+                    {item.name}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+
+          <Link
+            href="/admin/inventory/add_product"
+            className="mt-6 flex items-center justify-center gap-2 rounded-lg bg-[color:var(--brand)] px-3 py-2.5 text-sm font-medium text-[color:var(--ink)] transition-colors hover:bg-[color:var(--brand-soft)]"
+          >
+            <Plus className="h-4 w-4" />
+            Add product
+          </Link>
         </nav>
-      </div>
 
-      {/* Mobile overlay (when sidebar is open on mobile) */}
-      {open && (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-gray-900/80 transition-opacity duration-300"
-            onClick={() => setOpen(false)}
-          />
+        <div className="px-3 pb-5">
+          <Link
+            href="/"
+            className="flex items-center justify-between rounded-lg px-3 py-2.5 text-xs text-white/45 transition-colors hover:text-white/80"
+          >
+            View live site
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
-      )}
+      </aside>
 
-      {/* Desktop sidebar - Always visible when open, persistent */}
-      <div className={cn(
-        // Desktop: Fixed sidebar, always visible when open, with top margin for nav
-        "hidden lg:flex lg:w-72 lg:flex-col lg:shrink-0 lg:fixed lg:top-30   lg:bottom-0 lg:left-0 lg:z-30 lg:transition-transform lg:duration-300",
-        // Mobile: Overlay sidebar
-        "fixed inset-y-0 left-0 z-50 w-72 flex-col lg:z-30",
-        open ? "flex lg:translate-x-0" : "hidden lg:-translate-x-full"
-      )}>
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
-          <div className="flex h-16 shrink-0 items-center justify-between">
-            <h1 className="text-xl font-bold text-gray-900">Admin Panel</h1>
-            <button
-              type="button"
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 lg:hidden"
-              onClick={() => setOpen(false)}
-            >
-              <span className="sr-only">Close sidebar</span>
-              <X className="h-4 w-4 text-gray-600" aria-hidden="true" />
-            </button>
-          </div>
-          <nav className="flex flex-1 flex-col">
-            <ul role="list" className="flex flex-1 flex-col gap-y-7">
-              <li>
-                <ul role="list" className="-mx-2 space-y-1">
-                  {navigation.map((item) => (
-                    <li key={item.name}>
-                      <Link
-                        href={item.href}
-                        onClick={() => {
-                          // Only close sidebar on mobile
-                          if (window.innerWidth < 1024) {
-                            setOpen(false)
-                          }
-                        }}
-                        className={cn(
-                          pathname === item.href
-                            ? "bg-gray-50 text-blue-600"
-                            : "text-gray-700 hover:text-blue-600 hover:bg-gray-50",
-                          "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition-colors",
-                        )}
-                      >
-                        <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+      {/* Mobile tab bar. pb-safe keeps it clear of the iOS home indicator. */}
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[color:var(--ink)] pb-[env(safe-area-inset-bottom)] lg:hidden">
+        <ul className="grid grid-cols-4">
+          {ADMIN_NAV.map((item) => {
+            const isActive = active?.href === item.href;
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={cn(
+                    'flex flex-col items-center gap-1 py-2.5 text-[10px] font-medium transition-colors',
+                    isActive ? 'text-[color:var(--brand)]' : 'text-white/50'
+                  )}
+                >
+                  <item.icon className="h-[18px] w-[18px]" aria-hidden="true" />
+                  {item.short}
+                </Link>
               </li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-
-      {/* Desktop content spacer when sidebar is open */}
-      <div className={cn(
-        "hidden lg:block lg:transition-all lg:duration-300",
-        open ? "lg:ml-72" : "lg:ml-0"
-      )} />
+            );
+          })}
+        </ul>
+      </nav>
     </>
-  )
+  );
 }

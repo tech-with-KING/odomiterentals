@@ -1,191 +1,219 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
-import { ShoppingCart, MessageSquare } from 'lucide-react';
-import Image from 'next/image';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
+import { ChevronRight, MessageSquare, ShieldCheck, Truck, Wrench } from 'lucide-react';
+import { ProductGallery } from '@/components/site/ProductGallery';
+import { AddToQuoteButton } from '@/components/site/AddToQuoteButton';
+import { ProductCard } from '@/components/site/ProductCard';
+import { SectionHeading } from '@/components/site/SectionHeading';
+import { getProductById, getRelatedProducts } from '@/lib/catalogue';
 
-interface ProductData {
-  id: string;
-  name: string;
-  short_description: string;
-  description: string;
-  images: string[];
-  dimensions: string;
-  material: string;
-  features: string;
-  category: string;
-  subcategory: string;
-  rating: number;
-  instock: boolean;
-  unitsleft: number;
-  price: number;
+export const revalidate = 60;
+
+interface PageProps {
+  params: Promise<{ id: string }>;
 }
 
-const ShopPage = () => {
-  const params = useParams();
-  const productId = params?.id as string;
-  
-  const [product, setProduct] = useState<ProductData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const product = await getProductById(id);
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      if (!productId) {
-        setError('Product ID not found');
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const productRef = doc(db, 'products', productId);
-        const productSnap = await getDoc(productRef);
-
-        if (productSnap.exists()) {
-          const productData = productSnap.data() as Omit<ProductData, 'id'>;
-          setProduct({
-            id: productSnap.id,
-            ...productData
-          });
-        } else {
-          setError('Product not found');
-        }
-      } catch (err) {
-        console.error('Error fetching product:', err);
-        setError('Failed to load product');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProduct();
-  }, [productId]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading product...</p>
-        </div>
-      </div>
-    );
+  if (!product) {
+    return { title: 'Product not found — Odomite Rentals' };
   }
 
-  if (error || !product) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 text-lg font-medium mb-4">{error || 'Product not found'}</p>
-          <button 
-            onClick={() => window.history.back()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Go Back
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const description =
+    product.shortDescription ||
+    product.description ||
+    `Rent ${product.name} from Odomite Rentals in New Jersey.`;
+
+  return {
+    title: `${product.name} — Odomite Rentals`,
+    description: description.slice(0, 160),
+    openGraph: {
+      title: `${product.name} — Odomite Rentals`,
+      description: description.slice(0, 160),
+      images: product.image ? [product.image] : undefined,
+    },
+  };
+}
+
+const SERVICE_POINTS = [
+  { icon: Truck, label: 'Delivery and pickup on your schedule' },
+  { icon: Wrench, label: 'Setup and breakdown available' },
+  { icon: ShieldCheck, label: 'Sanitized and inspected between rentals' },
+];
+
+export default async function ProductDetailPage({ params }: PageProps) {
+  const { id } = await params;
+  const product = await getProductById(id);
+
+  if (!product) notFound();
+
+  const related = await getRelatedProducts(product.categorySlug, product.id);
+
+  const soldOut = !product.instock || product.unitsleft === 0;
+  const lowStock =
+    !soldOut && typeof product.unitsleft === 'number' && product.unitsleft > 0 && product.unitsleft <= 5;
+
+  const badge = soldOut
+    ? { label: 'Sold Out', tone: 'ink' as const }
+    : lowStock
+      ? { label: `Only ${product.unitsleft} left`, tone: 'amber' as const }
+      : { label: 'In Stock', tone: 'sage' as const };
+
+  const specs = [
+    { label: 'Dimensions', value: product.dimensions },
+    { label: 'Material', value: product.material },
+    { label: 'Features', value: product.features },
+    { label: 'Type', value: product.subcategory },
+  ].filter((spec) => spec.value);
 
   return (
-    <div className="min-h-screen bg-slate-50 font-['Plus_Jakarta_Sans',_'Noto_Sans',_sans-serif]">
-      {/* Main Content */}
-      <main className="px-4 md:px-8 lg:px-16 xl:px-40 py-5">
-        <div className="max-w-6xl mx-auto">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 p-4 text-sm">
-            <a href="#" className="text-blue-600 hover:text-blue-800 transition-colors">
-              {product.category}
-            </a>
-            <span className="text-blue-600">/</span>
-            <span className="text-gray-900 font-medium">{product.subcategory}</span>
-          </nav>
+    <div className="bg-[color:var(--background)] py-10 md:py-14">
+      <div className="mx-auto max-w-[1280px] px-6">
+        <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-sm">
+          <Link
+            href="/shop"
+            className="text-[color:var(--muted-ink)] transition-colors hover:text-[color:var(--brand)]"
+          >
+            Catalogue
+          </Link>
+          {product.categorySlug ? (
+            <>
+              <ChevronRight size={14} className="text-[color:var(--muted-ink)]" aria-hidden="true" />
+              <Link
+                href={`/shop/cartegory/${product.categorySlug}`}
+                className="text-[color:var(--muted-ink)] transition-colors hover:text-[color:var(--brand)]"
+              >
+                {product.categoryName}
+              </Link>
+            </>
+          ) : null}
+          <ChevronRight size={14} className="text-[color:var(--muted-ink)]" aria-hidden="true" />
+          <span className="font-medium text-[color:var(--ink)]" aria-current="page">
+            {product.name}
+          </span>
+        </nav>
 
-          {/* Product Header */}
-          <div className="px-4 mb-6">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
+        <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
+          <ProductGallery images={product.images} name={product.name} badge={badge} />
+
+          <div>
+            <div className="eyebrow mb-3">{product.categoryName}</div>
+
+            <h1 className="font-sans text-[clamp(1.5rem,3vw,2.125rem)] font-semibold leading-tight tracking-tight">
               {product.name}
             </h1>
-            <p className="text-gray-600 text-sm md:text-base max-w-2xl">
-              {product.description}
-            </p>
-          </div>
 
-          {/* Product Images */}
-          <div className="px-4 mb-8">
-            <div className="w-full bg-center bg-no-repeat bg-cover aspect-[3/2] md:aspect-[16/10] lg:aspect-[3/2] rounded-xl overflow-hidden shadow-lg relative">
-              <Image 
-                src={product.images[activeImageIndex]} 
-                alt={product.name}
-                fill
-                className="object-cover hover:scale-105 transition-transform duration-300"
-                sizes="(max-width: 768px) 100vw, 800px"
-                priority
-                unoptimized
-              />
+            <div className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <span className="font-sans text-3xl font-semibold tracking-tight text-[color:var(--brand)]">
+                ${product.price.toFixed(2)}
+              </span>
+
+              {product.isDiscounted ? (
+                <>
+                  <span className="text-lg text-[color:var(--muted-ink)]">
+                    <span className="sr-only">Was </span>
+                    <s className="decoration-[color:var(--muted-ink)]/60">
+                      ${product.listPrice.toFixed(2)}
+                    </s>
+                  </span>
+                  <span className="rounded-full bg-[color:var(--brand-soft)] px-2.5 py-1 text-xs font-semibold text-[color:var(--brand-deep)]">
+                    Save {product.discountPercent}%
+                  </span>
+                </>
+              ) : null}
+
+              <span className="text-sm text-[color:var(--muted-ink)]">per unit, per day</span>
             </div>
-            
-            {/* Image Thumbnails (if multiple images) */}
-            {product.images.length > 1 && (
-              <div className="flex gap-2 mt-4 overflow-x-auto">
-                {product.images.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setActiveImageIndex(index)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                      index === activeImageIndex ? 'border-blue-600' : 'border-gray-200'
-                    }`}
-                  >
-                    <Image
-                      src={image}
-                      alt={`${product.name} view ${index + 1}`}
-                      width={80}
-                      height={80}
-                      className="object-cover w-full h-full"
-                      unoptimized
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
 
-          {/* Product Details */}
-          <section className="mb-8">
-            <h3 className="text-lg font-bold text-gray-900 px-4 pb-4">Product Details</h3>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-              {[
-                { label: "Dimensions", value: product.dimensions },
-                { label: "Material", value: product.material },
-                { label: "Features", value: product.features },
-              ].map((detail, index) => (
-                <div key={index} className={`grid grid-cols-1 md:grid-cols-4 gap-4 p-4 ${index !== 3 ? 'border-b border-gray-100' : ''}`}>
-                  <p className="text-gray-600 text-sm font-medium md:col-span-1">{detail.label}</p>
-                  <p className="text-gray-900 text-sm md:col-span-3">{detail.value}</p>
-                </div>
+            {typeof product.unitsleft === 'number' && !soldOut ? (
+              <p className="mt-2 text-sm text-[color:var(--muted-ink)]">
+                {product.unitsleft} available
+              </p>
+            ) : null}
+
+            {product.description ? (
+              <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-[color:var(--muted-ink)]">
+                {product.description}
+              </p>
+            ) : null}
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              {soldOut ? (
+                <span className="inline-flex h-12 items-center justify-center rounded-full border border-[color:var(--hairline)] px-8 text-sm font-medium text-[color:var(--muted-ink)]">
+                  Currently unavailable
+                </span>
+              ) : (
+                <AddToQuoteButton
+                  id={product.id}
+                  name={product.name}
+                  price={product.price}
+                  listPrice={product.isDiscounted ? product.listPrice : undefined}
+                  images={product.images}
+                  desc={product.shortDescription || product.description}
+                  category={product.categoryName}
+                />
+              )}
+
+              <Link
+                href="/contact"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-[color:var(--hairline)] px-8 text-sm font-medium text-[color:var(--ink)] transition-colors hover:border-[color:var(--brand)] hover:text-[color:var(--brand)]"
+              >
+                <MessageSquare size={16} />
+                Ask a question
+              </Link>
+            </div>
+
+            <ul className="mt-8 space-y-3 border-t border-[color:var(--hairline)] pt-6">
+              {SERVICE_POINTS.map(({ icon: Icon, label }) => (
+                <li key={label} className="flex items-center gap-3">
+                  <Icon size={16} className="shrink-0 text-[color:var(--brand)]" aria-hidden="true" />
+                  <span className="text-sm text-[color:var(--muted-ink)]">{label}</span>
+                </li>
+              ))}
+            </ul>
+
+            {specs.length > 0 ? (
+              <section className="mt-10">
+                <h2 className="text-xs font-medium uppercase tracking-[0.18em] text-[color:var(--muted-ink)]">
+                  Specifications
+                </h2>
+                <dl className="mt-4 overflow-hidden rounded-2xl border border-[color:var(--hairline)] bg-[color:var(--surface)]">
+                  {specs.map((spec, index) => (
+                    <div
+                      key={spec.label}
+                      className={`grid grid-cols-1 gap-1 p-4 md:grid-cols-3 md:gap-3 ${
+                        index !== specs.length - 1 ? 'border-b border-[color:var(--hairline)]' : ''
+                      }`}
+                    >
+                      <dt className="text-sm font-medium text-[color:var(--muted-ink)]">
+                        {spec.label}
+                      </dt>
+                      <dd className="text-sm text-[color:var(--ink)] md:col-span-2">{spec.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+            ) : null}
+          </div>
+        </div>
+
+        {related.length > 0 ? (
+          <section className="mt-20 border-t border-[color:var(--hairline)] pt-16">
+            <SectionHeading
+              eyebrow="You might also need"
+              title={`More from ${product.categoryName}`}
+            />
+            <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {related.map((item) => (
+                <ProductCard key={item.id} product={item} />
               ))}
             </div>
           </section>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 px-4 mb-8">
-            <button className="flex items-center justify-center rounded-full h-12 px-6 bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition-colors flex-1 sm:flex-none">
-              <ShoppingCart size={16} className="mr-2" />
-              Add to Cart
-            </button>
-            <button className="flex items-center justify-center rounded-full h-12 px-6 bg-gray-100 text-gray-900 text-sm font-bold hover:bg-gray-200 transition-colors flex-1 sm:flex-none">
-              <MessageSquare size={16} className="mr-2" />
-              Request a Quote
-            </button>
-          </div>
-        </div>
-      </main>
+        ) : null}
+      </div>
     </div>
   );
-};
-
-export default ShopPage;
+}

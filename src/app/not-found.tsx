@@ -1,123 +1,117 @@
-"use client"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { useState, useEffect } from "react"
+'use client';
+
+import { useEffect, useState, type FormEvent } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Search } from 'lucide-react';
+
+const LINKS = [
+  { label: 'Catalogue', href: '/shop' },
+  { label: 'Get a Quote', href: '/quote' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
 
 export default function NotFoundPage() {
-  const [countdown, setCountdown] = useState(20)
-  const [searchQuery, setSearchQuery] = useState("")
-  const router = useRouter()
+  const router = useRouter();
+  const [countdown, setCountdown] = useState(20);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const timer = window.setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
-          clearInterval(timer)
-          router.push('/')
-          return 0
+          window.clearInterval(timer);
+          router.push('/');
+          return 0;
         }
-        return prev - 1
-      })
-    }, 1000)
+        return prev - 1;
+      });
+    }, 1000);
 
-    return () => clearInterval(timer)
-  }, [router])
+    return () => window.clearInterval(timer);
+  }, [router]);
 
   const handleGoBack = () => {
     if (typeof window !== 'undefined' && window.history.length > 1) {
-      router.back()
+      router.back();
     } else {
-      router.push('/')
+      router.push('/');
     }
-  }
+  };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
-    }
-  }
+  const handleSearch = (e: FormEvent) => {
+    e.preventDefault();
+    router.push('/shop');
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Gradient Header */}
-      
-      <div className="relative w-full h-[220px] sm:h-[300px] md:h-[350px] lg:h-[450px] xl:h-[500px] rounded-2xl">
-        <Image
-            src={'https://static.vecteezy.com/system/resources/previews/031/974/996/non_2x/modern-illustration-of-404-error-page-template-for-website-electric-plug-and-socket-unplugged-concept-of-electrical-theme-web-banner-disconnection-loss-of-connect-yellow-vector.jpg'}
-            alt='notfoundimage'
-            fill
-            unoptimized
-            className="object-cover  rounded-2xl"
-            priority={true}
-        />
-    </div>
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-6 my-4">
-        <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Page Not Found</h1>
-          <p className="text-gray-600 text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
-            The page you are looking for does not exist or has been moved. Please use the search bar below or navigate to one of the links provided to find what you need.
-          </p>
-          
-          {/* Countdown Timer */}
-          <div className="mb-8 p-4 bg-blue-50 rounded-lg inline-block">
-            <p className="text-blue-700 font-medium">
-              Redirecting to homepage in <span className="font-bold text-blue-900">{countdown}</span> seconds
-            </p>
-          </div>
+    <div className="bg-[color:var(--background)] py-20 md:py-28">
+      <div className="mx-auto max-w-2xl px-6 text-center">
+        <div className="eyebrow">Error 404</div>
+        <h1 className="mt-3 font-serif text-[clamp(2rem,5vw,3rem)] leading-tight">
+          We couldn&apos;t find that page.
+        </h1>
+        <p className="mt-4 text-[15px] leading-relaxed text-[color:var(--muted-ink)]">
+          The link may be out of date, or the item may no longer be in our catalogue. Taking you
+          home in <span className="font-medium text-[color:var(--ink)]">{countdown}</span> seconds.
+        </p>
 
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="mb-8">
-            <div className="relative max-w-lg mx-auto">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for products"
-                className="w-full pl-12 pr-4 py-4 bg-gray-100 border-0 rounded-2xl text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all duration-200"
-              />
-            </div>
-          </form>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <button
-              onClick={handleGoBack}
-              className="px-8 py-3 bg-gray-100 text-gray-700 rounded-2xl hover:bg-gray-200 transition-colors duration-200 font-medium border-0 min-w-[160px]"
-            >
-              Go Back
-            </button>
-            <Link href="/">
-              <button className="px-8 py-3 bg-gray-800 text-white rounded-2xl hover:bg-gray-700 transition-colors duration-200 font-medium border-0 min-w-[160px]">
-                Go to Homepage
-              </button>
-            </Link>
+        <form onSubmit={handleSearch} className="mx-auto mt-9 flex max-w-md gap-2">
+          <div className="relative flex-1">
+            <Search
+              size={16}
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--muted-ink)]"
+            />
+            <label htmlFor="notfound-search" className="sr-only">
+              Search the catalogue
+            </label>
+            <input
+              id="notfound-search"
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search chairs, tents…"
+              className="w-full rounded-full border border-[color:var(--hairline)] bg-[color:var(--surface)] py-3 pl-11 pr-4 text-sm text-[color:var(--ink)] placeholder:text-[color:var(--muted-ink)] focus:border-[color:var(--brand)] focus:outline-none focus:ring-2 focus:ring-[color:var(--brand)]/30"
+            />
           </div>
+          <button
+            type="submit"
+            className="shrink-0 rounded-full bg-[color:var(--brand)] px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-[color:var(--brand-deep)]"
+          >
+            Browse
+          </button>
+        </form>
 
-          {/* Navigation Links */}
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center text-gray-600">
-            <Link href="/products" className="hover:text-gray-900 transition-colors duration-200 font-medium">
-              Browse Products
-            </Link>
-            <Link href="/services" className="hover:text-gray-900 transition-colors duration-200 font-medium">
-              Our Services
-            </Link>
-            <Link href="/contact" className="hover:text-gray-900 transition-colors duration-200 font-medium">
-              Contact Us
-            </Link>
-            <Link href="/help" className="hover:text-gray-900 transition-colors duration-200 font-medium">
-              Help Center
-            </Link>
-          </div>
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <button
+            type="button"
+            onClick={handleGoBack}
+            className="inline-flex items-center gap-2 rounded-full border border-[color:var(--hairline)] px-6 py-3 text-sm font-medium text-[color:var(--ink)] transition-colors hover:border-[color:var(--brand)] hover:text-[color:var(--brand)]"
+          >
+            <ArrowLeft size={16} />
+            Go back
+          </button>
+          <Link
+            href="/"
+            className="inline-flex items-center rounded-full bg-[color:var(--brand)] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[color:var(--brand-deep)]"
+          >
+            Return home
+          </Link>
         </div>
+
+        <nav className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-3 border-t border-[color:var(--hairline)] pt-8 text-sm text-[color:var(--muted-ink)]">
+          {LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="transition-colors hover:text-[color:var(--brand)]"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
       </div>
     </div>
-  )
+  );
 }

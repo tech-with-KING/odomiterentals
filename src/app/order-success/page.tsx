@@ -1,148 +1,150 @@
-"use client"
+'use client';
 
-import { useEffect, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { CheckCircle, Mail, MessageCircle, Home, ShoppingBag } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { Check, Home, Mail, MessageCircle, ShoppingBag } from 'lucide-react';
+
+interface LastOrder {
+  orderId: string | null;
+  emailSent: boolean;
+}
 
 export default function OrderSuccessPage() {
-  const router = useRouter()
-  const [orderComplete, setOrderComplete] = useState(false)
+  const [revealed, setRevealed] = useState(false);
+  const [order, setOrder] = useState<LastOrder | null>(null);
 
   useEffect(() => {
-    // Animation delay
-    const timer = setTimeout(() => {
-      setOrderComplete(true)
-    }, 500)
+    const timer = window.setTimeout(() => setRevealed(true), 200);
 
-    return () => clearTimeout(timer)
-  }, [])
+    try {
+      const stored = sessionStorage.getItem('odomite:last-order');
+      if (stored) setOrder(JSON.parse(stored) as LastOrder);
+    } catch {
+      // A missing or malformed record just means we show the generic copy.
+    }
+
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  // Only promise an email when one actually went out.
+  const steps = [
+    {
+      title: 'We confirm availability',
+      body: "We'll contact you to check everything on your list is free for your date.",
+    },
+    {
+      title: 'We agree delivery',
+      body: 'Delivery is quoted on that call, based on where and when you need it.',
+    },
+    {
+      title: 'A $50 commitment fee secures it',
+      body: "Arranged when we speak. Nothing was charged online.",
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
-        
-        {/* Success Animation */}
-        <div className="text-center mb-8">
-          <div className={`inline-flex items-center justify-center w-24 h-24 bg-green-500 rounded-full transition-all duration-1000 ${
-            orderComplete ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
-          }`}>
-            <CheckCircle className="w-12 h-12 text-white" />
+    <div className="bg-[color:var(--background)] py-20 md:py-28">
+      <div className="mx-auto max-w-2xl px-6">
+        <div className="text-center">
+          <div
+            className="mx-auto grid h-20 w-20 place-items-center rounded-full transition-all duration-700"
+            style={{
+              backgroundColor: 'var(--brand-soft)',
+              transform: revealed ? 'scale(1)' : 'scale(0.6)',
+              opacity: revealed ? 1 : 0,
+            }}
+          >
+            <span className="grid h-12 w-12 place-items-center rounded-full bg-[color:var(--sage)]">
+              <Check className="h-6 w-6 text-white" strokeWidth={3} />
+            </span>
+          </div>
+
+          <div className="eyebrow mt-6">Order received</div>
+          <h1 className="mt-3 font-serif text-[clamp(1.75rem,4vw,2.5rem)] leading-tight">
+            Thank you — your request is in.
+          </h1>
+          <p className="mt-4 text-[15px] leading-relaxed text-[color:var(--muted-ink)]">
+            We typically respond within 1–2 hours during business hours.
+          </p>
+
+          {order?.orderId ? (
+            <div className="mt-6 inline-flex flex-col items-center rounded-xl border border-[color:var(--hairline)] bg-[color:var(--surface)] px-6 py-4">
+              <span className="text-[11px] uppercase tracking-[0.16em] text-[color:var(--muted-ink)]">
+                Your reference
+              </span>
+              <span className="spec mt-1 text-lg font-semibold tabular-nums">
+                #{order.orderId.slice(0, 8).toUpperCase()}
+              </span>
+            </div>
+          ) : null}
+        </div>
+
+        <div className="mt-10 rounded-2xl border border-[color:var(--hairline)] bg-[color:var(--surface)] p-8">
+          <h2 className="font-serif text-xl">What happens next?</h2>
+
+          <ol className="mt-6 space-y-6">
+            {steps.map((step, index) => (
+              <li key={step.title} className="flex gap-4">
+                <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[color:var(--brand)] font-serif text-sm text-[color:var(--brand)]">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <div>
+                  <h3 className="font-serif text-base text-[color:var(--ink)]">{step.title}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-[color:var(--muted-ink)]">
+                    {step.body}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+
+          <div className="mt-8 grid grid-cols-1 gap-4 rounded-xl bg-[color:var(--background)] p-5 sm:grid-cols-2">
+            <div className="flex items-center gap-3">
+              <MessageCircle className="h-5 w-5 shrink-0 text-[color:var(--brand)]" />
+              <div>
+                <p className="text-sm font-medium text-[color:var(--ink)]">We&apos;ll contact you</p>
+                <p className="text-sm text-[color:var(--muted-ink)]">Usually within a couple of hours</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Mail className="h-5 w-5 shrink-0 text-[color:var(--brand)]" />
+              <div>
+                <p className="text-sm font-medium text-[color:var(--ink)]">
+                  {order?.emailSent ? 'Confirmation sent' : 'Keep your reference'}
+                </p>
+                <p className="text-sm text-[color:var(--muted-ink)]">
+                  {order?.emailSent ? 'Check your inbox' : 'Quote it when we speak'}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[color:var(--brand)] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[color:var(--brand-deep)]"
+            >
+              <Home className="h-4 w-4" />
+              Return Home
+            </Link>
+            <Link
+              href="/shop"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-[color:var(--hairline)] px-6 py-3 text-sm font-medium text-[color:var(--ink)] transition-colors hover:border-[color:var(--brand)] hover:text-[color:var(--brand)]"
+            >
+              <ShoppingBag className="h-4 w-4" />
+              Continue Shopping
+            </Link>
           </div>
         </div>
 
-        {/* Main Success Card */}
-        <Card className="text-center shadow-lg">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-3xl font-bold text-green-600 mb-2">
-              Order Submitted Successfully! 🎉
-            </CardTitle>
-            <p className="text-lg text-slate-600">
-              Thank you for choosing our rental service
-            </p>
-          </CardHeader>
-          
-          <CardContent className="space-y-6">
-            <div className="bg-blue-50 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-blue-900 mb-4">
-                What happens next?
-              </h3>
-              
-              <div className="space-y-4">
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                    <span className="text-white font-semibold text-sm">1</span>
-                  </div>
-                  <div className="text-left">
-                    <h4 className="font-semibold text-blue-900">Order Confirmation</h4>
-                    <p className="text-blue-800 text-sm">
-                      We've sent a confirmation email with your order details
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                    <span className="text-white font-semibold text-sm">2</span>
-                  </div>
-                  <div className="text-left">
-                    <h4 className="font-semibold text-blue-900">WhatsApp Contact</h4>
-                    <p className="text-blue-800 text-sm">
-                      We'll contact you via WhatsApp to confirm details and availability
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                    <span className="text-white font-semibold text-sm">3</span>
-                  </div>
-                  <div className="text-left">
-                    <h4 className="font-semibold text-blue-900">Payment & Delivery</h4>
-                    <p className="text-blue-800 text-sm">
-                      We'll arrange payment and schedule delivery/pickup
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Contact Information */}
-            <div className="bg-slate-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">
-                Need immediate assistance?
-              </h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center space-x-3">
-                  <MessageCircle className="w-5 h-5 text-green-600" />
-                  <div>
-                    <p className="font-medium text-slate-900">WhatsApp</p>
-                    <p className="text-sm text-slate-600">We'll message you soon</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center space-x-3">
-                  <Mail className="w-5 h-5 text-blue-600" />
-                  <div>
-                    <p className="font-medium text-slate-900">Email</p>
-                    <p className="text-sm text-slate-600">Check your inbox</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-6">
-              <Button
-                onClick={() => router.push('/')}
-                className="flex-1 h-12 bg-blue-600 hover:bg-blue-700"
-              >
-                <Home className="w-5 h-5 mr-2" />
-                Return to Home
-              </Button>
-              
-              <Button
-                onClick={() => router.push('/shop')}
-                variant="outline"
-                className="flex-1 h-12"
-              >
-                <ShoppingBag className="w-5 h-5 mr-2" />
-                Continue Shopping
-              </Button>
-            </div>
-
-            {/* Additional Note */}
-            <div className="pt-4 border-t border-slate-200">
-              <p className="text-sm text-slate-600">
-                <strong>Note:</strong> Please check your email and WhatsApp for updates. 
-                We typically respond within 1-2 hours during business hours.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        <p className="mt-6 text-center text-xs text-[color:var(--muted-ink)]">
+          Questions in the meantime? Call{' '}
+          <a href="tel:+18622306639" className="text-[color:var(--brand)] hover:underline">
+            +1 (862) 230-6639
+          </a>
+          .
+        </p>
       </div>
     </div>
-  )
+  );
 }

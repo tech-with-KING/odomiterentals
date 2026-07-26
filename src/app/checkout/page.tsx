@@ -2,25 +2,15 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { useUser } from "@clerk/nextjs"
+import { useAuth } from "@/context/auth"
+import { useCart } from "@/context/cart"
+import { useFeedback } from "@/context/feedback"
 import { ArrowLeft, ShoppingCart, User, MapPin, Phone, Mail, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { Badge } from "@/components/ui/badge"
-
-interface CartItem {
-  id: string
-  name: string
-  image: string
-  quantity: number
-  duration: number
-  unitPrice: number
-  total: number
-  category: string
-  productId: string
-}
+import { COMMITMENT_FEE, DELIVERY_NOTE, buildPricing, formatPrice } from "@/lib/pricing"
 
 interface CustomerInfo {
   firstName: string
@@ -37,13 +27,14 @@ interface CustomerInfo {
 
 export default function CheckoutPage() {
   const router = useRouter()
-  const { user } = useUser()
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const { user } = useAuth()
+  const { cartItems, cartTotal, clearCart } = useCart()
+  const { toast } = useFeedback()
   const [loading, setLoading] = useState(false)
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
     firstName: "",
     lastName: "",
-    email: user?.emailAddresses?.[0]?.emailAddress || "",
+    email: user?.email || "",
     phone: "",
     address: "",
     city: "",
@@ -53,20 +44,12 @@ export default function CheckoutPage() {
     specialInstructions: ""
   })
 
-  // Load cart items from localStorage
-  useEffect(() => {
-    const savedCart = localStorage.getItem('cart')
-    if (savedCart) {
-      setCartItems(JSON.parse(savedCart))
-    }
-  }, [])
-
   // Update email when user loads
   useEffect(() => {
-    if (user?.emailAddresses?.[0]?.emailAddress) {
+    if (user?.email) {
       setCustomerInfo(prev => ({
         ...prev,
-        email: user.emailAddresses[0].emailAddress
+        email: user.email as string
       }))
     }
   }, [user])
@@ -78,10 +61,10 @@ export default function CheckoutPage() {
     }))
   }
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.total, 0)
-  const shipping = subtotal > 100 ? 0 : 15
-  const taxes = subtotal * 0.08
-  const total = subtotal + shipping + taxes
+  // Delivery and the commitment fee are agreed on the confirmation call, so the
+  // checkout total is exactly what the items come to.
+  const subtotal = cartTotal
+  const pricing = buildPricing(subtotal)
 
   const validateForm = (): boolean => {
     const required = ['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'rentalStartDate']
@@ -90,12 +73,20 @@ export default function CheckoutPage() {
 
   const handleSubmitOrder = async () => {
     if (!validateForm()) {
-      alert('Please fill in all required fields')
+      toast({
+        title: 'Some details are missing',
+        description: 'Fill in every field marked with an asterisk, then submit again.',
+        tone: 'warning',
+      })
       return
     }
 
     if (cartItems.length === 0) {
-      alert('Your cart is empty')
+      toast({
+        title: 'Your cart is empty',
+        description: 'Add something from the catalogue before checking out.',
+        tone: 'warning',
+      })
       return
     }
 
@@ -105,12 +96,7 @@ export default function CheckoutPage() {
       const orderData = {
         customerInfo,
         items: cartItems,
-        pricing: {
-          subtotal,
-          shipping,
-          taxes,
-          total
-        },
+        pricing,
         orderDate: new Date().toISOString(),
         userId: user?.id || 'guest'
       }
@@ -124,9 +110,22 @@ export default function CheckoutPage() {
       })
 
       if (response.ok) {
-        // Clear cart
-        localStorage.removeItem('cart')
-        
+        const result = await response.json().catch(() => null)
+
+        // Hand the outcome to the success page so it can show the reference and
+        // only promise an email if one actually went out.
+        sessionStorage.setItem(
+          'odomite:last-order',
+          JSON.stringify({
+            orderId: result?.orderId ?? null,
+            emailSent: result?.emailSent?.customer === true,
+          })
+        )
+
+        // Clear cart (context + localStorage, so the navbar badge and every
+        // other page relying on useCart() stay in sync)
+        clearCart()
+
         // Redirect to success page
         router.push('/order-success')
       } else {
@@ -134,16 +133,20 @@ export default function CheckoutPage() {
       }
     } catch (error) {
       console.error('Error submitting order:', error)
-      alert('Failed to submit order. Please try again.')
+      toast({
+        title: 'We could not submit your order',
+        description: 'Please try again. If it keeps happening, call us on (862) 230-6639.',
+        tone: 'error',
+      })
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-paper">
       {/* Header */}
-      <div className="bg-white border-b border-slate-200">
+      <div className="bg-white border-b border-line">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-4">
             <Button
@@ -154,7 +157,7 @@ export default function CheckoutPage() {
               <ArrowLeft className="w-4 h-4" />
               <span>Back to Cart</span>
             </Button>
-            <h1 className="text-2xl font-bold text-slate-900">Checkout</h1>
+            <h1 className="text-2xl font-bold text-ink">Checkout</h1>
             <div className="w-20"></div>
           </div>
         </div>
@@ -177,7 +180,7 @@ export default function CheckoutPage() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-ink mb-2">
                       First Name *
                     </label>
                     <Input
@@ -187,7 +190,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-ink mb-2">
                       Last Name *
                     </label>
                     <Input
@@ -200,7 +203,7 @@ export default function CheckoutPage() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-ink mb-2">
                       Email Address *
                     </label>
                     <Input
@@ -211,7 +214,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-ink mb-2">
                       Phone Number *
                     </label>
                     <Input
@@ -235,7 +238,7 @@ export default function CheckoutPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-sm font-medium text-ink mb-2">
                     Street Address *
                   </label>
                   <Input
@@ -247,7 +250,7 @@ export default function CheckoutPage() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-ink mb-2">
                       City *
                     </label>
                     <Input
@@ -257,7 +260,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-ink mb-2">
                       State
                     </label>
                     <Input
@@ -267,7 +270,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-ink mb-2">
                       ZIP Code
                     </label>
                     <Input
@@ -290,7 +293,7 @@ export default function CheckoutPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-sm font-medium text-ink mb-2">
                     Rental Start Date *
                   </label>
                   <Input
@@ -302,11 +305,11 @@ export default function CheckoutPage() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-sm font-medium text-ink mb-2">
                     Special Instructions
                   </label>
                   <textarea
-                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-line rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                     rows={3}
                     value={customerInfo.specialInstructions}
                     onChange={(e) => handleInputChange('specialInstructions', e.target.value)}
@@ -328,20 +331,20 @@ export default function CheckoutPage() {
                 {/* Cart Items */}
                 <div className="space-y-3">
                   {cartItems.map((item) => (
-                    <div key={item.id} className="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg">
+                    <div key={item.id} className="flex items-start space-x-3 p-3 bg-paper rounded-lg">
                       <img
                         src={item.image}
                         alt={item.name}
                         className="w-12 h-12 object-cover rounded"
                       />
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-medium text-slate-900 truncate">
+                        <h4 className="text-sm font-medium text-ink truncate">
                           {item.name}
                         </h4>
-                        <p className="text-xs text-slate-600">
+                        <p className="text-xs text-muted-foreground">
                           Qty: {item.quantity} × {item.duration} days
                         </p>
-                        <p className="text-sm font-semibold text-blue-600">
+                        <p className="text-sm font-semibold text-primary">
                           ${item.total}
                         </p>
                       </div>
@@ -353,32 +356,40 @@ export default function CheckoutPage() {
 
                 {/* Pricing Breakdown */}
                 <div className="space-y-3">
-                  <div className="flex justify-between text-slate-600">
-                    <span>Subtotal</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Rental items</span>
+                    <span className="text-ink">{formatPrice(pricing.subtotal)}</span>
                   </div>
-                  <div className="flex justify-between text-slate-600">
-                    <span>Delivery Fee</span>
-                    <span className={shipping === 0 ? "text-green-600 font-medium" : ""}>
-                      {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-slate-600">
-                    <span>Taxes & Fees</span>
-                    <span>${taxes.toFixed(2)}</span>
+                  <div className="flex items-baseline justify-between gap-4 text-muted-foreground">
+                    <span>Delivery</span>
+                    <span className="text-right text-sm">{DELIVERY_NOTE}</span>
                   </div>
                   <Separator />
-                  <div className="flex justify-between text-lg font-bold text-slate-900">
+                  <div className="flex justify-between text-lg font-bold text-ink">
                     <span>Total</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>{formatPrice(pricing.total)}</span>
                   </div>
+                  <p className="text-xs text-muted-foreground">
+                    No tax is added. Delivery is quoted separately.
+                  </p>
+                </div>
+
+                {/* Commitment fee — the one thing they must know before submitting. */}
+                <div className="rounded-lg border border-[color:var(--brand)]/30 bg-secondary p-4">
+                  <p className="text-sm font-semibold text-ink">
+                    A ${COMMITMENT_FEE} commitment fee secures your booking
+                  </p>
+                  <p className="mt-1.5 text-sm text-muted-foreground">
+                    It is not charged now. We&apos;ll contact you to confirm availability, agree the
+                    delivery charge, and arrange the fee.
+                  </p>
                 </div>
 
                 {/* Submit Button */}
                 <Button
                   onClick={handleSubmitOrder}
                   disabled={loading || cartItems.length === 0}
-                  className="w-full h-12 text-base font-semibold bg-blue-600 hover:bg-blue-700"
+                  className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90"
                 >
                   {loading ? (
                     "Submitting Order..."
@@ -390,13 +401,9 @@ export default function CheckoutPage() {
                   )}
                 </Button>
 
-                {/* Note */}
-                <div className="p-4 bg-blue-50 rounded-lg">
-                  <p className="text-sm text-blue-800">
-                    <strong>Note:</strong> After submitting your order, we'll contact you via WhatsApp 
-                    and email to confirm details and arrange payment. No payment is required at this time.
-                  </p>
-                </div>
+                <p className="text-center text-xs text-muted-foreground">
+                  Nothing is charged online.
+                </p>
               </CardContent>
             </Card>
           </div>

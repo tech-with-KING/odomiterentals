@@ -1,103 +1,103 @@
-"use client"
-import { useEffect, useState } from "react"
-import type React from "react"
-import { useRouter } from "next/navigation"
-import { useUser } from "@clerk/nextjs"
-import { useAdminCheck } from "@/context/admin"
-import { Sidebar } from "@/components/admin/sidebar"
-import NotificationSetup from "@/components/admin/NotificationSetup"
-import { cn } from "@/lib/utils"
+'use client';
 
-export default function AdminLayout({
-  children,
+import { useEffect } from 'react';
+import type React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { ShieldAlert } from 'lucide-react';
+import { useAuth } from '@/context/auth';
+import { useAdminCheck } from '@/context/admin';
+import { AdminSidebar } from '@/components/admin/sidebar';
+import { AdminTopbar } from '@/components/admin/topbar';
+
+function AdminGateScreen({
+  title,
+  description,
+  action,
 }: {
-  children: React.ReactNode
+  title: string;
+  description: string;
+  action?: React.ReactNode;
 }) {
-  const { isSignedIn, isLoaded: userLoaded, user } = useUser()
-  const { isAdmin, isLoading: adminLoading } = useAdminCheck()
-  const router = useRouter()
-  const [sidebarOpen, setSidebarOpen] = useState(false) // Start closed on mobile, will be handled by useEffect
-
-  // Set initial sidebar state based on screen size
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 1024) {
-        setSidebarOpen(true) // Always open on desktop
-      } else {
-        setSidebarOpen(false) // Closed on mobile by default
-      }
-    }
-
-    // Set initial state
-    handleResize()
-    
-    // Listen for resize events
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  useEffect(() => {
-    if (!userLoaded || adminLoading) {
-      return
-    }
-    if (!isSignedIn) {
-      router.push("/signin?redirect_url=" + encodeURIComponent(window.location.pathname))
-      return
-    }
-    if (isSignedIn && !isAdmin) {
-      router.push("/unauthorized")
-      return
-    }
-  }, [isSignedIn, isAdmin, userLoaded, adminLoading, router])
-  if (!userLoaded || adminLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 absolute inset-0">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading admin dashboard...</p>
-        </div>
-      </div>
-    )
-  }
-  if (!isSignedIn || !isAdmin) {
-    return null
-  }
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
-      
-      {/* Main content with proper spacing for desktop sidebar */}
-      <div className={cn(
-        "transition-all duration-300",
-        sidebarOpen && "lg:ml-72" // Add left margin when sidebar is open on desktop
-      )}>
-        <main className="py-6">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            {/* Hamburger menu button for mobile */}
-            <div className="mb-4 lg:hidden flex items-center justify-between">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center rounded-md p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
-                onClick={() => setSidebarOpen(true)}
-              >
-                <span className="sr-only">Open sidebar</span>
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                </svg>
-              </button>
-              <NotificationSetup userEmail={user?.primaryEmailAddress?.emailAddress} />
-            </div>
-            
-            {/* Notification setup for desktop */}
-            <div className="hidden lg:block mb-4">
-              <div className="flex justify-end">
-                <NotificationSetup userEmail={user?.primaryEmailAddress?.emailAddress} />
-              </div>
-            </div>
-            {children}
-          </div>
-        </main>
+    <div className="grid min-h-screen place-items-center bg-[color:var(--background)] px-6">
+      <div className="max-w-sm text-center">
+        <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-[color:var(--brand-soft)] text-[color:var(--brand-deep)]">
+          <ShieldAlert className="h-5 w-5" />
+        </div>
+        <h1 className="mt-5 font-serif text-2xl">{title}</h1>
+        <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted-ink)]">{description}</p>
+        {action ? <div className="mt-6">{action}</div> : null}
       </div>
     </div>
-  )
+  );
+}
+
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const { isSignedIn, isLoaded } = useAuth();
+  const { isAdmin, isLoading: adminLoading } = useAdminCheck();
+  const router = useRouter();
+
+  const resolving = !isLoaded || adminLoading;
+
+  useEffect(() => {
+    if (resolving) return;
+    if (!isSignedIn) {
+      router.replace('/');
+      return;
+    }
+    if (!isAdmin) {
+      router.replace('/unauthorized');
+    }
+  }, [resolving, isSignedIn, isAdmin, router]);
+
+  if (resolving) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-[color:var(--background)]">
+        <div className="text-center">
+          <span
+            className="mx-auto block h-7 w-7 animate-spin rounded-full border-2 border-[color:var(--hairline)] border-t-[color:var(--brand)]"
+            aria-hidden="true"
+          />
+          <p className="mt-4 text-sm text-[color:var(--muted-ink)]">Checking your access…</p>
+        </div>
+      </div>
+    );
+  }
+
+  // The effect above is already redirecting; these render for the frame in
+  // between so the screen is never blank.
+  if (!isSignedIn) {
+    return (
+      <AdminGateScreen
+        title="Sign in to continue"
+        description="The admin panel is only available to signed-in staff. Taking you back to the site."
+        action={
+          <Link
+            href="/"
+            className="inline-flex rounded-full border border-[color:var(--hairline)] px-5 py-2.5 text-sm font-medium transition-colors hover:border-[color:var(--brand)] hover:text-[color:var(--brand-deep)]"
+          >
+            Go to the site
+          </Link>
+        }
+      />
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <AdminGateScreen
+        title="Access denied"
+        description="This account is not on the admin list. Ask an existing admin to add your email."
+      />
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[color:var(--background)] lg:pl-64">
+      <AdminSidebar />
+      <AdminTopbar />
+      <main className="mx-auto max-w-[1200px] px-4 pb-28 pt-8 sm:px-6 lg:px-8 lg:pb-16">{children}</main>
+    </div>
+  );
 }

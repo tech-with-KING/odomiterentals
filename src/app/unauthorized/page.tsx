@@ -1,37 +1,31 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Shield, ArrowLeft } from "lucide-react"
-import Link from "next/link"
+import Link from 'next/link';
+import { ArrowLeft, Shield } from 'lucide-react';
 
 export default function UnauthorizedPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6">
-        <Card className="text-center">
-          <CardHeader className="space-y-4">
-            <div className="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-              <Shield className="w-6 h-6 text-red-600" />
-            </div>
-            <div>
-              <CardTitle className="text-2xl font-bold text-gray-900">Access Denied</CardTitle>
-              <CardDescription className="text-gray-600 mt-2">
-                You need to be signed in as admin to access this page
-              </CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-gray-500">Please sign in with your account to continue</p>
-            <div className="flex gap-2">
-              <Button asChild variant="outline" className="flex-1">
-                <Link href="/" className="flex items-center gap-2">
-                  <ArrowLeft className="w-4 h-4 my-auto" />
-                  Go Home
-                </Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="bg-[color:var(--background)] py-20 md:py-28">
+      <div className="mx-auto max-w-md px-6 text-center">
+        <div
+          className="mx-auto grid h-14 w-14 place-items-center rounded-full text-[color:var(--brand-deep)]"
+          style={{ backgroundColor: 'var(--brand-soft)' }}
+        >
+          <Shield className="h-6 w-6" />
+        </div>
+
+        <div className="eyebrow mt-6">Restricted</div>
+        <h1 className="mt-3 font-serif text-2xl leading-tight">Access denied.</h1>
+        <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--muted-ink)]">
+          You need to be signed in as an admin to view this page.
+        </p>
+
+        <Link
+          href="/"
+          className="mt-8 inline-flex items-center gap-2 rounded-full border border-[color:var(--hairline)] px-6 py-3 text-sm font-medium text-[color:var(--ink)] transition-colors hover:border-[color:var(--brand)] hover:text-[color:var(--brand)]"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Go home
+        </Link>
       </div>
     </div>
-  )
+  );
 }

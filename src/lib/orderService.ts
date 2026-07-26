@@ -1,18 +1,4 @@
-import { 
-  collection, 
-  doc, 
-  addDoc, 
-  getDoc, 
-  getDocs,
-  updateDoc, 
-  deleteDoc, 
-  query,
-  where,
-  orderBy,
-  limit,
-  serverTimestamp 
-} from 'firebase/firestore'
-import { db } from '@/lib/firebase'
+import { supabase } from '@/lib/supabase'
 
 export interface OrderItem {
   id: string
@@ -58,6 +44,51 @@ export interface Order {
   notes?: string
 }
 
+// Row shapes as returned by Supabase (snake_case), mapped to/from the Order interface above.
+function rowToOrder(row: any): Order {
+  return {
+    id: row.id,
+    customerInfo: {
+      firstName: row.first_name,
+      lastName: row.last_name,
+      email: row.email,
+      phone: row.phone,
+      address: row.address,
+      city: row.city,
+      state: row.state,
+      zipCode: row.zip_code,
+      rentalStartDate: row.rental_start_date,
+      specialInstructions: row.special_instructions,
+    },
+    items: (row.order_items || []).map((item: any) => ({
+      id: item.id,
+      productId: item.product_id,
+      name: item.name,
+      image: item.image,
+      quantity: item.quantity,
+      duration: item.duration,
+      unitPrice: Number(item.unit_price),
+      total: Number(item.total),
+      category: item.category,
+    })),
+    pricing: {
+      subtotal: Number(row.subtotal),
+      shipping: Number(row.shipping),
+      taxes: Number(row.taxes),
+      total: Number(row.total),
+    },
+    orderDate: row.created_at,
+    userId: row.user_id || 'guest',
+    status: row.status,
+    paymentStatus: row.payment_status,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    notes: row.notes,
+  }
+}
+
+const ORDER_SELECT = '*, order_items(*)'
+
 export class OrderService {
   private static instance: OrderService
 
@@ -68,142 +99,120 @@ export class OrderService {
     return OrderService.instance
   }
 
-  // Create a new order
+  // Create a new order (used for authenticated in-app flows; guest checkout
+  // goes through /api/orders/submit, which writes with the service role key).
   async createOrder(orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
-    try {
-      const orderRef = await addDoc(collection(db, 'orders'), {
-        ...orderData,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
+    const { customerInfo, items, pricing, userId } = orderData
+
+    const { data: order, error: orderError } = await supabase
+      .from('orders')
+      .insert({
+        user_id: userId && userId !== 'guest' ? userId : null,
+        first_name: customerInfo.firstName,
+        last_name: customerInfo.lastName,
+        email: customerInfo.email,
+        phone: customerInfo.phone,
+        address: customerInfo.address,
+        city: customerInfo.city,
+        state: customerInfo.state,
+        zip_code: customerInfo.zipCode,
+        rental_start_date: customerInfo.rentalStartDate,
+        special_instructions: customerInfo.specialInstructions,
+        subtotal: pricing.subtotal,
+        shipping: pricing.shipping,
+        taxes: pricing.taxes,
+        total: pricing.total,
       })
-      return orderRef.id
-    } catch (error) {
-      console.error('Error creating order:', error)
-      throw error
+      .select('id')
+      .single()
+
+    if (orderError) throw orderError
+
+    if (items.length > 0) {
+      const { error: itemsError } = await supabase.from('order_items').insert(
+        items.map((item) => ({
+          order_id: order.id,
+          product_id: item.productId,
+          name: item.name,
+          image: item.image,
+          quantity: item.quantity,
+          duration: item.duration,
+          unit_price: item.unitPrice,
+          total: item.total,
+          category: item.category,
+        }))
+      )
+      if (itemsError) throw itemsError
     }
+
+    return order.id
   }
 
   // Get order by ID
   async getOrder(orderId: string): Promise<Order | null> {
-    try {
-      const orderRef = doc(db, 'orders', orderId)
-      const orderSnap = await getDoc(orderRef)
-      
-      if (orderSnap.exists()) {
-        return {
-          id: orderSnap.id,
-          ...orderSnap.data()
-        } as Order
-      }
-      return null
-    } catch (error) {
-      console.error('Error getting order:', error)
-      throw error
-    }
+    const { data, error } = await supabase
+      .from('orders')
+      .select(ORDER_SELECT)
+      .eq('id', orderId)
+      .maybeSingle()
+
+    if (error) throw error
+    return data ? rowToOrder(data) : null
   }
 
   // Get orders by user ID
   async getOrdersByUser(userId: string): Promise<Order[]> {
-    try {
-      const q = query(
-        collection(db, 'orders'),
-        where('userId', '==', userId),
-        orderBy('createdAt', 'desc')
-      )
-      
-      const querySnapshot = await getDocs(q)
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Order[]
-    } catch (error) {
-      console.error('Error getting user orders:', error)
-      throw error
-    }
+    const { data, error } = await supabase
+      .from('orders')
+      .select(ORDER_SELECT)
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+    return (data || []).map(rowToOrder)
   }
 
   // Get all orders (for admin)
   async getAllOrders(limitCount?: number): Promise<Order[]> {
-    try {
-      let q = query(
-        collection(db, 'orders'),
-        orderBy('createdAt', 'desc')
-      )
-      
-      if (limitCount) {
-        q = query(q, limit(limitCount))
-      }
-      
-      const querySnapshot = await getDocs(q)
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Order[]
-    } catch (error) {
-      console.error('Error getting all orders:', error)
-      throw error
+    let query = supabase.from('orders').select(ORDER_SELECT).order('created_at', { ascending: false })
+
+    if (limitCount) {
+      query = query.limit(limitCount)
     }
+
+    const { data, error } = await query
+    if (error) throw error
+    return (data || []).map(rowToOrder)
   }
 
   // Update order status
-  async updateOrderStatus(
-    orderId: string, 
-    status: Order['status'], 
-    notes?: string
-  ): Promise<void> {
-    try {
-      const orderRef = doc(db, 'orders', orderId)
-      const updateData: any = {
-        status,
-        updatedAt: serverTimestamp()
-      }
-      
-      if (notes) {
-        updateData.notes = notes
-      }
-      
-      await updateDoc(orderRef, updateData)
-    } catch (error) {
-      console.error('Error updating order status:', error)
-      throw error
-    }
+  async updateOrderStatus(orderId: string, status: Order['status'], notes?: string): Promise<void> {
+    const updateData: Record<string, any> = { status, updated_at: new Date().toISOString() }
+    if (notes) updateData.notes = notes
+
+    const { error } = await supabase.from('orders').update(updateData).eq('id', orderId)
+    if (error) throw error
   }
 
   // Update payment status
-  async updatePaymentStatus(
-    orderId: string, 
-    paymentStatus: Order['paymentStatus']
-  ): Promise<void> {
-    try {
-      const orderRef = doc(db, 'orders', orderId)
-      await updateDoc(orderRef, {
-        paymentStatus,
-        updatedAt: serverTimestamp()
-      })
-    } catch (error) {
-      console.error('Error updating payment status:', error)
-      throw error
-    }
+  async updatePaymentStatus(orderId: string, paymentStatus: Order['paymentStatus']): Promise<void> {
+    const { error } = await supabase
+      .from('orders')
+      .update({ payment_status: paymentStatus, updated_at: new Date().toISOString() })
+      .eq('id', orderId)
+    if (error) throw error
   }
 
   // Get orders by status
   async getOrdersByStatus(status: Order['status']): Promise<Order[]> {
-    try {
-      const q = query(
-        collection(db, 'orders'),
-        where('status', '==', status),
-        orderBy('createdAt', 'desc')
-      )
-      
-      const querySnapshot = await getDocs(q)
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Order[]
-    } catch (error) {
-      console.error('Error getting orders by status:', error)
-      throw error
-    }
+    const { data, error } = await supabase
+      .from('orders')
+      .select(ORDER_SELECT)
+      .eq('status', status)
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+    return (data || []).map(rowToOrder)
   }
 
   // Get order statistics
@@ -214,34 +223,22 @@ export class OrderService {
     completed: number
     totalRevenue: number
   }> {
-    try {
-      const orders = await this.getAllOrders()
-      
-      const stats = {
-        total: orders.length,
-        pending: orders.filter(o => o.status === 'pending').length,
-        confirmed: orders.filter(o => o.status === 'confirmed').length,
-        completed: orders.filter(o => o.status === 'completed').length,
-        totalRevenue: orders
-          .filter(o => o.paymentStatus === 'paid')
-          .reduce((sum, o) => sum + o.pricing.total, 0)
-      }
-      
-      return stats
-    } catch (error) {
-      console.error('Error getting order stats:', error)
-      throw error
+    const orders = await this.getAllOrders()
+
+    return {
+      total: orders.length,
+      pending: orders.filter((o) => o.status === 'pending').length,
+      confirmed: orders.filter((o) => o.status === 'confirmed').length,
+      completed: orders.filter((o) => o.status === 'completed').length,
+      totalRevenue: orders
+        .filter((o) => o.paymentStatus === 'paid')
+        .reduce((sum, o) => sum + o.pricing.total, 0),
     }
   }
 
   // Delete order (admin only)
   async deleteOrder(orderId: string): Promise<void> {
-    try {
-      const orderRef = doc(db, 'orders', orderId)
-      await deleteDoc(orderRef)
-    } catch (error) {
-      console.error('Error deleting order:', error)
-      throw error
-    }
+    const { error } = await supabase.from('orders').delete().eq('id', orderId)
+    if (error) throw error
   }
 }

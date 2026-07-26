@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { NotificationService } from '@/lib/notificationService';
 import { Button } from '@/components/ui/button';
 import { Bell, BellOff } from 'lucide-react';
+import { useFeedback } from '@/context/feedback';
 
 interface NotificationSetupProps {
   userEmail?: string;
@@ -13,7 +14,8 @@ export default function NotificationSetup({ userEmail = 'admin@odomiterentals.co
   const [notificationEnabled, setNotificationEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState<string | null>(null);
-  
+  const { toast } = useFeedback();
+
   const notificationService = NotificationService.getInstance();
 
   useEffect(() => {
@@ -49,7 +51,14 @@ export default function NotificationSetup({ userEmail = 'admin@odomiterentals.co
       }
     } catch (error) {
       console.error('Error enabling notifications:', error);
-      alert('Failed to enable notifications. Please check your browser settings.');
+      toast({
+        title: 'Could not turn on alerts',
+        description:
+          error instanceof Error
+            ? error.message
+            : 'Check that this browser allows notifications for the site.',
+        tone: 'error',
+      });
     } finally {
       setLoading(false);
     }
@@ -65,10 +74,11 @@ export default function NotificationSetup({ userEmail = 'admin@odomiterentals.co
       localStorage.removeItem('fcm-token');
       setToken(null);
       setNotificationEnabled(false);
-      
-      alert('Notifications have been disabled.');
+
+      toast({ title: 'Order alerts turned off', tone: 'success' });
     } catch (error) {
       console.error('Error disabling notifications:', error);
+      toast({ title: 'Could not turn off alerts', tone: 'error' });
     } finally {
       setLoading(false);
     }
@@ -79,33 +89,30 @@ export default function NotificationSetup({ userEmail = 'admin@odomiterentals.co
     return null;
   }
 
-  return (
-    <div className="flex items-center space-x-2">
-      {notificationEnabled ? (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={disableNotifications}
-          disabled={loading}
-          className="flex items-center space-x-2"
-        >
-          <Bell className="w-4 h-4 text-green-600" />
-          <span className="text-sm">Notifications On</span>
-        </Button>
-      ) : (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={enableNotifications}
-          disabled={loading}
-          className="flex items-center space-x-2"
-        >
-          <BellOff className="w-4 h-4 text-gray-400" />
-          <span className="text-sm">
-            {loading ? 'Enabling...' : 'Enable Notifications'}
-          </span>
-        </Button>
-      )}
-    </div>
+  // Label collapses on small screens — the topbar has no room for it there.
+  return notificationEnabled ? (
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={disableNotifications}
+      disabled={loading}
+      className="gap-2 rounded-full"
+      title="Turn off order notifications"
+    >
+      <Bell className="h-4 w-4 text-[color:var(--sage)]" />
+      <span className="hidden text-xs md:inline">Alerts on</span>
+    </Button>
+  ) : (
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={enableNotifications}
+      disabled={loading}
+      className="gap-2 rounded-full"
+      title="Get a push notification for every new order"
+    >
+      <BellOff className="h-4 w-4 text-[color:var(--muted-ink)]" />
+      <span className="hidden text-xs md:inline">{loading ? 'Enabling…' : 'Enable alerts'}</span>
+    </Button>
   );
 }

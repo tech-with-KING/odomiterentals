@@ -1,97 +1,86 @@
-// hooks/useAdminCheck.ts
+'use client';
 
-import { useState, useEffect } from 'react'
-import { useUser } from '@clerk/nextjs'
-import { db } from '@/lib/firebase'
-import { collection, query, where, getDocs } from 'firebase/firestore'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
+import { useAuth } from '@/context/auth';
+import { supabase } from '@/lib/supabase';
 
-interface AdminDetails {
-  name: string
-  privilege: 'dev' | 'admin'
-  email: string
+export interface AdminDetails {
+  name: string;
+  privilege: 'dev' | 'admin';
+  email: string;
 }
 
-export function useAdminCheck() {
-  const { user, isLoaded } = useUser()
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const [adminDetails, setAdminDetails] = useState<AdminDetails | undefined>(undefined)
+interface AdminContextValue {
+  isAdmin: boolean;
+  /** True until we know one way or the other — never redirect while this is true. */
+  isLoading: boolean;
+  adminDetails: AdminDetails | undefined;
+  refetch: () => Promise<void>;
+}
 
-  const checkAdminStatus = async () => {
-    console.log('🔁 Running checkAdminStatus...')
+const AdminContext = createContext<AdminContextValue | undefined>(undefined);
 
-    if (!user) {
-      console.warn('❌ No user found from Clerk.')
-      setIsAdmin(false)
-      setAdminDetails(undefined)
-      setIsLoading(false)
-      return
+/**
+ * Resolves the signed-in user's admin row once for the whole tree.
+ *
+ * The `admins` table is protected by a "self read" RLS policy, so this query
+ * returns the caller's own row and nothing else — a non-admin simply gets null.
+ */
+export function AdminProvider({ children }: { children: ReactNode }) {
+  const { user, isLoaded } = useAuth();
+  const email = user?.email;
+
+  const [adminDetails, setAdminDetails] = useState<AdminDetails | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const checkAdminStatus = useCallback(async () => {
+    if (!email) {
+      setAdminDetails(undefined);
+      setIsLoading(false);
+      return;
     }
 
-    const userEmail = user.emailAddresses?.[0]?.emailAddress
-    console.log('📨 Clerk user email:', userEmail)
-
-    if (!userEmail) {
-      console.warn('❌ No email found for Clerk user.')
-      setIsAdmin(false)
-      setAdminDetails(undefined)
-      setIsLoading(false)
-      return
-    }
-
+    setIsLoading(true);
     try {
-      const adminCollectionRef = collection(db, 'admin')
-      console.log('📁 Firestore admin collection ref:', adminCollectionRef.path)
+      const { data, error } = await supabase
+        .from('admins')
+        .select('name, privilege, email')
+        .eq('email', email)
+        .maybeSingle();
 
-      const q = query(adminCollectionRef, where('email', '==', userEmail))
-      console.log('🔍 Firestore query created:', q)
-
-      const querySnapshot = await getDocs(q)
-      console.log('📊 Query snapshot size:', querySnapshot.size)
-
-      if (!querySnapshot.empty) {
-        const doc = querySnapshot.docs[0]
-        const adminDoc = doc.data()
-        console.log('✅ Firestore admin document found:', adminDoc)
-
-        const details: AdminDetails = {
-          name: adminDoc.name,
-          privilege: adminDoc.privilege,
-          email: userEmail
-        }
-
-        setIsAdmin(true)
-        setAdminDetails(details)
-        console.log('✅ Admin status set to true with details:', details)
-      } else {
-        console.warn('⚠️ No admin record found for this email.')
-        setIsAdmin(false)
-        setAdminDetails(undefined)
-      }
+      if (error) throw error;
+      setAdminDetails((data as AdminDetails | null) ?? undefined);
     } catch (error) {
-      console.error('🔥 Error while checking Firestore admin status:', error)
-      setIsAdmin(false)
-      setAdminDetails(undefined)
+      console.error('Error while checking admin status:', error);
+      setAdminDetails(undefined);
     } finally {
-      setIsLoading(false)
-      console.log('✅ Admin status check completed.')
+      setIsLoading(false);
     }
-  }
+  }, [email]);
 
   useEffect(() => {
     if (!isLoaded) {
-      console.log('⏳ Clerk user not loaded yet.')
-      return
+      setIsLoading(true);
+      return;
     }
+    checkAdminStatus();
+  }, [isLoaded, checkAdminStatus]);
 
-    console.log('🧠 Clerk user loaded. Starting admin check.')
-    checkAdminStatus()
-  }, [isLoaded, user?.emailAddresses])
+  const value = useMemo<AdminContextValue>(
+    () => ({
+      isAdmin: !!adminDetails,
+      isLoading: !isLoaded || isLoading,
+      adminDetails,
+      refetch: checkAdminStatus,
+    }),
+    [adminDetails, isLoaded, isLoading, checkAdminStatus]
+  );
 
-  return {
-    isAdmin,
-    isLoading,
-    adminDetails,
-    refetch: checkAdminStatus
-  }
+  return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;
+}
+
+export function useAdminCheck() {
+  const ctx = useContext(AdminContext);
+  if (!ctx) throw new Error('useAdminCheck must be used within an AdminProvider');
+  return ctx;
 }

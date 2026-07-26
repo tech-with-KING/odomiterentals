@@ -1,324 +1,296 @@
-"use client"
+'use client';
 
-import type React from "react"
-import { useState, useEffect } from "react"
-import Image from "next/image"
-import { Plus, Minus, ShoppingCart } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { collection, getDocs } from 'firebase/firestore'
-import { db } from '@/lib/firebase' // Adjust the import path to your Firebase config
-import { HeaderThree } from '@/components/GlobalHeader'
+import { useEffect, useMemo, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Minus, Plus, ShoppingBag } from 'lucide-react';
+import { SectionHeading } from '@/components/site/SectionHeading';
+import { ProductCardSkeleton } from '@/components/site/ProductCard';
+import { useCart } from '@/context/cart';
+import { fetchProducts, type CatalogueProduct } from '@/lib/catalogue';
 
-interface Product {
-  id: string | number
-  images: string[]
-  name: string
-  price: number
-  desc: string
-  categories?: string[]
-}
-
-interface ProductCardProps {
-  product: Product
-  quantity: number
-  onQuantityChange: (id: string | number, quantity: number) => void
-}
-
-// Loading component
-const LoadingGrid = ({ cols = 4 }: { cols?: number }) => (
-  <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-${cols} gap-2 md:gap-6`}>
-    {Array.from({ length: 8 }).map((_, index) => (
-      <div key={index} className="bg-gray-200 animate-pulse rounded-xl">
-        <div className="h-64 bg-gray-300 rounded-xl mb-2"></div>
-        <div className="p-3">
-          <div className="h-4 bg-gray-300 rounded mb-2"></div>
-          <div className="h-3 bg-gray-300 rounded w-2/3"></div>
-        </div>
-      </div>
-    ))}
-  </div>
-)
-
-function QuoteProductCard({ product, quantity, onQuantityChange }: ProductCardProps) {
-  const handleIncrease = () => {
-    onQuantityChange(product.id, quantity + 1)
-  }
-
-  const handleDecrease = () => {
-    if (quantity > 0) {
-      onQuantityChange(product.id, quantity - 1)
-    }
-  }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-
-    // Allow empty input for better UX while typing
-    if (value === "") {
-      onQuantityChange(product.id, 0)
-      return
-    }
-
-    // Only allow positive integers
-    const numValue = Number.parseInt(value)
-    if (!isNaN(numValue) && numValue >= 0) {
-      onQuantityChange(product.id, numValue)
-    }
-  }
-
-  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    // Ensure we have a valid number when input loses focus
-    const value = e.target.value
-    if (value === "" || isNaN(Number.parseInt(value))) {
-      onQuantityChange(product.id, 0)
-    }
-  }
-
+function QuantityStepper({
+  product,
+  quantity,
+  onChange,
+}: {
+  product: CatalogueProduct;
+  quantity: number;
+  onChange: (id: string, quantity: number) => void;
+}) {
   return (
-    <div className="bg-white rounded-xl overflow-hidden max-w-sm mx-auto">
-      <div className="relative rounded-2xl">
-        <Image
-          src={product.images[0] || "/placeholder.svg"}
-          alt={product.name}
-          width={400}
-          height={256}
-          className="w-full h-45 md:h-64 object-cover rounded-2xl transition-transform duration-300 transform hover:scale-105"
-        />
-      </div>
-      <div className="p-1 sm:p-3">
-        {/* Product title and price - matching ProductCard design */}
-        <div className="md:flex md:flex-1 md:justify-between mb-4">
-          <h3 className="text-[16px] sm:text-sm sm:font-semibold font-medium text-gray-900">{product.name}</h3>
-          <p className="text-gray-600 text-sm leading-relaxed">
-            <span className="text-blue-900">${product.price}</span> a unit
-          </p>
-        </div>
-
-        {/* Quantity controls */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={handleDecrease}
-              disabled={quantity === 0}
-              className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              <Minus className="w-4 h-4" />
-            </button>
-            <input
-              type="text"
-              value={quantity || ""}
-              onChange={handleInputChange}
-              onBlur={handleInputBlur}
-              className="w-12 h-8 text-center font-semibold border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              min="0"
-              placeholder="0"
-            />
-            <button
-              onClick={handleIncrease}
-              className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-            </button>
-          </div>
-
-          {quantity > 0 && (
-            <div className="text-right">
-              <p className="text-sm text-gray-600">Subtotal</p>
-              <p className="font-semibold text-blue-900">${(product.price * quantity).toFixed(2)}</p>
-            </div>
-          )}
-        </div>
-      </div>
+    <div className="flex items-center gap-2">
+      <button
+        type="button"
+        aria-label={`Remove one ${product.name}`}
+        onClick={() => onChange(product.id, Math.max(0, quantity - 1))}
+        disabled={quantity === 0}
+        className="grid h-8 w-8 place-items-center rounded-full border border-[color:var(--hairline)] transition-colors hover:border-[color:var(--brand)] hover:text-[color:var(--brand)] disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        <Minus className="h-4 w-4" />
+      </button>
+      <input
+        type="number"
+        min={0}
+        aria-label={`Quantity of ${product.name}`}
+        value={quantity || ''}
+        placeholder="0"
+        onChange={(e) => onChange(product.id, Math.max(0, parseInt(e.target.value, 10) || 0))}
+        className="h-8 w-14 rounded-lg border border-[color:var(--hairline)] bg-[color:var(--surface)] text-center text-sm font-medium focus:border-[color:var(--brand)] focus:outline-none focus:ring-2 focus:ring-[color:var(--brand)]/30"
+      />
+      <button
+        type="button"
+        aria-label={`Add one ${product.name}`}
+        onClick={() => onChange(product.id, quantity + 1)}
+        className="grid h-8 w-8 place-items-center rounded-full border border-[color:var(--hairline)] transition-colors hover:border-[color:var(--brand)] hover:text-[color:var(--brand)]"
+      >
+        <Plus className="h-4 w-4" />
+      </button>
     </div>
-  )
+  );
 }
 
-export default function GetQuotePage() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [quantities, setQuantities] = useState<Record<string | number, number>>({})
+export default function QuotePage() {
+  const router = useRouter();
+  const { addToCart } = useCart();
 
-  // Fetch products from Firestore - same as ShopPage
+  const [products, setProducts] = useState<CatalogueProduct[]>([]);
+  const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const [duration, setDuration] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true)
-        const productsCollection = collection(db, 'products')
-        const productsSnapshot = await getDocs(productsCollection)
-        
-        console.log('Raw Firestore data:', productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
-        
-        const productsData: Product[] = productsSnapshot.docs.map(doc => {
-          const data = doc.data()
-          let images: string[] = []
-          if (data.images && Array.isArray(data.images)) {
-            images = data.images
-          } else if (data.img && typeof data.img === 'string') {
-            images = [data.img]
-          } else if (data.image && typeof data.image === 'string') {
-            images = [data.image]
-          }
-          
-          // Handle different possible field names for name
-          const name = data.name || data.Product_name || data.title || 'Unnamed Product'
-          
-          // Handle different possible field names for categories
-          let categories: string[] = []
-          if (data.categories && Array.isArray(data.categories)) {
-            categories = data.categories
-          } else if (data.category && Array.isArray(data.category)) {
-            categories = data.category
-          } else if (typeof data.category === 'string') {
-            categories = [data.category]
-          }
-          
-          return {
-            id: doc.id,
-            images,
-            name,
-            price: data.price || 0,
-            desc: data.desc || data.description || '',
-            categories
-          }
-        })
-        
-        setProducts(productsData)
-        setError(null)
-      } catch (err) {
-        setError('Failed to load products. Please try again later.')
-      } finally {
-        setLoading(false)
-      }
-    }
+    let cancelled = false;
 
     fetchProducts()
-  }, [])
+      .then((rows) => {
+        if (!cancelled) {
+          setProducts(rows);
+          setError(null);
+        }
+      })
+      .catch((err) => {
+        console.error('Error loading products:', err);
+        if (!cancelled) setError('We could not load the catalogue. Please try again.');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
 
-  const handleQuantityChange = (id: string | number, quantity: number) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [id]: quantity,
-    }))
-  }
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-  const calculateTotal = () => {
-    return products.reduce((total, product) => {
-      const quantity = quantities[product.id] || 0
-      return total + product.price * quantity
-    }, 0)
-  }
+  const handleQuantityChange = (id: string, quantity: number) =>
+    setQuantities((prev) => ({ ...prev, [id]: quantity }));
 
-  const getTotalItems = () => {
-    return Object.values(quantities).reduce((total, quantity) => total + quantity, 0)
-  }
+  const selected = useMemo(
+    () =>
+      products
+        .map((product) => ({ product, quantity: quantities[product.id] ?? 0 }))
+        .filter((entry) => entry.quantity > 0),
+    [products, quantities]
+  );
 
-  const getSelectedProducts = () => {
-    return products.filter((product) => (quantities[product.id] || 0) > 0)
-  }
+  const total = selected.reduce(
+    (sum, { product, quantity }) => sum + product.price * quantity * duration,
+    0
+  );
+
+  const handleRequestQuote = () => {
+    selected.forEach(({ product, quantity }) => {
+      addToCart(
+        {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          images: product.image ? [product.image] : [],
+          categories: [product.categoryName],
+        },
+        quantity,
+        duration
+      );
+    });
+
+    router.push('/checkout');
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Get Your Quote</h1>
-          <p className="text-gray-600">Select the services you need and see your total in real-time</p>
-        </div>
+    <div className="bg-[color:var(--background)] py-16 md:py-20">
+      <div className="mx-auto max-w-[1280px] px-6">
+        <SectionHeading
+          eyebrow="Request a Quote"
+          title="Build your event list."
+          intro="Set the quantities you need and the number of rental days. We'll come back with a clear, itemized quote in under 24 hours."
+        />
 
-        {/* Products Section with same styling as ShopPage */}
-        <div className='container mx-auto px-1 py-6 bg-white rounded-xl mb-8'>
-          <HeaderThree title='Quality Items Tailored To Your Event' />
-          
-          {/* Loading State */}
-          {loading && <LoadingGrid cols={4} />}
-          
-          {/* Error State */}
-          {error && (
-            <div className="text-center py-12">
-              <p className="text-red-600 mb-4">{error}</p>
-              <button 
-                onClick={() => window.location.reload()} 
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1fr_320px]">
+          <div>
+            {error ? (
+              <div className="rounded-2xl border border-[color:var(--hairline)] bg-[color:var(--surface)] p-8 text-center">
+                <p className="text-[color:var(--destructive)]">{error}</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                {loading
+                  ? Array.from({ length: 6 }).map((_, i) => <ProductCardSkeleton key={i} />)
+                  : products.map((product) => {
+                      const quantity = quantities[product.id] ?? 0;
+
+                      return (
+                        <article
+                          key={product.id}
+                          className={`flex flex-col overflow-hidden rounded-2xl border bg-[color:var(--surface)] transition-colors ${
+                            quantity > 0
+                              ? 'border-[color:var(--brand)]'
+                              : 'border-[color:var(--hairline)]'
+                          }`}
+                        >
+                          <div className="relative aspect-[4/3] overflow-hidden bg-[#f5f0e6]">
+                            {product.image ? (
+                              <Image
+                                src={product.image}
+                                alt={product.name}
+                                fill
+                                sizes="(min-width: 1280px) 300px, (min-width: 640px) 45vw, 90vw"
+                                className="object-cover"
+                              />
+                            ) : null}
+                          </div>
+
+                          <div className="flex flex-1 flex-col gap-3 p-5">
+                            <div className="eyebrow text-[10px] text-[color:var(--muted-ink)]">
+                              {product.categoryName}
+                            </div>
+                            <h3 className="line-clamp-2 font-serif text-base leading-tight">
+                              {product.name}
+                            </h3>
+                            <p className="text-sm">
+                              <span className="font-serif text-lg font-semibold text-[color:var(--brand)]">
+                                ${product.price.toFixed(2)}
+                              </span>
+                              <span className="text-[color:var(--muted-ink)]"> / unit / day</span>
+                            </p>
+
+                            <div className="mt-auto flex items-center justify-between gap-3 pt-2">
+                              <QuantityStepper
+                                product={product}
+                                quantity={quantity}
+                                onChange={handleQuantityChange}
+                              />
+                              {quantity > 0 ? (
+                                <span className="text-sm font-medium text-[color:var(--ink)]">
+                                  ${(product.price * quantity * duration).toFixed(2)}
+                                </span>
+                              ) : null}
+                            </div>
+                          </div>
+                        </article>
+                      );
+                    })}
+              </div>
+            )}
+          </div>
+
+          <aside className="lg:sticky lg:top-24 lg:self-start">
+            <div className="rounded-2xl border border-[color:var(--hairline)] bg-[color:var(--surface)] p-6">
+              <h2 className="font-serif text-xl">Quote summary</h2>
+
+              <div className="mt-5">
+                <label
+                  htmlFor="quote-duration"
+                  className="text-sm font-medium text-[color:var(--ink)]"
+                >
+                  Rental duration
+                </label>
+                <div className="mt-2 flex items-center gap-2">
+                  <button
+                    type="button"
+                    aria-label="Decrease duration"
+                    onClick={() => setDuration((d) => Math.max(1, d - 1))}
+                    disabled={duration <= 1}
+                    className="grid h-8 w-8 place-items-center rounded-full border border-[color:var(--hairline)] transition-colors hover:border-[color:var(--brand)] hover:text-[color:var(--brand)] disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </button>
+                  <input
+                    id="quote-duration"
+                    type="number"
+                    min={1}
+                    value={duration}
+                    onChange={(e) => setDuration(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                    className="h-8 w-14 rounded-lg border border-[color:var(--hairline)] bg-[color:var(--surface)] text-center text-sm font-medium focus:border-[color:var(--brand)] focus:outline-none focus:ring-2 focus:ring-[color:var(--brand)]/30"
+                  />
+                  <button
+                    type="button"
+                    aria-label="Increase duration"
+                    onClick={() => setDuration((d) => d + 1)}
+                    className="grid h-8 w-8 place-items-center rounded-full border border-[color:var(--hairline)] transition-colors hover:border-[color:var(--brand)] hover:text-[color:var(--brand)]"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
+                  <span className="text-sm text-[color:var(--muted-ink)]">
+                    {duration === 1 ? 'day' : 'days'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-6 border-t border-[color:var(--hairline)] pt-5">
+                {selected.length === 0 ? (
+                  <p className="text-sm text-[color:var(--muted-ink)]">
+                    Nothing selected yet. Set a quantity on any item to start your quote.
+                  </p>
+                ) : (
+                  <ul className="space-y-3">
+                    {selected.map(({ product, quantity }) => (
+                      <li key={product.id} className="flex justify-between gap-3 text-sm">
+                        <span className="min-w-0 flex-1 truncate text-[color:var(--muted-ink)]">
+                          {product.name} × {quantity}
+                        </span>
+                        <span className="shrink-0 font-medium text-[color:var(--ink)]">
+                          ${(product.price * quantity * duration).toFixed(2)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <div className="mt-5 flex items-baseline justify-between border-t border-[color:var(--hairline)] pt-5">
+                <span className="font-medium text-[color:var(--ink)]">Estimated total</span>
+                <span className="font-serif text-xl font-semibold text-[color:var(--brand)]">
+                  ${total.toFixed(2)}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleRequestQuote}
+                disabled={selected.length === 0}
+                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--brand)] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[color:var(--brand-deep)] disabled:cursor-not-allowed disabled:opacity-40"
               >
-                Retry
+                <ShoppingBag className="h-4 w-4" />
+                Request Quote
               </button>
-            </div>
-          )}
-          
-          {/* Products Grid */}
-          {!loading && !error && (
-            <div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-6 mx-auto'>
-              {products.map((product) => (
-                <QuoteProductCard
-                  key={product.id}
-                  product={product}
-                  quantity={quantities[product.id] || 0}
-                  onQuantityChange={handleQuantityChange}
-                />
-              ))}
-            </div>
-          )}
 
-          {/* No Products Message */}
-          {!loading && !error && products.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-600 mb-4">No products available at the moment.</p>
-              <p className="text-sm text-gray-500">
-                Debug: Check browser console for Firestore data structure
+              <p className="mt-3 text-center text-xs text-[color:var(--muted-ink)]">
+                Adds your selection to the cart and takes you to checkout — no payment is taken
+                online.
+              </p>
+
+              <p className="mt-4 text-center text-xs text-[color:var(--muted-ink)]">
+                Prefer to talk?{' '}
+                <Link href="/contact" className="text-[color:var(--brand)] hover:underline">
+                  Contact us
+                </Link>
               </p>
             </div>
-          )}
-        </div>
-
-        {/* Quote Summary */}
-        <div className="max-w-md mx-auto">
-          <Card className="bg-white shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ShoppingCart className="w-5 h-5" />
-                Quote Summary
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {getTotalItems() === 0 ? (
-                <p className="text-gray-500 text-center py-4">No items selected</p>
-              ) : (
-                <>
-                  <div className="space-y-3 mb-4">
-                    {getSelectedProducts().map((product) => {
-                      const quantity = quantities[product.id]
-                      const subtotal = product.price * quantity
-                      return (
-                        <div key={product.id} className="flex justify-between items-center">
-                          <div>
-                            <p className="font-medium text-sm">{product.name}</p>
-                            <p className="text-xs text-gray-500">
-                              {quantity} × ${product.price}
-                            </p>
-                          </div>
-                          <p className="font-semibold">${subtotal.toFixed(2)}</p>
-                        </div>
-                      )
-                    })}
-                  </div>
-
-                  <div className="border-t pt-4">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-lg font-semibold">Total:</span>
-                      <span className="text-2xl font-bold text-blue-900">${calculateTotal().toFixed(2)}</span>
-                    </div>
-
-                    <Button className="w-full" size="lg">
-                      Request Quote
-                    </Button>
-                  </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
+          </aside>
         </div>
       </div>
     </div>
-  )
+  );
 }

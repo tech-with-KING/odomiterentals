@@ -1,319 +1,352 @@
-"use client"
+'use client';
 
-import type React from "react"
+import { useState, type ChangeEvent, type FormEvent } from 'react';
+import Link from 'next/link';
+import { Clock, Mail, MapPin, Phone } from 'lucide-react';
+import { SectionHeading } from '@/components/site/SectionHeading';
+import MapIntegration from '@/components/map-intergration';
+import NewsletterSection from '@/components/newsletter';
 
-import { useState } from "react"
-import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Users, Globe, Link } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import MapIntegration from "@/components/map-intergration"
-import NewsletterSection from "@/components/newsletter"
+const HOURS = [
+  { days: 'Mon, Tue, Wed, Sat', time: '6:00 AM – 8:30 PM ET' },
+  { days: 'Thursday', time: '6:00 AM – 8:00 PM ET' },
+  { days: 'Friday', time: '8:00 AM – 9:00 PM ET' },
+  { days: 'Sunday', time: '9:00 AM – 8:00 PM ET' },
+];
+
+const FAQS = [
+  {
+    question: 'How soon can I get my rental items delivered?',
+    answer:
+      'Most orders can be delivered within 24–48 hours, depending on availability and location. We also accommodate same-day or next-day rentals for urgent events.',
+  },
+  {
+    question: 'What items do you rent out?',
+    answer:
+      'Chairs, tables, tents, canopies, table covers, kids rentals and event equipment. If you need something specific, ask — we are always expanding our inventory.',
+  },
+  {
+    question: 'Do you handle setup and takedown?',
+    answer:
+      'Yes. Our team offers full setup and takedown for tents, chairs and tables, so you can focus on your event while we handle the logistics.',
+  },
+  {
+    question: 'What if something gets damaged or I need to cancel?',
+    answer:
+      'Plans change. Cancellations made 48 hours in advance are fully refundable. Minor damages are covered under our rental protection plan.',
+  },
+];
+
+const RENTAL_TYPES = ['Chairs', 'Tables', 'Tents', 'Table Covers', 'Equipment', 'Kids Rentals', 'Full event setup'];
+
+const inputClass =
+  'w-full rounded-lg border border-[color:var(--hairline)] bg-[color:var(--surface)] px-4 py-3 text-sm text-[color:var(--ink)] placeholder:text-[color:var(--muted-ink)] focus:border-[color:var(--brand)] focus:outline-none focus:ring-2 focus:ring-[color:var(--brand)]/30';
+
+const labelClass = 'mb-2 block text-sm font-medium text-[color:var(--ink)]';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    company: "",
-    subject: "",
-    message: "",
-    projectType: "",
-  })
+    name: '',
+    email: '',
+    phone: '',
+    rentalType: '',
+    subject: '',
+    message: '',
+  });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle form submission here
-    console.log("Form submitted:", formData)
-    // Reset form or show success message
-  }
+  const [status, setStatus] = useState<'idle' | 'sending' | 'done'>('idle');
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setStatus('sending');
+    setError(null);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setError(result.error ?? 'Something went wrong. Please try again or call us.');
+        setStatus('idle');
+        return;
+      }
+
+      setStatus('done');
+      setFormData({ name: '', email: '', phone: '', rentalType: '', subject: '', message: '' });
+    } catch {
+      setError('Something went wrong. Please try again or call us.');
+      setStatus('idle');
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-white font-sans">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-        {/* Header Section */}
-        <div className="text-center mb-12 lg:mb-16">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 lg:mb-6">Get in Touch</h1>
-          <p className="text-lg lg:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-            Planning an event? We’re here to help. Whether you need chairs, tents, or full event setup, Odomite Rentals has you covered. Reach out today to get a quote, check availability, or learn how we can help make your occasion unforgettable."
+    <div className="bg-[color:var(--background)]">
+      <div className="mx-auto max-w-[1280px] px-6 py-16 md:py-20">
+        <SectionHeading
+          eyebrow="Contact"
+          title="Get in touch."
+          intro="Planning an event? Whether you need chairs, tents or a full setup, we're here to help. Reach out for a quote, to check availability, or just to talk through your day."
+        />
 
-Let me know if you want a more casual, formal, or playful tone
-          </p>
+        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <a
+            href="tel:+18622306639"
+            className="group rounded-2xl border border-[color:var(--hairline)] bg-[color:var(--surface)] p-6 transition-all duration-300 hover:border-[color:var(--brand)]/40 hover:shadow-brand"
+          >
+            <span
+              className="grid h-11 w-11 place-items-center rounded-full text-[color:var(--brand-deep)]"
+              style={{ backgroundColor: 'var(--brand-soft)' }}
+            >
+              <Phone className="h-5 w-5" />
+            </span>
+            <h3 className="mt-4 font-serif text-lg">Call us</h3>
+            <p className="mt-1 text-sm text-[color:var(--muted-ink)]">
+              Fastest way to check availability.
+            </p>
+            <p className="mt-3 text-sm font-medium text-[color:var(--brand)]">
+              +1 (862) 230-6639
+            </p>
+          </a>
+
+          <a
+            href="mailto:odomitegroupsllc@gmail.com"
+            className="group rounded-2xl border border-[color:var(--hairline)] bg-[color:var(--surface)] p-6 transition-all duration-300 hover:border-[color:var(--brand)]/40 hover:shadow-brand"
+          >
+            <span
+              className="grid h-11 w-11 place-items-center rounded-full text-[color:var(--brand-deep)]"
+              style={{ backgroundColor: 'var(--brand-soft)' }}
+            >
+              <Mail className="h-5 w-5" />
+            </span>
+            <h3 className="mt-4 font-serif text-lg">Email us</h3>
+            <p className="mt-1 text-sm text-[color:var(--muted-ink)]">
+              We typically reply within the hour.
+            </p>
+            <p className="mt-3 break-all text-sm font-medium text-[color:var(--brand)]">
+              odomitegroupsllc@gmail.com
+            </p>
+          </a>
+
+          <div className="rounded-2xl border border-[color:var(--hairline)] bg-[color:var(--surface)] p-6 sm:col-span-2 lg:col-span-1">
+            <span
+              className="grid h-11 w-11 place-items-center rounded-full text-[color:var(--brand-deep)]"
+              style={{ backgroundColor: 'var(--brand-soft)' }}
+            >
+              <MapPin className="h-5 w-5" />
+            </span>
+            <h3 className="mt-4 font-serif text-lg">Visit the warehouse</h3>
+            <p className="mt-1 text-sm text-[color:var(--muted-ink)]">
+              331 Seymour Ave
+              <br />
+              Newark, NJ 07112
+            </p>
+          </div>
         </div>
 
-        {/* Quick Contact Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 lg:mb-16 ">
-          <Card className="text-center hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Phone className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Call Us</h3>
-             <p className="text-sm text-gray-600 mb-2">Mon, Wed, Sat, Tue: 6 AM – 8:30 PM ET</p>
-              <p className="text-sm text-gray-600 mb-2">Thursday: 6 AM – 8 PM ET</p>
-              <p className="text-sm text-gray-600 mb-2">Friday: 8 AM – 9 PM ET</p>
-              <p className="text-sm text-gray-600 mb-2">Sunday: 9 AM – 8 PM ET</p>
-
-              <a href="tel:+1-555-123-4567" className="text-blue-600 hover:text-blue-700 font-medium">
-                +1 (555) 123-4567
-              </a>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center hover:shadow-md transition-shadow">
-            
-            <CardContent className="p-6">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Mail className="w-6 h-6 text-green-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Email Us</h3>
-              <p className="text-sm text-gray-600 mb-2">We&apos;ll respond within an hour</p>
-              <a href="mailto:odomitegroupsllc@gmail.com" className="text-green-600 hover:text-green-700 font-medium">
-            
-              </a>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <MessageSquare className="w-6 h-6 text-purple-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Live Chat</h3>
-              <p className="text-sm text-gray-600 mb-2">Available 24/7</p>
-              <button className="text-purple-600 hover:text-purple-700 font-medium">Start Chat</button>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Users className="w-6 h-6 text-orange-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Book a Call</h3>
-              <p className="text-sm text-gray-600 mb-2">30-min consultation</p>
-              <button className="text-orange-600 hover:text-orange-700 font-medium">Schedule Now</button>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-12 lg:mb-16">
-          {/* Contact Form */}
+        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-6">Send us a Message</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <h2 className="font-serif text-2xl">Send us a message</h2>
+            <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name *
+                  <label htmlFor="name" className={labelClass}>
+                    Full name *
                   </label>
                   <input
-                    type="text"
                     id="name"
                     name="name"
+                    type="text"
                     required
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    placeholder="John Doe"
+                    placeholder="Jane Doe"
+                    className={inputClass}
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address *
+                  <label htmlFor="email" className={labelClass}>
+                    Email address *
                   </label>
                   <input
-                    type="email"
                     id="email"
                     name="email"
+                    type="email"
                     required
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    placeholder="john@company.com"
+                    placeholder="jane@example.com"
+                    className={inputClass}
                   />
                 </div>
               </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
-                      Your Name / Company
-                    </label>
-                    <input
-                      type="text"
-                      id="company"
-                      name="company"
-                      value={formData.company}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                      placeholder="E.g. John Events or XYZ Planners"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="projectType" className="block text-sm font-medium text-gray-700 mb-2">
-                      Rental Type
-                    </label>
-                    <select
-                      id="projectType"
-                      name="projectType"
-                      value={formData.projectType}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    >
-                      <option value="">Select a rental type</option>
-                      <option value="chairs">Chairs</option>
-                      <option value="tables">Tables</option>
-                      <option value="tents">Tents/Canopies</option>
-                      <option value="coolers">Coolers</option>
-                      <option value="decor">Decor Items</option>
-                      <option value="combo">Full Event Package</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="phone" className={labelClass}>
+                    Phone
+                  </label>
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder="(862) 000-0000"
+                    className={inputClass}
+                  />
                 </div>
-
+                <div>
+                  <label htmlFor="rentalType" className={labelClass}>
+                    What do you need?
+                  </label>
+                  <select
+                    id="rentalType"
+                    name="rentalType"
+                    value={formData.rentalType}
+                    onChange={handleInputChange}
+                    className={inputClass}
+                  >
+                    <option value="">Select an option</option>
+                    {RENTAL_TYPES.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
 
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                  Subject *
+                <label htmlFor="subject" className={labelClass}>
+                  Subject
                 </label>
                 <input
-                  type="text"
                   id="subject"
                   name="subject"
-                  required
+                  type="text"
                   value={formData.subject}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  placeholder="How can we help you?"
+                  placeholder="Backyard graduation party, June 14"
+                  className={inputClass}
                 />
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="message" className={labelClass}>
                   Message *
                 </label>
                 <textarea
                   id="message"
                   name="message"
                   required
-                  rows={6}
+                  rows={5}
                   value={formData.message}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-vertical"
-                  placeholder="Tell us about your project requirements, timeline, and any specific needs..."
+                  placeholder="Tell us the date, guest count and anything else we should know."
+                  className={`${inputClass} resize-y`}
                 />
               </div>
 
-              <Button
+              <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                disabled={status === 'sending'}
+                className="inline-flex w-full items-center justify-center rounded-full bg-[color:var(--brand)] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[color:var(--brand-deep)] disabled:opacity-60 sm:w-auto"
               >
-                <Send className="w-4 h-4" />
-                Send Message
-              </Button>
+                {status === 'sending' ? 'Sending…' : 'Send message'}
+              </button>
+
+              {status === 'done' ? (
+                <p
+                  className="rounded-lg px-4 py-3 text-sm font-medium text-[color:var(--brand-deep)]"
+                  style={{ backgroundColor: 'var(--brand-soft)' }}
+                >
+                  Thanks — your message is on its way. We usually reply within the hour during
+                  business hours.
+                </p>
+              ) : null}
+
+              {error ? (
+                <p className="text-sm text-[color:var(--destructive)]">{error}</p>
+              ) : null}
+
+              <p className="text-xs text-[color:var(--muted-ink)]">
+                Prefer to price it up yourself?{' '}
+                <Link href="/quote" className="text-[color:var(--brand)] hover:underline">
+                  Build a quote online
+                </Link>
+                .
+              </p>
             </form>
           </div>
 
-          {/* Office Locations */}
-          <div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-6">Our Offices</h2>
-            <div className="space-y-6 mb-8">
-              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-5 h-5 text-green-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">New Jersey Address</h3>
-                    <p className="text-gray-700 mb-2">
-                      331 Seymour Ave
-                      <br />
-                       Newark, NJ 07112
-                      <br />
-                      United States
-                    </p>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Clock className="w-4 h-4" />
-                      <span>Mon-Fri: 9:00 AM - 6:00 PM EST</span>
-                    </div>
-                  </div>
-                </div>
+          <div className="space-y-6">
+            <div className="rounded-2xl border border-[color:var(--hairline)] bg-[color:var(--surface)] p-6">
+              <div className="flex items-center gap-3">
+                <Clock className="h-5 w-5 text-[color:var(--brand)]" />
+                <h3 className="font-serif text-lg">Opening hours</h3>
               </div>
-
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6">
-         <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6">
-  <div className="flex items-start gap-4">
-    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-      <Globe className="w-5 h-5 text-purple-600" />
-    </div>
-    <div>
-      <h3 className="font-semibold text-gray-900 mb-1">Serving New Jersey Area</h3>
-      <p className="text-gray-700 mb-2">
-        Odomite Rentals delivers and sets up event essentials across New Jersey, call and we’ll be there.
-      </p>
-      <div className="flex items-center gap-2 text-sm text-gray-600">
-        <Clock className="w-4 h-4" />
-        <span>Timely Setup & Support</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-              </div>
+              <dl className="mt-4 space-y-3">
+                {HOURS.map((entry) => (
+                  <div
+                    key={entry.days}
+                    className="flex flex-wrap justify-between gap-2 border-b border-[color:var(--hairline)] pb-3 text-sm last:border-0 last:pb-0"
+                  >
+                    <dt className="text-[color:var(--ink)]">{entry.days}</dt>
+                    <dd className="text-[color:var(--muted-ink)]">{entry.time}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
 
-            {/* Map Integration */}
-            
+            <div
+              className="rounded-2xl border border-[color:var(--hairline)] p-6"
+              style={{ backgroundColor: 'var(--brand-soft)' }}
+            >
+              <h3 className="font-serif text-lg">Service areas</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted-ink)]">
+                We deliver across Newark, Elizabeth, Jersey City, Paterson and greater New Jersey.
+                Outside that radius? Ask us — we often make it work.
+              </p>
+            </div>
           </div>
-        </div>  
-        <div className="rounded-xl overflow-hidden mb-6">
-            <MapIntegration />
         </div>
-        {/* FAQ Section */}
-<section className="mb-12 lg:mb-16">
-  <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8 text-center">Frequently Asked Questions</h2>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div className="bg-gray-50 rounded-xl p-6">
-      <h3 className="font-semibold text-gray-900 mb-2">How soon can I get my rental items delivered?</h3>
-      <p className="text-gray-700 text-sm leading-relaxed">
-        Most orders can be delivered within 24-48 hours, depending on availability and location. We also accommodate same-day or next-day rentals for urgent events.
-      </p>
-    </div>
 
-    <div className="bg-gray-50 rounded-xl p-6">
-      <h3 className="font-semibold text-gray-900 mb-2">What items do you rent out?</h3>
-      <p className="text-gray-700 text-sm leading-relaxed">
-        We offer a wide range of party rentals including chairs, tables, tents, canopies, coolers, and decor. If you need something specific, feel free to ask—we’re always expanding our inventory.
-      </p>
-    </div>
+        <div className="mt-16 overflow-hidden rounded-2xl border border-[color:var(--hairline)]">
+          <MapIntegration />
+        </div>
 
-    <div className="bg-gray-50 rounded-xl p-6">
-      <h3 className="font-semibold text-gray-900 mb-2">Do you handle setup and takedown?</h3>
-      <p className="text-gray-700 text-sm leading-relaxed">
-        Yes! Our team offers full setup and takedown services for tents, chairs, and tables, so you can focus on your event while we handle the logistics.
-      </p>
-    </div>
-
-    <div className="bg-gray-50 rounded-xl p-6">
-      <h3 className="font-semibold text-gray-900 mb-2">What if something gets damaged or I need to cancel?</h3>
-      <p className="text-gray-700 text-sm leading-relaxed">
-        We understand that plans can change. Cancellations made 48 hours in advance are fully refundable. Minor damages are covered under our rental protection plan, and we’re always here to work with you on any issues.
-      </p>
-    </div>
-  </div>
-</section>
-
+        <section className="mt-16">
+          <h2 className="text-center font-serif text-2xl">Frequently asked questions</h2>
+          <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+            {FAQS.map((faq) => (
+              <div
+                key={faq.question}
+                className="rounded-2xl border border-[color:var(--hairline)] bg-[color:var(--surface)] p-6"
+              >
+                <h3 className="font-serif text-base text-[color:var(--ink)]">{faq.question}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted-ink)]">
+                  {faq.answer}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
+
       <NewsletterSection />
     </div>
-  )
+  );
 }

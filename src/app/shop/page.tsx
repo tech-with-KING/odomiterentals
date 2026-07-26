@@ -1,245 +1,138 @@
 'use client';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { ProductCard } from '@/components/Products';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/lib/firebase'; // Adjust the import path to your Firebase config
-import { HeaderThree } from '@/components/GlobalHeader';
 
-// Define proper types for your product data
-interface Product {
-  id: string | number;
-  images: string[];
-  name: string;
-  price: number | string;
-  desc: string;
-  categories?: string[];
-}
+import { useEffect, useMemo, useState } from 'react';
+import { Search } from 'lucide-react';
+import { SectionHeading } from '@/components/site/SectionHeading';
+import { ProductCard, ProductCardSkeleton } from '@/components/site/ProductCard';
+import { fetchCategories, fetchProducts, type CatalogueProduct } from '@/lib/catalogue';
 
-// Loading component
-const LoadingGrid = ({ cols = 4 }: { cols?: number }) => (
-  <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-${cols} gap-2 md:gap-6`}>
-    {Array.from({ length: 8 }).map((_, index) => (
-      <div key={index} className="bg-gray-200 animate-pulse rounded-xl">
-        <div className="h-64 bg-gray-300 rounded-xl mb-2"></div>
-        <div className="p-3">
-          <div className="h-4 bg-gray-300 rounded mb-2"></div>
-          <div className="h-3 bg-gray-300 rounded w-2/3"></div>
-        </div>
-      </div>
-    ))}
-  </div>
-);
+type Filter = { key: string; label: string };
 
-const ShopPage = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+export default function ShopPage() {
+  const [products, setProducts] = useState<CatalogueProduct[]>([]);
+  const [filters, setFilters] = useState<Filter[]>([{ key: 'all', label: 'All' }]);
+  const [active, setActive] = useState('all');
+  const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch products from Firestore
   useEffect(() => {
-    const fetchProducts = async () => {
+    let cancelled = false;
+
+    (async () => {
       try {
         setLoading(true);
-        const productsCollection = collection(db, 'products');
-        const productsSnapshot = await getDocs(productsCollection);
-        
-        console.log('Raw Firestore data:', productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-        
-        const productsData: Product[] = productsSnapshot.docs.map(doc => {
-          const data = doc.data();
-          let images: string[] = [];
-          if (data.images && Array.isArray(data.images)) {
-            images = data.images;
-          } else if (data.img && typeof data.img === 'string') {
-            images = [data.img];
-          } else if (data.image && typeof data.image === 'string') {
-            images = [data.image];
-          }
-          
-          // Handle different possible field names for name
-          const name = data.name || data.Product_name || data.title || 'Unnamed Product';
-          
-          // Handle different possible field names for categories
-          let categories: string[] = [];
-          if (data.categories && Array.isArray(data.categories)) {
-            categories = data.categories;
-          } else if (data.category && Array.isArray(data.category)) {
-            categories = data.category;
-          } else if (typeof data.category === 'string') {
-            categories = [data.category];
-          }
-          
-          return {
-            id: doc.id,
-            images,
-            name,
-            price: data.price || 0,
-            desc: data.desc || data.description || '',
-            categories
-          };
-        });
-        
-        setProducts(productsData);
+        const [rows, categories] = await Promise.all([fetchProducts(), fetchCategories()]);
+        if (cancelled) return;
+
+        setProducts(rows);
+        setFilters([
+          { key: 'all', label: 'All' },
+          ...categories.map((c) => ({ key: c.slug, label: c.name })),
+        ]);
         setError(null);
       } catch (err) {
-        setError('Failed to load products. Please try again later.');
+        console.error('Error loading catalogue:', err);
+        if (!cancelled) setError('We could not load the catalogue. Please try again.');
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
+    })();
+
+    return () => {
+      cancelled = true;
     };
-
-    fetchProducts();
   }, []);
+
+  const visible = useMemo(() => {
+    const term = query.trim().toLowerCase();
+    return products.filter((product) => {
+      const matchesCategory = active === 'all' || product.categorySlug === active;
+      const matchesQuery =
+        term.length === 0 ||
+        product.name.toLowerCase().includes(term) ||
+        product.spec.toLowerCase().includes(term) ||
+        product.categoryName.toLowerCase().includes(term);
+      return matchesCategory && matchesQuery;
+    });
+  }, [products, active, query]);
+
   return (
-    <CategoryFilter
-      title="Filter by Product Type"
-      categories={[
-        'chairs',
-        'tables',
-        'tents',
-        'equipments',
-        'services',
-        'products',
-        'transportation',
-        'setup',
-        'decoration',
-      ]}
-      products={products}
-      loading={loading}
-      error={error}
-      onFilterChange={(selectedCategories) => {
-        console.log('Selected categories:', selectedCategories);
-      }}
-    />
-  );
-};
+    <div className="bg-[color:var(--background)] py-16 md:py-20">
+      <div className="mx-auto max-w-[1280px] px-6">
+        <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+          <SectionHeading
+            eyebrow="Catalogue"
+            title="Quality items tailored to your event."
+            intro="Transparent per-day pricing across chairs, tables, tents, linens and equipment. Everything is inspected and sanitized between rentals."
+          />
 
-// Category Filter Component
-interface CategoryFilterProps {
-  title?: string;
-  categories: string[];
-  products: Product[];
-  loading?: boolean;
-  error?: string | null;
-  className?: string;
-  onFilterChange?: (selectedCategories: string[]) => void;
-}
+          <div className="relative w-full md:max-w-xs">
+            <Search
+              size={16}
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--muted-ink)]"
+            />
+            <label htmlFor="catalogue-search" className="sr-only">
+              Search the catalogue
+            </label>
+            <input
+              id="catalogue-search"
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search chairs, tents…"
+              className="w-full rounded-full border border-[color:var(--hairline)] bg-[color:var(--surface)] py-3 pl-11 pr-4 text-sm text-[color:var(--ink)] placeholder:text-[color:var(--muted-ink)] focus:border-[color:var(--brand)] focus:outline-none focus:ring-2 focus:ring-[color:var(--brand)]/30"
+            />
+          </div>
+        </div>
 
-const CategoryFilter: React.FC<CategoryFilterProps> = ({
-  title = 'Filter by Product Type',
-  categories,
-  products,
-  loading = false,
-  error = null,
-  className = '',
-  onFilterChange,
-}) => {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
+        <div className="mt-8 -mx-6 flex gap-2 overflow-x-auto px-6 pb-2 md:mx-0 md:flex-wrap md:overflow-visible md:px-0">
+          {filters.map((filter) => (
+            <button
+              key={filter.key}
+              type="button"
+              onClick={() => setActive(filter.key)}
+              aria-pressed={active === filter.key}
+              className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                active === filter.key
+                  ? 'border-[color:var(--brand)] bg-[color:var(--brand)] text-white'
+                  : 'border-[color:var(--hairline)] bg-[color:var(--surface)] text-[color:var(--ink)] hover:border-[color:var(--brand)] hover:text-[color:var(--brand)]'
+              }`}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
 
-  useEffect(() => {
-    if (selectedCategories.length === 0) {
-      setFilteredProducts(products);
-    } else {
-      const filtered = products.filter((product: Product) => {
-        const productCategories = product.categories || [];
-        return productCategories.some((category: string) =>
-          selectedCategories.includes(category.toLowerCase())
-        );
-      });
-      setFilteredProducts(filtered);
-    }
-    if (onFilterChange) onFilterChange(selectedCategories);
-  }, [selectedCategories, products, onFilterChange]);
-
-  const toggleCategory = (category: string) => {
-    setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((cat) => cat !== category)
-        : [...prev, category]
-    );
-  };
-console.log('Filtered products:', filteredProducts);
-  return (
-    <div className={`w-full max-w-6xl mx-auto px-4 pb-4 ${className}`}>
-      {/* Filter Section */}
-      <h2 className="text-3xl sm:text-4xl font-medium text-center text-gray-800 my-8">
-        {title}
-      </h2>
-      
-      <div className="flex flex-wrap justify-center gap-2 mb-12">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => toggleCategory(category)}
-            className={`px-4 py-2 rounded-full border transition-colors capitalize ${
-              selectedCategories.includes(category)
-                ? 'bg-[#bcd1e5] text-grey-900'
-                : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100'
-            }`}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
-      {/* Products Section */}
-      <div className='container mx-auto px-1 py-6 bg-white'>
-        <HeaderThree title='Quality Items Tailored To Your Event' />
-        
-        {/* Loading State */}
-        {loading && <LoadingGrid cols={4} />}
-        
-        {/* Error State */}
-        {error && (
-          <div className="text-center py-12">
-            <p className="text-red-600 mb-4">{error}</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        {error ? (
+          <div className="mt-16 text-center">
+            <p className="text-[color:var(--destructive)]">{error}</p>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="mt-4 rounded-full bg-[color:var(--brand)] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[color:var(--brand-deep)]"
             >
               Retry
             </button>
           </div>
-        )}
-        
-          {!loading && !error && (
-          <div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-6 mx-auto'>
-            {filteredProducts.map((item: Product) => (
-              
-                <ProductCard 
-                  images={item.images || []} 
-                  name={item.name} 
-                  price={item.price} 
-                  desc={item.desc} 
-                  categories={item.categories}
-                  id={item.id}
-                />
-              
-            ))}
-          </div>
+        ) : (
+          <>
+            <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {loading
+                ? Array.from({ length: 8 }).map((_, i) => <ProductCardSkeleton key={i} />)
+                : visible.map((product) => <ProductCard key={product.id} product={product} />)}
+            </div>
+
+            {!loading && visible.length === 0 ? (
+              <p className="mt-16 text-center text-[color:var(--muted-ink)]">
+                {products.length === 0
+                  ? 'No items available at the moment — check back soon.'
+                  : 'Nothing matches that filter yet. Try another category.'}
+              </p>
+            ) : null}
+          </>
         )}
       </div>
-
-      {/* No Results Message */}
-      {!loading && !error && filteredProducts.length === 0 && products.length > 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-600">No products match the selected filters.</p>
-        </div>
-      )}
-
-      {/* No Products Message */}
-      {!loading && !error && products.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-600 mb-4">No products available at the moment.</p>
-          <p className="text-sm text-gray-500">
-            Debug: Check browser console for Firestore data structure
-          </p>
-        </div>
-      )}
     </div>
   );
-};
-
-export default ShopPage;
+}

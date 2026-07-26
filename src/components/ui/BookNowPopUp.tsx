@@ -1,8 +1,9 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import Image from "next/image"
-import { useCart } from "@/app/cart/page"
+import { useState } from 'react';
+import Image from 'next/image';
+import { Calendar, Minus, Package, Plus, ShoppingBag } from 'lucide-react';
+import { useCart } from '@/context/cart';
 import {
   Dialog,
   DialogContent,
@@ -10,287 +11,235 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import { Plus, Minus, ShoppingCart, Calendar, Package } from "lucide-react"
+} from '@/components/ui/dialog';
 
 interface BookNowPopupProps {
   product: {
-  id: string | number;
-  images: string[];
-  name: string;
-  price: number | string;
-  desc: string;
-  categories?: string[];
-  }
-  trigger?: React.ReactNode
+    id: string | number;
+    images: string[];
+    name: string;
+    /** Effective price — already discounted where a sale is running. */
+    price: number | string;
+    /** Undiscounted price, passed only when the product is on sale. */
+    listPrice?: number;
+    desc: string;
+    categories?: string[];
+  };
+  trigger?: React.ReactNode;
+}
+
+function Stepper({
+  id,
+  label,
+  icon,
+  value,
+  onChange,
+  suffix,
+}: {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  value: number;
+  onChange: (next: number) => void;
+  suffix?: string;
+}) {
+  return (
+    <div className="space-y-3">
+      <label
+        htmlFor={id}
+        className="flex items-center gap-1.5 text-sm font-medium text-[color:var(--ink)]"
+      >
+        {icon}
+        {label}
+      </label>
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          aria-label={`Decrease ${label.toLowerCase()}`}
+          onClick={() => onChange(value - 1)}
+          disabled={value <= 1}
+          className="grid h-9 w-9 place-items-center rounded-full border border-[color:var(--hairline)] text-[color:var(--ink)] transition-colors hover:border-[color:var(--brand)] hover:text-[color:var(--brand)] disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <Minus className="h-4 w-4" />
+        </button>
+        <input
+          id={id}
+          type="number"
+          min={1}
+          value={value}
+          onChange={(e) => onChange(Math.max(1, parseInt(e.target.value, 10) || 1))}
+          className="h-9 w-20 rounded-lg border border-[color:var(--hairline)] bg-[color:var(--surface)] text-center text-sm text-[color:var(--ink)] focus:border-[color:var(--brand)] focus:outline-none focus:ring-2 focus:ring-[color:var(--brand)]/30"
+        />
+        <button
+          type="button"
+          aria-label={`Increase ${label.toLowerCase()}`}
+          onClick={() => onChange(value + 1)}
+          className="grid h-9 w-9 place-items-center rounded-full border border-[color:var(--hairline)] text-[color:var(--ink)] transition-colors hover:border-[color:var(--brand)] hover:text-[color:var(--brand)]"
+        >
+          <Plus className="h-4 w-4" />
+        </button>
+        {suffix ? <span className="text-sm text-[color:var(--muted-ink)]">{suffix}</span> : null}
+      </div>
+    </div>
+  );
 }
 
 export const BookNowPopup = ({ product, trigger }: BookNowPopupProps) => {
-  const { addToCart } = useCart()
-  const [open, setOpen] = useState(false)
-  const [quantity, setQuantity] = useState(1)
-  const [duration, setDuration] = useState(1)
-  const [isAdding, setIsAdding] = useState(false)
+  const { addToCart } = useCart();
+  const [open, setOpen] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [duration, setDuration] = useState(1);
 
-  const totalPrice = Number(product.price) * quantity * duration
+  const unitPrice = Number(product.price) || 0;
+  const onSale = typeof product.listPrice === 'number' && product.listPrice > unitPrice;
+  const totalPrice = unitPrice * quantity * duration;
+  const image = product.images?.[0];
 
-  const handleAddToCart = async () => {
-    setIsAdding(true)
-    try {
-      // Transform the product to match the expected format
-      const cartProduct = {
+  const handleAddToCart = () => {
+    addToCart(
+      {
         id: product.id,
         name: product.name,
         price: product.price,
-        images: [product.images[0]],
-        categories: product.categories || ['General']
-      }
-      
-      await addToCart(cartProduct, quantity, duration)
-      setOpen(false)
-      // Reset form
-      setQuantity(1)
-      setDuration(1)
-      // Optional: Show success toast
-      console.log('Added to cart successfully!')
-    } catch (error) {
-      console.error('Error adding to cart:', error)
-    } finally {
-      setIsAdding(false)
-    }
-  }
+        images: image ? [image] : [],
+        categories: product.categories ?? ['General'],
+      },
+      quantity,
+      duration
+    );
 
-  const handleQuantityChange = (change: number) => {
-    setQuantity(Math.max(1, quantity + change))
-  }
-
-  const handleDurationChange = (change: number) => {
-    setDuration(Math.max(1, duration + change))
-  }
+    setOpen(false);
+    setQuantity(1);
+    setDuration(1);
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button variant="secondary" size="sm" className="bg-white text-gray-800 px-2 py-1 text-xs rounded-full font-medium hover:bg-gray-100 transition-colors">
+          <button
+            type="button"
+            className="rounded-full bg-[color:var(--brand)] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[color:var(--brand-deep)]"
+          >
             Book Now
-          </Button>
+          </button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+
+      <DialogContent className="rounded-2xl border-[color:var(--hairline)] bg-[color:var(--surface)] sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">Book Item</DialogTitle>
-          <DialogDescription>
-            Choose quantity and duration for your rental
+          <DialogTitle className="font-serif text-xl">Add to your booking</DialogTitle>
+          <DialogDescription className="text-[color:var(--muted-ink)]">
+            Choose quantity and rental duration.
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="space-y-6">
-          {/* Product Preview */}
-          <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-            <div className="flex-shrink-0">
-              <Image
-                src={product.images[0]}
-                alt={product.name}
-                width={80}
-                height={80}
-                className="w-20 h-20 object-cover rounded-lg"
-              />
-            </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-gray-900">{product.name}</h3>
-              <p className="text-sm text-gray-600">${product.price} per unit</p>
-              {product.desc && (
-                <p className="text-sm text-gray-500 mt-1 line-clamp-2">
-                  {product.desc}
-                </p>
+          <div className="flex items-center gap-4 rounded-xl border border-[color:var(--hairline)] bg-[color:var(--background)] p-4">
+            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-[#f5f0e6]">
+              {image ? (
+                <Image src={image} alt={product.name} fill sizes="80px" className="object-cover" />
+              ) : (
+                <div className="grid h-full w-full place-items-center text-[color:var(--muted-ink)]">
+                  <ShoppingBag size={20} aria-hidden="true" />
+                </div>
               )}
             </div>
-          </div>
-
-          {/* Quantity and Duration Controls */}
-          <div className="grid grid-cols-2 gap-6">
-            {/* Quantity */}
-            <div className="space-y-3">
-              <Label htmlFor="quantity" className="text-sm font-medium flex items-center">
-                <Package className="w-4 h-4 mr-1" />
-                Quantity
-              </Label>
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleQuantityChange(-1)}
-                  disabled={quantity <= 1}
-                  className="h-9 w-9 p-0"
-                >
-                  <Minus className="w-4 h-4" />
-                </Button>
-                <Input
-                  id="quantity"
-                  type="number"
-                  value={quantity}
-                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-20 text-center h-9"
-                  min="1"
-                />
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleQuantityChange(1)}
-                  className="h-9 w-9 p-0"
-                >
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Duration */}
-            <div className="space-y-3">
-              <Label htmlFor="duration" className="text-sm font-medium flex items-center">
-                <Calendar className="w-4 h-4 mr-1" />
-                Duration (days)
-              </Label>
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDurationChange(-1)}
-                  disabled={duration <= 1}
-                  className="h-9 w-9 p-0"
-                >
-                  <Minus className="w-4 h-4" />
-                </Button>
-                <Input
-                  id="duration"
-                  type="number"
-                  value={duration}
-                  onChange={(e) => setDuration(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-20 text-center h-9"
-                  min="1"
-                />
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDurationChange(1)}
-                  className="h-9 w-9 p-0"
-                >
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="font-sans text-base font-semibold text-[color:var(--ink)]">
+                {product.name}
+              </h3>
+              <p className="text-sm text-[color:var(--brand)]">
+                ${unitPrice.toFixed(2)}
+                {onSale ? (
+                  <span className="ml-1.5 text-[color:var(--muted-ink)]">
+                    <span className="sr-only">Was </span>
+                    <s className="decoration-[color:var(--muted-ink)]/60">
+                      ${product.listPrice!.toFixed(2)}
+                    </s>
+                  </span>
+                ) : null}
+                <span className="text-[color:var(--muted-ink)]"> per unit / day</span>
+              </p>
+              {product.desc ? (
+                <p className="mt-1 line-clamp-2 text-sm text-[color:var(--muted-ink)]">
+                  {product.desc}
+                </p>
+              ) : null}
             </div>
           </div>
 
-          {/* Price Calculation */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="space-y-2">
-                <div className="flex justify-between items-center text-sm text-gray-600">
-                  <span>Price per unit</span>
-                  <span>${product.price}</span>
-                </div>
-                <div className="flex justify-between items-center text-sm text-gray-600">
-                  <span>Quantity</span>
-                  <span>{quantity}</span>
-                </div>
-                <div className="flex justify-between items-center text-sm text-gray-600">
-                  <span>Duration</span>
-                  <span>{duration} {duration === 1 ? 'day' : 'days'}</span>
-                </div>
-                <Separator />
-                <div className="flex justify-between items-center text-base font-semibold">
-                  <span>Total</span>
-                  <span className="text-blue-600">${totalPrice}</span>
-                </div>
-                <div className="text-xs text-gray-500">
-                  {quantity} × {duration} × ${product.price} = ${totalPrice}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <Stepper
+              id="quantity"
+              label="Quantity"
+              icon={<Package className="h-4 w-4 text-[color:var(--brand)]" />}
+              value={quantity}
+              onChange={(next) => setQuantity(Math.max(1, next))}
+            />
+            <Stepper
+              id="duration"
+              label="Duration"
+              icon={<Calendar className="h-4 w-4 text-[color:var(--brand)]" />}
+              value={duration}
+              onChange={(next) => setDuration(Math.max(1, next))}
+              suffix={duration === 1 ? 'day' : 'days'}
+            />
+          </div>
 
-          {/* Action Buttons */}
-          <div className="flex space-x-3">
-            <Button
-              variant="outline"
+          <div className="rounded-xl border border-[color:var(--hairline)] bg-[color:var(--background)] p-4">
+            <dl className="space-y-2 text-sm text-[color:var(--muted-ink)]">
+              <div className="flex items-center justify-between">
+                <dt>Price per unit / day</dt>
+                <dd>${unitPrice.toFixed(2)}</dd>
+              </div>
+              <div className="flex items-center justify-between">
+                <dt>Quantity</dt>
+                <dd>{quantity}</dd>
+              </div>
+              <div className="flex items-center justify-between">
+                <dt>Duration</dt>
+                <dd>
+                  {duration} {duration === 1 ? 'day' : 'days'}
+                </dd>
+              </div>
+            </dl>
+
+            <div className="mt-3 border-t border-[color:var(--hairline)] pt-3">
+              <div className="flex items-baseline justify-between">
+                <span className="text-base font-semibold text-[color:var(--ink)]">Total</span>
+                <span className="font-serif text-xl font-semibold text-[color:var(--brand)]">
+                  ${totalPrice.toFixed(2)}
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-[color:var(--muted-ink)]">
+                {quantity} × {duration} {duration === 1 ? 'day' : 'days'} × $
+                {unitPrice.toFixed(2)}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              type="button"
               onClick={() => setOpen(false)}
-              className="flex-1"
+              className="flex-1 rounded-full border border-[color:var(--hairline)] px-4 py-2.5 text-sm font-medium text-[color:var(--ink)] transition-colors hover:border-[color:var(--brand)] hover:text-[color:var(--brand)]"
             >
               Cancel
-            </Button>
-            <Button
+            </button>
+            <button
+              type="button"
               onClick={handleAddToCart}
-              disabled={isAdding}
-              className="flex-1"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[color:var(--brand)] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[color:var(--brand-deep)]"
             >
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              {isAdding ? 'Adding...' : 'Add to Cart'}
-            </Button>
+              <ShoppingBag className="h-4 w-4" />
+              Add to Booking
+            </button>
           </div>
         </div>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-// Updated Product Card Component
-interface ProductCardProps {
-  id: string
-  title: string
-  price: number
-  image: string
-  categories?: string[]
-  description?: string
-  onAddToCart?: () => void
-}
-
-export const ProductCard = ({ id, title, price, image, categories, description, onAddToCart }: ProductCardProps) => {
-  const product = {
-    id,
-    images: [image],
-    name: title,
-    price,
-    desc: description || "",
-    categories
-  }
-
-  return (
-    <div className="bg-white rounded-xl overflow-hidden max-w-sm mx-auto">
-      <div className="relative rounded-2xl">
-        <Image 
-          src={image} 
-          alt={title}
-          width={400}
-          height={256}
-          className="w-full h-45 md:h-64 object-cover rounded-2xl transition-transform duration-300 transform hover:scale-105"
-        />
-        <BookNowPopup product={product} />
-      </div>
-      <div className="p-1 sm:p-3 md:flex md:flex-1 md:justify-between">
-        <h3 className="text-[16px] sm:text-sm sm:font-semibold font-medium text-gray-900">{title}</h3>
-        <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
-          <span className="text-blue-900">${price}</span> a unit
-        </p>
-      </div>
-    </div>
-  )
-}
-
-// Alternative: If you want to keep your existing component structure
-export const BookNowButton = ({ product }: { product: any }) => {
-  return (
-    <BookNowPopup 
-      product={product}
-      trigger={
-        <button className="absolute top-3 right-3 bg-white text-gray-800 px-2 py-1 text-xs rounded-full font-medium hover:bg-gray-100 transition-colors">
-          Book Now
-        </button>
-      }
-    />
-  )
-}
+export default BookNowPopup;

@@ -42,27 +42,52 @@ Add these to your `.env` file:
 
 ```env
 # Business Contact Information
-BUSINESS_WHATSAPP_NUMBER=+1234567890  # Your WhatsApp number with country code
-BUSINESS_EMAIL=kingsleyfrancis42@gmail.com
+BUSINESS_WHATSAPP_NUMBER=+18622306639  # WhatsApp number with country code
+BUSINESS_EMAIL=odomitegroupsllc@gmail.com  # Where order + enquiry notifications land
 
-# Email Configuration (Gmail App Password Method)
-EMAIL_FROM=kingsleyfrancis42@gmail.com
-EMAIL_PASSWORD=your_gmail_app_password_here  # See setup instructions below
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
+# Email (Resend)
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxx
+EMAIL_FROM="Odomite Rentals <orders@odomiterentals.com>"
 ```
 
-### 2. **Gmail App Password Setup**
+### 2. **Resend Setup**
 
-To send emails, you need to create a Gmail App Password:
+All outbound email goes through [Resend](https://resend.com) via `src/lib/email.ts`.
+SMTP / Gmail App Passwords are no longer used.
 
-1. Go to your Google Account settings
-2. Navigate to "Security" > "2-Step Verification" (must be enabled)
-3. At the bottom, click "App passwords"
-4. Select "Mail" and "Other (custom name)"
-5. Enter "Odomite Rentals" as the name
-6. Copy the 16-character password
-7. Use this password in the `EMAIL_PASSWORD` environment variable
+1. Create an API key in Resend and set it as `RESEND_API_KEY`.
+2. **Verify your sending domain.** In Resend go to *Domains → Add Domain*, add
+   `odomiterentals.com`, and publish the DNS records it gives you.
+3. Set `EMAIL_FROM` to an address on that verified domain.
+
+> **The domain must be verified in the same Resend account the API key belongs to.**
+> If you swap the key to a different account, verify the domain there too.
+> Until a domain is verified, sends fall back to `onboarding@resend.dev`, which
+> Resend only delivers to the account owner's own address — customer
+> confirmations will be rejected.
+
+**Check your configuration** with the built-in diagnostic:
+
+```bash
+curl localhost:3000/api/test-email                    # reports which vars are set
+curl -X POST localhost:3000/api/test-email \
+  -H 'Content-Type: application/json' \
+  -d '{"to":"you@example.com"}'                        # sends a real test message
+```
+
+The POST returns `{ sent: true, id }` on success, or `{ sent: false, error }`
+with Resend's exact rejection reason.
+
+### What sends email
+
+| Trigger | Recipients |
+|---|---|
+| Checkout submitted | Order confirmation → customer; new-order alert → `BUSINESS_EMAIL` (reply-to customer) |
+| Contact form | Enquiry → `BUSINESS_EMAIL` (reply-to customer); acknowledgement → customer |
+| Newsletter signup | Signup alert → `BUSINESS_EMAIL`; welcome → subscriber |
+
+Email failures never block an order — the checkout response includes
+`emailSent: { customer, business }` so you can see what actually went out.
 
 ### 3. **Firebase Configuration**
 

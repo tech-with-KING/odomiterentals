@@ -19,10 +19,10 @@ export class NotificationService {
     }
 
     // Check if VAPID key is configured
+    // Surfaced by the caller as a toast — this module has no UI of its own.
     if (!NotificationService.VAPID_KEY || NotificationService.VAPID_KEY.includes('YOUR_VAPID_KEY')) {
-      console.error('VAPID key not configured. Please set NEXT_PUBLIC_FIREBASE_VAPID_KEY in your environment variables.');
-      alert('Push notifications are not configured. Please contact your administrator.');
-      return null;
+      console.error('VAPID key not configured. Set NEXT_PUBLIC_FIREBASE_VAPID_KEY.');
+      throw new Error('Push notifications are not set up yet. NEXT_PUBLIC_FIREBASE_VAPID_KEY is missing.');
     }
 
     try {

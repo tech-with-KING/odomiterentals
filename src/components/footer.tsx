@@ -1,214 +1,120 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { Mail, Phone, Facebook, Twitter, Instagram, Linkedin, LucideIcon } from "lucide-react"
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Facebook, Instagram, Mail, Phone } from 'lucide-react';
+
+const QUICK_LINKS = [
+  { label: 'About Us', href: '/about' },
+  { label: 'Our Services', href: '/#services' },
+  { label: 'Catalogue', href: '/shop' },
+  { label: 'Get Quote', href: '/quote' },
+  { label: 'Get In Touch', href: '/contact' },
+];
+
+const SERVICE_AREAS = [
+  'Newark, NJ',
+  'Elizabeth, NJ',
+  'Jersey City, NJ',
+  'Paterson, NJ',
+  'Greater New Jersey',
+];
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  // Admin runs its own chrome.
+  if (pathname?.startsWith('/admin')) return null;
+
   return (
-    <footer className="bg-white text-gray-600 py-8">
-      <div className="max-w-7xl mx-auto px-4 py-16 relative z-10">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4 mb-12">
-          {/* Logo and Company Info */}
-          <div className="flex flex-col gap-6 max-w-[300px]">
-            <Image
-              src="/logo.png"
-              alt="Odomite Rental Logo"
-              width={250}
-              height={80}
-              className="w-[250px] h-auto brightness-110"
-            />
-            <p className="text-lg text-gray-500 leading-relaxed italic">
-              &ldquo;Your trusted evnet rental to cater to all your party needs.&rdquo;
-            </p>
-          </div>
-
-          {/* Quick Links */}
-          <div className="flex flex-col gap-6">
-            <h3 className="text-xl font-bold  mb-2 border-b-2 border-blue-500 pb-2 inline-block">
-              Quick Links
-            </h3>
-            <nav>
-              <ul className="list-none p-0 m-0 flex flex-col gap-3">
-                <li>
-                  <InteractiveLink href="/about">About Us</InteractiveLink>
-                </li>
-                <li>
-                  <InteractiveLink href="/services">Our Services</InteractiveLink>
-                </li>
-                <li>
-                  <InteractiveLink href="/shop">Catalogue</InteractiveLink>
-                </li>
-                <li>
-                  <InteractiveLink href="/resources">Get Quote</InteractiveLink>
-                </li>
-                <li>
-                  <InteractiveLink href="/contact">Get In Touch</InteractiveLink>
-                </li>
-              </ul>
-            </nav>
-          </div>
-
-          {/* Contact Info */}
-          <div className="flex flex-col gap-6">
-            <h3 className="text-xl font-bold mb-2 border-b-2 border-blue-500 pb-2 inline-block">
-              Contact Information
-            </h3>
-            <div className="flex flex-col gap-4">
-              <ContactItem icon={Mail} href="mailto:odomitegroupsllc@gmail.com" type="email">
-                odomitegroupsllc@gmail.com
-              </ContactItem>
-              <ContactItem icon={Phone} href="tell:+18622306639" type="phone">
-                +18622306639
-              </ContactItem>
-            </div>
-          </div>
-
-          {/* Social Links */}
-          <div className="flex flex-col gap-6">
-            <h3 className="text-xl font-bold border-b-2 border-blue-500 pb-2 inline-block">
-              Connect With Us
-            </h3>
-            <div className="flex flex-col gap-6">
-              <p className="text-sm m-0">Follow us for updates and project showcases</p>
-              <div className="flex gap-4 flex-wrap">
-                <SocialIcon icon={Facebook} href="#" label="Facebook" hoverColor="#1877f2" />
-                <SocialIcon icon={Instagram} href="#" label="Instagram" hoverColor="#e4405f" />
-
-              </div>
-            </div>
+    <footer id="contact" className="bg-[color:var(--ink)] text-white/80">
+      <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-10 px-6 py-16 md:grid-cols-4 md:gap-8">
+        <div>
+          <div className="font-serif text-2xl text-white">Odomite Rentals</div>
+          <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/60">
+            Your trusted event rental for all your party needs. Family-owned, New Jersey based.
+          </p>
+          <div className="mt-5 flex gap-2">
+            <a
+              href="https://www.facebook.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              className="grid h-10 w-10 place-items-center rounded-full border border-white/15 transition-colors hover:border-[color:var(--brand)] hover:text-[color:var(--brand)]"
+            >
+              <Facebook size={16} />
+            </a>
+            <a
+              href="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="grid h-10 w-10 place-items-center rounded-full border border-white/15 transition-colors hover:border-[color:var(--brand)] hover:text-[color:var(--brand)]"
+            >
+              <Instagram size={16} />
+            </a>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="flex justify-between items-center flex-wrap gap-4 pt-8 border-t border-white/10">
-          <p className="text-sm">© 2025 OdomiteRentals.com. All rights reserved.</p>
-{/*           <div className="flex gap-8 flex-wrap">
-            <BottomLink href="/privacy">Privacy Policy</BottomLink>
-            <BottomLink href="/terms">Terms of Service</BottomLink>
-            <BottomLink href="/sitemap">Sitemap</BottomLink>
-          </div> */}
+        <div>
+          <h4 className="mb-4 text-xs font-medium uppercase tracking-[0.18em] text-white/50">
+            Quick Links
+          </h4>
+          <ul className="space-y-2 text-sm">
+            {QUICK_LINKS.map((link) => (
+              <li key={link.label}>
+                <Link href={link.href} className="transition-colors hover:text-[color:var(--brand)]">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="mb-4 text-xs font-medium uppercase tracking-[0.18em] text-white/50">
+            Contact Information
+          </h4>
+          <ul className="space-y-3 text-sm">
+            <li>
+              <a
+                href="mailto:odomitegroupsllc@gmail.com"
+                className="inline-flex items-center gap-2 transition-colors hover:text-[color:var(--brand)]"
+              >
+                <Mail size={15} />
+                odomitegroupsllc@gmail.com
+              </a>
+            </li>
+            <li>
+              <a
+                href="tel:+18622306639"
+                className="inline-flex items-center gap-2 transition-colors hover:text-[color:var(--brand)]"
+              >
+                <Phone size={15} />
+                +1 (862) 230-6639
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="mb-4 text-xs font-medium uppercase tracking-[0.18em] text-white/50">
+            Service Areas
+          </h4>
+          <ul className="space-y-2 text-sm">
+            {SERVICE_AREAS.map((area) => (
+              <li key={area}>{area}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="border-t border-white/10">
+        <div className="mx-auto flex max-w-[1280px] flex-col items-center justify-between gap-2 px-6 py-6 text-xs text-white/50 sm:flex-row">
+          <span>© {new Date().getFullYear()} OdomiteRentals.com. All rights reserved.</span>
+          <span>Handcrafted for events across New Jersey.</span>
         </div>
       </div>
     </footer>
-  )
-}
-
-// Type definitions
-interface InteractiveLinkProps {
-  href: string;
-  children: React.ReactNode;
-}
-
-interface ContactItemProps {
-  icon: LucideIcon;
-  href: string;
-  children: React.ReactNode;
-  type?: "email" | "phone" | "link";
-}
-
-interface SocialIconProps {
-  icon: LucideIcon;
-  href: string;
-  label: string;
-  hoverColor: string;
-}
-
-interface BottomLinkProps {
-  href: string;
-  children: string;
-}
-
-// Interactive link component
-const InteractiveLink = ({ href, children }: InteractiveLinkProps) => {
-  const [isHovered, setIsHovered] = useState(false)
-
-  return (
-    <Link
-      href={href}
-      className={` no-underline text-base transition-all duration-300 py-2 border-l-[3px] pl-3 block ${
-        isHovered ? "text-blue-500 border-blue-500 translate-x-[5px]" : "border-transparent"
-      }`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {children}
-    </Link>
-  )
-}
-
-// Interactive contact item
-const ContactItem = ({ icon: Icon, href, children, type = "link" }: ContactItemProps) => {
-  const [isHovered, setIsHovered] = useState(false)
-
-  const content = (
-    <div
-      className={`flex items-center gap-4 py-3 transition-all duration-300 ${isHovered ? "translate-x-[5px]" : ""}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div className="text-blue-500 bg-blue-500/10 p-2 rounded-full min-w-[40px] h-[40px] flex items-center justify-center">
-        <Icon size={24} />
-      </div>
-      <span className={`text-base transition-colors duration-300 ${isHovered ? "text-blue-500" : ""}`}>
-        {children}
-      </span>
-    </div>
-  )
-
-  if (type === "email") {
-    return (
-      <a href={`mailto:${href}`} className="no-underline">
-        {content}
-      </a>
-    )
-  }
-  if (type === "phone") {
-    return (
-      <a href={`tel:${href}`} className="no-underline">
-        {content}
-      </a>
-    )
-  }
-  return <div>{content}</div>
-}
-
-// Interactive social icon
-const SocialIcon = ({ icon: Icon, href, label, hoverColor }: SocialIconProps) => {
-  const [isHovered, setIsHovered] = useState(false)
-
-  return (
-    <a
-      href={href}
-      className={`p-3 bg-white/10 rounded-full transition-all duration-300 no-underline flex items-center justify-center w-[50px] h-[50px] backdrop-blur-[10px] ${
-        isHovered ? "text-white translate-y-[-3px] scale-105" : ""
-      }`}
-      style={{
-        backgroundColor: isHovered ? hoverColor : "rgba(255, 255, 255, 0.1)",
-        boxShadow: isHovered ? `0 8px 25px rgba(66, 153, 225, 0.3)` : "none",
-      }}
-      aria-label={label}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <Icon size={24} />
-    </a>
-  )
-}
-
-// Interactive bottom link
-const BottomLink = ({ href, children }: BottomLinkProps) => {
-  const [isHovered, setIsHovered] = useState(false)
-
-  return (
-    <Link
-      href={href}
-      className={`no-underline text-sm transition-colors duration-300 ${isHovered ? "text-blue-500" : ""}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {children}
-    </Link>
-  )
+  );
 }

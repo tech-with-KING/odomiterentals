@@ -1,174 +1,140 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
-import { ProductCard } from '@/components/Products';
-import { HeaderThree } from '@/components/GlobalHeader';
-
-interface Product {
-  id: string | number;
-  images: string[];
-  name: string;
-  price: number | string;
-  desc: string;
-  categories?: string[];
-  instock?: boolean;
-  unitsleft?: number;
-}
-
-const LoadingGrid = ({ cols = 4 }: { cols?: number }) => (
-  <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-${cols} gap-2 md:gap-6`}>
-    {Array.from({ length: 8 }).map((_, index) => (
-      <div key={index} className="bg-gray-200 animate-pulse rounded-xl">
-        <div className="h-64 bg-gray-300 rounded-xl mb-2"></div>
-        <div className="p-3">
-          <div className="h-4 bg-gray-300 rounded mb-2"></div>
-          <div className="h-3 bg-gray-300 rounded w-2/3"></div>
-        </div>
-      </div>
-    ))}
-  </div>
-);
+import { ArrowLeft } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { SectionHeading } from '@/components/site/SectionHeading';
+import { ProductCard, ProductCardSkeleton } from '@/components/site/ProductCard';
+import { mapProduct, PRODUCT_COLUMNS, type CatalogueProduct } from '@/lib/catalogue';
 
 export default function CategoryPage() {
   const params = useParams();
   const categorySlug = params.cartegory as string;
-  
-  // Convert slug back to category name
-  const categoryName = categorySlug
-    ? categorySlug
-        .split('-')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ')
-    : '';
 
-  const [products, setProducts] = useState<Product[]>([]);
+  const [categoryName, setCategoryName] = useState('');
+  const [description, setDescription] = useState('');
+  const [products, setProducts] = useState<CatalogueProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchCategoryProducts = async () => {
-      if (!categoryName) return;
-      
+    if (!categorySlug) return;
+    let cancelled = false;
+
+    (async () => {
       try {
         setLoading(true);
-        const productsCollection = collection(db, 'products');
-        const productsSnapshot = await getDocs(productsCollection);
-        
-        // Filter products by category
-        const filteredProducts: Product[] = productsSnapshot.docs
-          .map(doc => {
-            const data = doc.data();
-            let images: string[] = [];
-            if (data.images && Array.isArray(data.images)) {
-              images = data.images;
-            } else if (data.img && typeof data.img === 'string') {
-              images = [data.img];
-            } else if (data.image && typeof data.image === 'string') {
-              images = [data.image];
-            }
 
-            const name = data.name || data.Product_name || data.title || 'Unnamed Product';
-            let categories: string[] = [];
-            if (data.categories && Array.isArray(data.categories)) {
-              categories = data.categories;
-            } else if (data.category && Array.isArray(data.category)) {
-              categories = data.category;
-            } else if (typeof data.category === 'string') {
-              categories = [data.category];
-            }
-            
-            return {
-              id: doc.id,
-              images,
-              name,
-              price: data.price || 0,
-              desc: data.desc || data.description || '',
-              categories
-            };
-          })
-          .filter(product => {
-            // Check if product matches the category
-            if (!product.categories || product.categories.length === 0) return false;
-            
-            // Check for exact match or partial match (case insensitive)
-            return product.categories.some(cat => 
-              cat.toLowerCase().includes(categoryName.toLowerCase()) ||
-              categoryName.toLowerCase().includes(cat.toLowerCase()) ||
-              cat.toLowerCase().replace(/s$/, '') === categoryName.toLowerCase().replace(/s$/, '') // Handle plural/singular
-            );
-          });
-        
-        setProducts(filteredProducts);
-        console.log(`Filtered products for category "${categoryName}":`, filteredProducts);
+        const { data: category, error: catError } = await supabase
+          .from('categories')
+          .select('id, name, description')
+          .eq('slug', categorySlug)
+          .maybeSingle();
+
+        if (catError) throw catError;
+        if (cancelled) return;
+
+        if (!category) {
+          setProducts([]);
+          setCategoryName(
+            categorySlug
+              .split('-')
+              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(' ')
+          );
+          setError(null);
+          return;
+        }
+
+        setCategoryName(category.name);
+        setDescription(category.description ?? '');
+
+        const { data, error: prodError } = await supabase
+          .from('products')
+          .select(PRODUCT_COLUMNS)
+          .eq('category_id', category.id)
+          .order('created_at', { ascending: false });
+
+        if (prodError) throw prodError;
+        if (cancelled) return;
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setProducts((data ?? []).map((row: any) => mapProduct(row)));
         setError(null);
       } catch (err) {
         console.error('Error fetching category products:', err);
-        setError('Failed to load products for this category');
+        if (!cancelled) setError('We could not load this category. Please try again.');
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
+    })();
+
+    return () => {
+      cancelled = true;
     };
-
-    fetchCategoryProducts();
-  }, [categoryName]);
-
-  if (loading) {
-    return (
-      <div className='container mx-auto px-4 py-6 bg-white min-h-screen'>
-        <HeaderThree title={`${categoryName} - Loading...`} />
-        <LoadingGrid cols={4} />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className='container mx-auto px-4 py-6 bg-white min-h-screen'>
-        <HeaderThree title={`${categoryName} - Error`} />
-        <div className="text-center py-12">
-          <p className="text-red-600">{error}</p>
-        </div>
-      </div>
-    );
-  }
+  }, [categorySlug]);
 
   return (
-    <div className='container mx-auto px-4 py-6 bg-white min-h-screen'>
-      <HeaderThree title={`${categoryName} Rentals`} />
-      
-      {products.length === 0 ? (
-        <div className="text-center py-12">
-          <h3 className="text-xl font-semibold text-gray-600 mb-4">
-            No products found in "{categoryName}" category
-          </h3>
-          <p className="text-gray-500">
-            Try browsing our other categories or check back later.
-          </p>
+    <div className="bg-[color:var(--background)] py-16 md:py-20">
+      <div className="mx-auto max-w-[1280px] px-6">
+        <Link
+          href="/shop"
+          className="inline-flex items-center gap-2 text-sm text-[color:var(--muted-ink)] transition-colors hover:text-[color:var(--brand)]"
+        >
+          <ArrowLeft size={16} />
+          All categories
+        </Link>
+
+        <div className="mt-6">
+          <SectionHeading
+            eyebrow="Catalogue"
+            title={categoryName || 'Category'}
+            intro={description || undefined}
+          />
+          {!loading && !error ? (
+            <p className="mt-4 text-sm text-[color:var(--muted-ink)]">
+              {products.length} {products.length === 1 ? 'item' : 'items'} available
+            </p>
+          ) : null}
         </div>
-      ) : (
-        <>
-          <p className="text-gray-600 mb-6">
-            Showing {products.length} {products.length === 1 ? 'product' : 'products'} in {categoryName}
-          </p>
-          
-          <div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mx-auto'>
-            {products.map((item: Product) => (
-              <ProductCard 
-                key={item.id}
-                images={item.images} 
-                name={item.name} 
-                price={item.price} 
-                categories={item.categories}
-                id={item.id}
-                desc={item.desc} 
-              />
-            ))}
+
+        {error ? (
+          <div className="mt-16 text-center">
+            <p className="text-[color:var(--destructive)]">{error}</p>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="mt-4 rounded-full bg-[color:var(--brand)] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[color:var(--brand-deep)]"
+            >
+              Retry
+            </button>
           </div>
-        </>
-      )}
+        ) : (
+          <>
+            <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {loading
+                ? Array.from({ length: 8 }).map((_, i) => <ProductCardSkeleton key={i} />)
+                : products.map((product) => <ProductCard key={product.id} product={product} />)}
+            </div>
+
+            {!loading && products.length === 0 ? (
+              <div className="mt-16 text-center">
+                <p className="text-[color:var(--muted-ink)]">
+                  Nothing in this category yet — check back soon.
+                </p>
+                <Link
+                  href="/shop"
+                  className="mt-6 inline-flex items-center gap-2 rounded-full border border-[color:var(--hairline)] px-6 py-3 text-sm font-medium text-[color:var(--ink)] transition-colors hover:border-[color:var(--brand)] hover:text-[color:var(--brand)]"
+                >
+                  Browse the full catalogue
+                </Link>
+              </div>
+            ) : null}
+          </>
+        )}
+      </div>
     </div>
   );
 }

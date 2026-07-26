@@ -22,58 +22,33 @@ export default function GlobalHeader({
   className = "",
 }: GlobalHeaderProps) {
   return (
-    <div className={`mx-auto flex items-center flex-col container space-y-6 ${className}`}>
-      {/* Animated Title */}
-      <motion.span
-        whileHover="whileHover"
-        variants={{
-          initial: { x: 0 },
-          whileHover: { x: -16 },
-        }}
-        transition={{
-          type: "spring",
-          staggerChildren: 0.075,
-          delayChildren: 0.25,
-        }}
-        className="relative z-10 block text-4xl font-bold text-gray-800 transition-colors duration-700 hover:text-gray-600 md:text-6xl"
+    <div className={`mx-auto flex flex-col items-center container space-y-5 text-center ${className}`}>
+      <motion.h2
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="font-display text-4xl text-ink md:text-6xl"
       >
-        {title.split("").map((l, i) => (
-          <motion.span
-            variants={{
-              initial: { x: 0 },
-              whileHover: { x: 16 },
-            }}
-            transition={{ type: "spring" }}
-            className="inline-block"
-            key={i}
-          >
-            {l === " " ? "\u00A0" : l}
-          </motion.span>
-        ))}
-      </motion.span>
+        {title}
+      </motion.h2>
 
-      {/* Optional Description */}
-      {description && <p className="text-lg text-gray-600 leading-relaxed">{description}</p>}
+      {description && (
+        <p className="max-w-2xl text-lg leading-relaxed text-muted-foreground">{description}</p>
+      )}
 
-      {/* Optional Button */}
       {buttonText && (
         <div className="pt-2">
           {buttonHref ? (
-            <Link href={buttonHref}>
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-colors"
-              >
-                {buttonText}
-              </Button>
-            </Link>
+            <Button variant="outline" size="lg" className="border-line text-ink hover:border-primary hover:text-primary" asChild>
+              <Link href={buttonHref}>{buttonText}</Link>
+            </Button>
           ) : (
             <Button
               variant="outline"
               size="lg"
               onClick={buttonOnClick}
-              className="border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-colors"
+              className="border-line text-ink hover:border-primary hover:text-primary"
             >
               {buttonText}
             </Button>
@@ -84,39 +59,11 @@ export default function GlobalHeader({
   )
 }
 
-export function HeaderThree({
-  title,
-}: GlobalHeaderProps) {
+export function HeaderThree({ title }: GlobalHeaderProps) {
   return (
-    <div className={`my-6  sm:my-10 `}>
-      {/* Animated Title */}
-      <motion.span
-        whileHover="whileHover"
-        variants={{
-          initial: { x: 0 },
-          whileHover: { x: -16 },
-        }}
-        transition={{
-          type: "spring",
-          staggerChildren: 0.075,
-          delayChildren: 0.25,
-        }}
-        className="relative z-10 block text-2xl font-bold text-gray-500 transition-colors duration-500 hover:text-gray-600 md:text-4xl"
-      >
-        {title.split("").map((l, i) => (
-          <motion.span
-            variants={{
-              initial: { x: 0 },
-              whileHover: { x: 16 },
-            }}
-            transition={{ type: "spring" }}
-            className="inline-block"
-            key={i}
-          >
-            {l}
-          </motion.span>
-        ))}
-      </motion.span>
+    <div className="my-6 flex items-center gap-3 sm:my-10">
+      <span className="h-px w-8 bg-marigold" />
+      <h3 className="font-display text-2xl text-ink md:text-4xl">{title}</h3>
     </div>
   )
 }

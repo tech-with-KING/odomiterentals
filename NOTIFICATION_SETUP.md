@@ -14,12 +14,11 @@ Add these to your `.env.local` file:
 
 ```
 # Existing variables (keep these)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-EMAIL_FROM=your-email@gmail.com
-EMAIL_PASSWORD=your-app-password
-BUSINESS_EMAIL=admin@odomiterentals.com
-BUSINESS_WHATSAPP_NUMBER=+1234567890
+# Email goes through Resend — see CHECKOUT_SETUP_GUIDE.md
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxx
+EMAIL_FROM="Odomite Rentals <orders@odomiterentals.com>"
+BUSINESS_EMAIL=odomitegroupsllc@gmail.com
+BUSINESS_WHATSAPP_NUMBER=+18622306639
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 # New Firebase Push Notification Variables
