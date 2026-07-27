@@ -1,34 +1,36 @@
-# Notion Clone
+# Odomite Rentals
+
 ## Description
-This is a simple Notion clone built with React, TypeScript, and Tailwind CSS. It allows users to create, edit, and delete notes, as well as organize them into folders. The app uses local storage to persist data across sessions.
-## Features
-- Create, edit, and delete notes
-- Organize notes into folders
-- Search notes by title or content
-- Responsive design   
-- Dark mode support
-- Local storage for data persistence
+Odomite Rentals is a rental listings web app built with Next.js, TypeScript, and Tailwind CSS. It uses Supabase for data, Firebase for push notifications, Cloudinary for media, and Resend for transactional email.
+
 ## Technologies Used
-- React
+- Next.js 15 (App Router) + React 19
 - TypeScript
-- Tailwind CSS
-- Vite
-- Local storage
+- Tailwind CSS v4
+- Supabase
+- Firebase / Firebase Admin (push notifications)
+- Cloudinary (`next-cloudinary`)
+- Resend (email)
+
+## Requirements
+- Node.js 24.x
+
 ## Getting Started
 1. Clone the repository:
    ```bash
-   git clone https://github.com/kingsley-sama/notion-clone.git
+   git clone https://github.com/kingsley-sama/OdomiteRentals.git
    ```
 2. Navigate to the project directory:
    ```bash
-   cd notion-clone
+   cd OdomiteRentals
    ```
 3. Install dependencies:
    ```bash
    npm install
    ```
-4. Start the development server:
+4. Add your environment variables to `.env.local` (Supabase, Firebase, Cloudinary, and Resend credentials).
+5. Start the development server:
    ```bash
    npm run dev
    ```
-5. Open your browser and go to `http://localhost:5173` to view the app.
+6. Open your browser and go to `http://localhost:3000` to view the app.
