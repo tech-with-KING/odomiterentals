@@ -103,7 +103,7 @@ export default function ShoppingCartPage() {
                     <div className="flex-1 space-y-3">
                       <div className="flex items-start justify-between">
                         <div className="space-y-1">
-                          <h3 className="font-semibold text-lg text-ink">
+                          <h3 className="font-sans text-lg font-semibold text-ink">
                             {item.name}
                           </h3>
                           <Badge variant="secondary" className="text-xs">

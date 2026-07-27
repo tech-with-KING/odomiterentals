@@ -338,7 +338,7 @@ export default function CheckoutPage() {
                         className="w-12 h-12 object-cover rounded"
                       />
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-medium text-ink truncate">
+                        <h4 className="font-sans text-sm font-medium text-ink truncate">
                           {item.name}
                         </h4>
                         <p className="text-xs text-muted-foreground">

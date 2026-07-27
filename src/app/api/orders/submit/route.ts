@@ -1,226 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { BUSINESS_EMAIL, sendEmail } from '@/lib/email'
+import { formatPrice } from '@/lib/pricing'
 import {
-  BRAND,
-  BUSINESS_EMAIL,
-  calloutBox,
-  detailRows,
-  emailLayout,
-  escapeHtml,
-  paragraph,
-  sendEmail,
-} from '@/lib/email'
-import { COMMITMENT_FEE, DELIVERY_NOTE } from '@/lib/pricing'
+  buildBusinessEmail,
+  buildCustomerEmail,
+  buildFollowUpEmail,
+  generateWhatsAppMessage,
+  type OrderData,
+} from '@/lib/order-emails'
 
-interface OrderData {
-  customerInfo: {
-    firstName: string
-    lastName: string
-    email: string
-    phone: string
-    address: string
-    city: string
-    state: string
-    zipCode: string
-    rentalStartDate: string
-    specialInstructions: string
-  }
-  items: Array<{
-    id: string
-    name: string
-    image: string
-    quantity: number
-    duration: number
-    unitPrice: number
-    total: number
-    category: string
-    productId: string
-  }>
-  pricing: {
-    subtotal: number
-    shipping: number
-    taxes: number
-    total: number
-  }
-  orderDate: string
-  userId: string
-}
+const money = formatPrice
 
-const money = (value: number) => `$${value.toFixed(2)}`
+/**
+ * Everyone who should hear about a new booking: the shop inbox plus every
+ * admin on file, deduplicated and lowercased so nobody gets two copies.
+ */
+async function notificationRecipients(): Promise<string[]> {
+  const recipients = new Set<string>()
+  if (BUSINESS_EMAIL) recipients.add(BUSINESS_EMAIL.toLowerCase())
 
-// Generate WhatsApp message
-const generateWhatsAppMessage = (orderData: OrderData, orderId: string) => {
-  const { customerInfo, items, pricing } = orderData
-
-  let message = `🛍️ *NEW ORDER RECEIVED* - #${orderId}\n\n`
-  message += `👤 *Customer Details:*\n`
-  message += `Name: ${customerInfo.firstName} ${customerInfo.lastName}\n`
-  message += `📧 Email: ${customerInfo.email}\n`
-  message += `📱 Phone: ${customerInfo.phone}\n`
-  message += `📍 Address: ${customerInfo.address}, ${customerInfo.city}\n`
-
-  if (customerInfo.state) message += `State: ${customerInfo.state}\n`
-  if (customerInfo.zipCode) message += `ZIP: ${customerInfo.zipCode}\n`
-
-  message += `📅 Rental Start: ${customerInfo.rentalStartDate}\n\n`
-
-  message += `🛒 *Order Items:*\n`
-  items.forEach((item, index) => {
-    message += `${index + 1}. ${item.name}\n`
-    message += `   • Qty: ${item.quantity} × ${item.duration} days\n`
-    message += `   • Price: ${money(item.total)}\n\n`
-  })
-
-  message += `💰 *Order Total:*\n`
-  message += `Rental items: ${money(pricing.subtotal)}\n`
-  message += `Delivery: ${DELIVERY_NOTE}\n`
-  message += `*Total: ${money(pricing.total)}*\n`
-  message += `Commitment fee to collect: ${money(COMMITMENT_FEE)}\n\n`
-
-  if (customerInfo.specialInstructions) {
-    message += `📝 *Special Instructions:*\n${customerInfo.specialInstructions}\n\n`
+  const { data, error } = await supabaseAdmin.from('admins').select('email')
+  if (error) {
+    console.error('Could not load admin recipients, falling back to the shop inbox:', error)
+  } else {
+    for (const row of data ?? []) {
+      if (row.email) recipients.add(String(row.email).toLowerCase())
+    }
   }
 
-  message += `🕒 Order Date: ${new Date(orderData.orderDate).toLocaleString()}`
-
-  return encodeURIComponent(message)
-}
-
-const renderItems = (items: OrderData['items']) =>
-  items
-    .map(
-      (item) => `
-      <tr>
-        <td style="padding:12px 0;border-bottom:1px solid ${BRAND.hairline};">
-          <div style="font-size:15px;font-weight:500;color:${BRAND.ink};">${escapeHtml(item.name)}</div>
-          <div style="font-size:13px;color:${BRAND.mutedInk};margin-top:2px;">
-            ${item.quantity} × ${item.duration} ${item.duration === 1 ? 'day' : 'days'} @ ${money(item.unitPrice)}/day
-          </div>
-        </td>
-        <td style="padding:12px 0;border-bottom:1px solid ${BRAND.hairline};text-align:right;font-size:15px;font-weight:500;color:${BRAND.ink};white-space:nowrap;">
-          ${money(item.total)}
-        </td>
-      </tr>`
-    )
-    .join('')
-
-const renderOrderSummary = (orderData: OrderData) => {
-  const { items, pricing } = orderData
-
-  return `
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 8px;">
-      ${renderItems(items)}
-    </table>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
-      <tr>
-        <td style="padding:6px 0;font-size:14px;color:${BRAND.mutedInk};">Rental items</td>
-        <td style="padding:6px 0;text-align:right;font-size:14px;color:${BRAND.ink};">${money(pricing.subtotal)}</td>
-      </tr>
-      <tr>
-        <td style="padding:6px 0;font-size:14px;color:${BRAND.mutedInk};">Delivery</td>
-        <td style="padding:6px 0;text-align:right;font-size:14px;color:${BRAND.ink};">${DELIVERY_NOTE}</td>
-      </tr>
-      <tr>
-        <td style="padding:12px 0 0;border-top:1px solid ${BRAND.hairline};font-size:16px;font-weight:600;color:${BRAND.ink};">Total</td>
-        <td style="padding:12px 0 0;border-top:1px solid ${BRAND.hairline};text-align:right;font-size:18px;font-weight:600;color:${BRAND.gold};">${money(pricing.total)}</td>
-      </tr>
-    </table>
-    <p style="margin:0 0 24px;font-size:13px;color:${BRAND.mutedInk};">No tax is added. Delivery is quoted separately.</p>`
-}
-
-const buildCustomerEmail = (orderData: OrderData, orderId: string) => {
-  const { customerInfo } = orderData
-  const shortId = orderId.slice(0, 8).toUpperCase()
-
-  const address = [
-    customerInfo.address,
-    [customerInfo.city, customerInfo.state].filter(Boolean).join(', '),
-    customerInfo.zipCode,
-  ]
-    .filter(Boolean)
-    .map(escapeHtml)
-    .join('<br>')
-
-  return emailLayout({
-    heading: `Thank you, ${escapeHtml(customerInfo.firstName)}.`,
-    preheader: `We've received your rental order #${shortId}.`,
-    body: `
-      ${paragraph(
-        "We've received your rental order. We'll contact you to confirm availability, agree the delivery charge, and arrange the commitment fee. Nothing is charged online."
-      )}
-
-      ${calloutBox(`
-        <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.18em;color:${BRAND.goldDeep};margin-bottom:6px;">Order reference</div>
-        <div style="font-size:18px;font-weight:600;color:${BRAND.ink};">#${shortId}</div>
-      `)}
-
-      ${calloutBox(`
-        <div style="font-size:15px;font-weight:600;color:${BRAND.ink};margin-bottom:6px;">A ${money(
-          COMMITMENT_FEE
-        )} commitment fee secures your booking</div>
-        <div style="font-size:14px;line-height:1.6;color:${BRAND.mutedInk};">
-          It is not charged now. We'll arrange it with you when we call to confirm.
-        </div>
-      `)}
-
-      ${detailRows([
-        ['Rental start date', escapeHtml(customerInfo.rentalStartDate)],
-        ['Delivery address', address],
-        ['Phone', escapeHtml(customerInfo.phone)],
-      ])}
-
-      <h2 style="margin:28px 0 12px;font-size:16px;font-weight:600;color:${BRAND.ink};">Items reserved</h2>
-      ${renderOrderSummary(orderData)}
-
-      ${
-        customerInfo.specialInstructions
-          ? `<h2 style="margin:0 0 8px;font-size:16px;font-weight:600;color:${BRAND.ink};">Special instructions</h2>
-             ${paragraph(escapeHtml(customerInfo.specialInstructions))}`
-          : ''
-      }
-    `,
-  })
-}
-
-const buildBusinessEmail = (orderData: OrderData, orderId: string, whatsappUrl: string) => {
-  const { customerInfo, pricing } = orderData
-  const shortId = orderId.slice(0, 8).toUpperCase()
-
-  return emailLayout({
-    heading: `New order — ${money(pricing.total)}`,
-    preheader: `${customerInfo.firstName} ${customerInfo.lastName} placed order #${shortId}.`,
-    body: `
-      ${detailRows([
-        ['Order', `#${shortId}`],
-        ['Customer', escapeHtml(`${customerInfo.firstName} ${customerInfo.lastName}`)],
-        ['Email', escapeHtml(customerInfo.email)],
-        ['Phone', escapeHtml(customerInfo.phone)],
-        ['Rental start', escapeHtml(customerInfo.rentalStartDate)],
-        [
-          'Address',
-          escapeHtml(
-            [customerInfo.address, customerInfo.city, customerInfo.state, customerInfo.zipCode]
-              .filter(Boolean)
-              .join(', ')
-          ),
-        ],
-      ])}
-
-      <div style="margin:0 0 24px;">
-        <a href="${whatsappUrl}" style="display:inline-block;background:${BRAND.gold};color:#ffffff;text-decoration:none;font-size:14px;font-weight:500;padding:12px 24px;border-radius:999px;">Message customer on WhatsApp</a>
-      </div>
-
-      <h2 style="margin:0 0 12px;font-size:16px;font-weight:600;color:${BRAND.ink};">Order contents</h2>
-      ${renderOrderSummary(orderData)}
-
-      ${
-        customerInfo.specialInstructions
-          ? `<h2 style="margin:0 0 8px;font-size:16px;font-weight:600;color:${BRAND.ink};">Special instructions</h2>
-             ${paragraph(escapeHtml(customerInfo.specialInstructions))}`
-          : ''
-      }
-    `,
-  })
+  return [...recipients]
 }
 
 export async function POST(request: NextRequest) {
@@ -296,26 +105,43 @@ export async function POST(request: NextRequest) {
     // Emails must never fail the order — send both, then report what happened.
     const shortId = orderId.slice(0, 8).toUpperCase()
 
+    const recipients = await notificationRecipients()
+
     const [customerEmail, businessEmail] = await Promise.all([
       sendEmail({
         to: customerInfo.email,
-        subject: `Order confirmation — #${shortId}`,
+        subject: `Booking confirmation — #${shortId}`,
         html: buildCustomerEmail(orderData, orderId),
         replyTo: BUSINESS_EMAIL,
       }),
       sendEmail({
-        to: BUSINESS_EMAIL,
-        subject: `New order #${shortId} — ${customerInfo.firstName} ${customerInfo.lastName} (${money(pricing.total)})`,
+        to: recipients,
+        subject: `New booking #${shortId} — ${customerInfo.firstName} ${customerInfo.lastName} (${money(pricing.total)})`,
         html: buildBusinessEmail(orderData, orderId, whatsappUrl),
         replyTo: customerInfo.email,
       }),
     ])
 
+    // The prep email follows the confirmation, so the two land in that order.
+    const followUpEmail = await sendEmail({
+      to: customerInfo.email,
+      subject: `What happens next — booking #${shortId}`,
+      html: buildFollowUpEmail(orderData, orderId),
+      replyTo: BUSINESS_EMAIL,
+    })
+
+    if (!followUpEmail.sent) {
+      console.error('Follow-up email failed:', followUpEmail.error)
+    }
+
     if (!customerEmail.sent) {
       console.error('Customer confirmation email failed:', customerEmail.error)
     }
     if (!businessEmail.sent) {
-      console.error('Business notification email failed:', businessEmail.error)
+      console.error(
+        `Business notification email to ${recipients.join(', ')} failed:`,
+        businessEmail.error
+      )
     }
 
     // Send push notification to admin devices
@@ -347,6 +173,7 @@ export async function POST(request: NextRequest) {
       emailSent: {
         customer: customerEmail.sent,
         business: businessEmail.sent,
+        followUp: followUpEmail.sent,
       },
       message: 'Order submitted successfully'
     })
