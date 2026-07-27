@@ -1,4 +1,14 @@
 /**
+ * Canonical public origin, hardcoded on purpose.
+ *
+ * Supabase Auth redirects are pinned to this rather than to
+ * window.location.origin so that a stale Site URL in the dashboard can never
+ * bounce a signed-in user to localhost. Note the www — it must match the
+ * Supabase Redirect URLs allow-list entry exactly.
+ */
+export const SITE_URL = 'https://www.odomiterentals.com';
+
+/**
  * Base URL used when the server calls back into our own API routes.
  *
  * Resolution order:

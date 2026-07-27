@@ -199,22 +199,29 @@ export default function Header() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
           overHero
-            ? 'bg-transparent'
+            ? // The hero's own overlay is horizontal (dark left, clear right), so it
+              // does nothing for the nav on the right. This vertical scrim guarantees
+              // legibility across every carousel image without dimming the hero art.
+              'bg-gradient-to-b from-black/60 via-black/30 to-transparent'
             : 'border-b border-[color:var(--hairline)] bg-[color:var(--surface)]/95 backdrop-blur supports-[backdrop-filter]:bg-[color:var(--surface)]/85'
         }`}
       >
         <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-6 px-6 py-4">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-baseline gap-2.5">
             <span
               className={`font-serif text-2xl font-semibold tracking-tight ${
-                onWhite ? 'text-[color:var(--ink)]' : 'text-white'
+                onWhite
+                  ? 'text-[color:var(--ink)]'
+                  : 'text-white [text-shadow:0_1px_10px_rgba(0,0,0,0.45)]'
               }`}
             >
               Odomite
             </span>
             <span
-              className={`hidden text-xs uppercase tracking-[0.2em] sm:inline ${
-                onWhite ? 'text-[color:var(--muted-ink)]' : 'text-white/70'
+              className={`hidden text-xs font-medium uppercase tracking-[0.22em] sm:inline ${
+                onWhite
+                  ? 'text-[color:var(--muted-ink)]'
+                  : 'text-white/90 [text-shadow:0_1px_8px_rgba(0,0,0,0.6)]'
               }`}
             >
               Rentals
@@ -223,7 +230,9 @@ export default function Header() {
 
           <nav
             className={`hidden items-center gap-8 text-sm md:flex ${
-              onWhite ? 'text-[color:var(--ink)]' : 'text-white/90'
+              onWhite
+                ? 'text-[color:var(--ink)]'
+                : 'text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.5)]'
             }`}
           >
             {NAV_LINKS.map((link) => (

@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/lib/supabase';
+import { SITE_URL } from '@/lib/app-url';
 
 type Mode = 'sign-in' | 'sign-up' | 'reset';
 
@@ -97,7 +98,7 @@ export function AuthDialog({ trigger, defaultMode = 'sign-in' }: { trigger: Reac
     setLoading(true);
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}${window.location.pathname}` },
+      options: { redirectTo: `${SITE_URL}${window.location.pathname}` },
     });
     if (oauthError) {
       setError(oauthError.message);
@@ -126,7 +127,7 @@ export function AuthDialog({ trigger, defaultMode = 'sign-in' }: { trigger: Reac
         password,
         options: {
           data: { full_name: name.trim() },
-          emailRedirectTo: `${window.location.origin}${window.location.pathname}`,
+          emailRedirectTo: `${SITE_URL}${window.location.pathname}`,
         },
       });
 
@@ -141,7 +142,7 @@ export function AuthDialog({ trigger, defaultMode = 'sign-in' }: { trigger: Reac
       }
     } else {
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}${window.location.pathname}`,
+        redirectTo: `${SITE_URL}${window.location.pathname}`,
       });
       if (resetError) {
         setError(resetError.message);
