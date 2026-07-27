@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getAppBaseUrl } from '@/lib/app-url'
 import { BUSINESS_EMAIL, sendEmail } from '@/lib/email'
 import { formatPrice } from '@/lib/pricing'
 import {
@@ -146,7 +147,7 @@ export async function POST(request: NextRequest) {
 
     // Send push notification to admin devices
     try {
-      const notificationResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/send-notification`, {
+      const notificationResponse = await fetch(`${getAppBaseUrl(request)}/api/send-notification`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

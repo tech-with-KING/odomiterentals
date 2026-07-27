@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getAppBaseUrl } from '@/lib/app-url';
 
 export async function POST(request: NextRequest) {
   try {
     // Send a test notification
-    const notificationResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/send-notification`, {
+    const notificationResponse = await fetch(`${getAppBaseUrl(request)}/api/send-notification`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -345,7 +345,7 @@ export default function CheckoutPage() {
                           Qty: {item.quantity} × {item.duration} days
                         </p>
                         <p className="text-sm font-semibold text-primary">
-                          ${item.total}
+                          {formatPrice(item.total)}
                         </p>
                       </div>
                     </div>

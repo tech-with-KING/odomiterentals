@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useCart } from "@/context/cart"
+import { formatPrice } from "@/lib/pricing"
 
 type EditableField = "name" | "duration" | "unitPrice" | "category"
 
@@ -186,14 +187,14 @@ export default function ShoppingCartPage() {
                             Price/Day
                           </label>
                           <div className="flex items-center space-x-1">
-                            <span className="spec font-medium">${item.unitPrice}</span>
+                            <span className="spec font-medium">{formatPrice(item.unitPrice)}</span>
                           </div>
                         </div>
 
                         {/* Total */}
                         <div className="space-y-2">
                           <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Total</label>
-                          <div className="spec font-bold text-lg text-primary">${item.total}</div>
+                          <div className="spec font-bold text-lg text-primary">{formatPrice(item.total)}</div>
                         </div>
                       </div>
                     </div>
@@ -226,20 +227,20 @@ export default function ShoppingCartPage() {
                 <div className="space-y-3">
                   <div className="flex justify-between text-muted-foreground">
                     <span>Subtotal</span>
-                    <span>${subtotal}</span>
+                    <span>{formatPrice(subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-muted-foreground">
                     <span>Shipping</span>
-                    <span className="text-[color:var(--sage)] font-medium">{shipping === 0 ? "Free" : `$${shipping}`}</span>
+                    <span className="text-[color:var(--sage)] font-medium">{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
                   </div>
                   <div className="flex justify-between text-muted-foreground">
                     <span>Taxes & Fees</span>
-                    <span>${taxes}</span>
+                    <span>{formatPrice(taxes)}</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between text-lg font-bold text-ink">
                     <span>Total</span>
-                    <span>${total}</span>
+                    <span>{formatPrice(total)}</span>
                   </div>
                 </div>
 
