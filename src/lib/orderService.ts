@@ -1,4 +1,6 @@
 import { supabase } from '@/lib/supabase'
+import { adminFetch } from '@/lib/admin-api'
+import { customerInfoToOrderRow, normalizeCustomerInfo, type CustomerInfo } from '@/lib/booking'
 
 export interface OrderItem {
   id: string
@@ -12,18 +14,9 @@ export interface OrderItem {
   category: string
 }
 
-export interface CustomerInfo {
-  firstName: string
-  lastName: string
-  email: string
-  phone: string
-  address: string
-  city: string
-  state: string
-  zipCode: string
-  rentalStartDate: string
-  specialInstructions: string
-}
+// The booking shape lives in one place; re-exported so existing importers of
+// `CustomerInfo` from this module keep working.
+export type { CustomerInfo }
 
 export interface Order {
   id?: string
@@ -48,18 +41,26 @@ export interface Order {
 function rowToOrder(row: any): Order {
   return {
     id: row.id,
-    customerInfo: {
+    // normalize fills in the columns that pre-date the booking-detail
+    // migration, so older orders render as the single-date deliveries they were.
+    customerInfo: normalizeCustomerInfo({
       firstName: row.first_name,
       lastName: row.last_name,
       email: row.email,
       phone: row.phone,
+      alternatePhone: row.alternate_phone ?? '',
       address: row.address,
       city: row.city,
       state: row.state,
       zipCode: row.zip_code,
+      deliveryMethod: row.delivery_method ?? undefined,
+      eventAddress: row.event_address ?? '',
+      eventAddressSameAsHome: row.event_address_same_as_home ?? undefined,
+      bookingDateMode: row.booking_date_mode ?? undefined,
       rentalStartDate: row.rental_start_date,
+      rentalEndDate: row.rental_end_date ?? '',
       specialInstructions: row.special_instructions,
-    },
+    }),
     items: (row.order_items || []).map((item: any) => ({
       id: item.id,
       productId: item.product_id,
@@ -108,16 +109,7 @@ export class OrderService {
       .from('orders')
       .insert({
         user_id: userId && userId !== 'guest' ? userId : null,
-        first_name: customerInfo.firstName,
-        last_name: customerInfo.lastName,
-        email: customerInfo.email,
-        phone: customerInfo.phone,
-        address: customerInfo.address,
-        city: customerInfo.city,
-        state: customerInfo.state,
-        zip_code: customerInfo.zipCode,
-        rental_start_date: customerInfo.rentalStartDate,
-        special_instructions: customerInfo.specialInstructions,
+        ...customerInfoToOrderRow(customerInfo),
         subtotal: pricing.subtotal,
         shipping: pricing.shipping,
         taxes: pricing.taxes,
@@ -236,9 +228,14 @@ export class OrderService {
     }
   }
 
-  // Delete order (admin only)
+  /**
+   * Permanently delete an order and its items (admin only).
+   *
+   * Routed through the admin API rather than the browser client: `orders` is
+   * closed to anonymous writes by RLS, so the delete has to happen server-side
+   * with the service role key, behind an admin check.
+   */
   async deleteOrder(orderId: string): Promise<void> {
-    const { error } = await supabase.from('orders').delete().eq('id', orderId)
-    if (error) throw error
+    await adminFetch(`/api/admin/orders/${orderId}`, { method: 'DELETE' })
   }
 }

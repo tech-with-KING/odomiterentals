@@ -173,14 +173,14 @@ export const BookNowPopup = ({ product, trigger }: BookNowPopupProps) => {
             <Stepper
               id="quantity"
               label="Quantity"
-              icon={<Package className="h-4 w-4 text-[color:var(--brand)]" />}
+              icon={<Package className="h-4 w-4 text-[color:var(--brand-deep)]" />}
               value={quantity}
               onChange={(next) => setQuantity(Math.max(1, next))}
             />
             <Stepper
               id="duration"
               label="Duration"
-              icon={<Calendar className="h-4 w-4 text-[color:var(--brand)]" />}
+              icon={<Calendar className="h-4 w-4 text-[color:var(--brand-deep)]" />}
               value={duration}
               onChange={(next) => setDuration(Math.max(1, next))}
               suffix={duration === 1 ? 'day' : 'days'}

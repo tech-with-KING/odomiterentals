@@ -46,7 +46,7 @@ export function ServicesSection({ services }: ServicesSectionProps) {
                         className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                       />
                     ) : null}
-                    <span className="absolute left-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-[color:var(--brand)] backdrop-blur">
+                    <span className="absolute left-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-[color:var(--brand-deep)] backdrop-blur">
                       <Icon size={18} />
                     </span>
                   </div>

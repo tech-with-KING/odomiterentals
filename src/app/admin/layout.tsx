@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { ShieldAlert } from 'lucide-react';
 import { useAuth } from '@/context/auth';
 import { useAdminCheck } from '@/context/admin';
-import { AdminSidebar } from '@/components/admin/sidebar';
+import { AdminMobileNav, AdminSidebar } from '@/components/admin/sidebar';
 import { AdminTopbar } from '@/components/admin/topbar';
 
 function AdminGateScreen({
@@ -97,7 +97,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-[color:var(--background)] lg:pl-64">
       <AdminSidebar />
       <AdminTopbar />
-      <main className="mx-auto max-w-[1200px] px-4 pb-28 pt-8 sm:px-6 lg:px-8 lg:pb-16">{children}</main>
+      <AdminMobileNav />
+      <main className="mx-auto max-w-[1200px] px-4 pb-16 pt-8 sm:px-6 lg:px-8">{children}</main>
     </div>
   );
 }

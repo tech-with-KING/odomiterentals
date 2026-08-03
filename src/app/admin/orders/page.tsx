@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
-import { Mail, MessageCircle, Receipt, X } from 'lucide-react';
+import { Mail, MessageCircle, Receipt, Trash2, X } from 'lucide-react';
 import { OrderService, type Order } from '@/lib/orderService';
+import { useFeedback } from '@/context/feedback';
 import {
   AdminSpinner,
   EmptyState,
@@ -21,7 +22,20 @@ import {
   PAYMENT_STATUS_TONE,
   labelStatus,
 } from '@/lib/order-status';
-import { COMMITMENT_FEE, DELIVERY_NOTE } from '@/lib/pricing';
+import {
+  CUSTOMER_PICKUP_NOTE,
+  DELIVERY_NOTE,
+  SECURITY_DEPOSIT,
+  SECURITY_DEPOSIT_LABEL,
+  SECURITY_DEPOSIT_NOTE,
+} from '@/lib/pricing';
+import {
+  DELIVERY_METHOD_LABEL,
+  bookingDateLabel,
+  formatBookingDates,
+  formatEventAddress,
+  formatShortDate,
+} from '@/lib/booking';
 
 const selectClass =
   'rounded-lg border border-[color:var(--hairline)] bg-[color:var(--surface)] px-2.5 py-1.5 text-xs capitalize outline-none transition-colors focus:border-[color:var(--brand)] focus:ring-2 focus:ring-[color:var(--brand)]/20';
@@ -38,6 +52,8 @@ export default function AdminOrdersPage() {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Order | null>(null);
   const [filter, setFilter] = useState<'all' | Order['status']>('all');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { confirm, toast } = useFeedback();
 
   const orderService = OrderService.getInstance();
 
@@ -91,6 +107,46 @@ export default function AdminOrdersPage() {
       console.error('Error updating payment status:', err);
       setError('That payment change did not save. Refresh and try again.');
       loadOrders();
+    }
+  };
+
+  /**
+   * Deleting is the one action here that cannot be undone, so it asks first,
+   * names the order and the customer in the question, and reloads from the
+   * server afterwards rather than trusting local state.
+   */
+  const deleteOrder = async (order: Order) => {
+    const reference = `#${order.id?.slice(-6)}`;
+    const ok = await confirm({
+      title: `Delete order ${reference}?`,
+      description: `This permanently deletes ${order.customerInfo.firstName} ${order.customerInfo.lastName}'s booking and all ${order.items.length} of its line items. This cannot be undone.`,
+      confirmLabel: 'Delete permanently',
+      cancelLabel: 'Keep order',
+      tone: 'danger',
+    });
+
+    if (!ok || !order.id) return;
+
+    setDeletingId(order.id);
+    try {
+      await orderService.deleteOrder(order.id);
+      // Close the detail sheet if the order it was showing has just gone.
+      setSelected((current) => (current?.id === order.id ? null : current));
+      await loadOrders();
+      toast({
+        title: `Order ${reference} deleted`,
+        description: 'It has been removed permanently.',
+        tone: 'success',
+      });
+    } catch (err) {
+      console.error('Error deleting order:', err);
+      toast({
+        title: 'Could not delete that order',
+        description: err instanceof Error ? err.message : 'Try again in a moment.',
+        tone: 'error',
+      });
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -157,7 +213,7 @@ export default function AdminOrdersPage() {
                   <th className="px-5 py-3 text-right font-medium">Total</th>
                   <th className="px-5 py-3 font-medium">Status</th>
                   <th className="px-5 py-3 font-medium">Payment</th>
-                  <th className="px-5 py-3 text-right font-medium">Contact</th>
+                  <th className="px-5 py-3 text-right font-medium">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[color:var(--hairline)]">
@@ -186,12 +242,14 @@ export default function AdminOrdersPage() {
                     </td>
 
                     <td className="spec px-5 py-3 text-xs tabular-nums text-[color:var(--muted-ink)]">
-                      {new Date(order.customerInfo.rentalStartDate).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                      })}
+                      {formatShortDate(order.customerInfo.rentalStartDate)}
+                      {order.customerInfo.bookingDateMode === 'range' &&
+                      order.customerInfo.rentalEndDate
+                        ? ` – ${formatShortDate(order.customerInfo.rentalEndDate)}`
+                        : ''}
                       <div className="mt-0.5">
                         {order.items.reduce((sum, item) => sum + item.quantity, 0)} items
+                        {order.customerInfo.deliveryMethod === 'pickup' ? ' · pickup' : ''}
                       </div>
                     </td>
 
@@ -249,6 +307,15 @@ export default function AdminOrdersPage() {
                         >
                           <Mail className="h-4 w-4" />
                         </a>
+                        <button
+                          type="button"
+                          onClick={() => deleteOrder(order)}
+                          disabled={deletingId === order.id}
+                          aria-label={`Delete order #${order.id?.slice(-6)}`}
+                          className="grid h-8 w-8 place-items-center rounded-full text-[color:var(--muted-ink)] transition-colors hover:bg-[color:var(--surface)] hover:text-[color:var(--destructive)] disabled:cursor-not-allowed disabled:opacity-40"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -259,12 +326,29 @@ export default function AdminOrdersPage() {
         )}
       </Panel>
 
-      {selected ? <OrderDetail order={selected} onClose={() => setSelected(null)} /> : null}
+      {selected ? (
+        <OrderDetail
+          order={selected}
+          onClose={() => setSelected(null)}
+          onDelete={() => deleteOrder(selected)}
+          deleting={deletingId === selected.id}
+        />
+      ) : null}
     </div>
   );
 }
 
-function OrderDetail({ order, onClose }: { order: Order; onClose: () => void }) {
+function OrderDetail({
+  order,
+  onClose,
+  onDelete,
+  deleting,
+}: {
+  order: Order;
+  onClose: () => void;
+  onDelete: () => void;
+  deleting: boolean;
+}) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -326,21 +410,37 @@ function OrderDetail({ order, onClose }: { order: Order; onClose: () => void }) 
                 </div>
                 <div className="text-[color:var(--muted-ink)]">{customer.email}</div>
                 <div className="spec tabular-nums text-[color:var(--muted-ink)]">{customer.phone}</div>
+                {customer.alternatePhone ? (
+                  <div className="spec tabular-nums text-[color:var(--muted-ink)]">
+                    {customer.alternatePhone} <span className="text-xs">(alternate)</span>
+                  </div>
+                ) : null}
+                <div className="pt-1.5 text-[color:var(--muted-ink)]">
+                  {customer.address}
+                  <br />
+                  {customer.city}
+                  {customer.state ? `, ${customer.state}` : ''} {customer.zipCode}
+                </div>
               </dl>
             </div>
 
             <div>
               <h3 className="text-[11px] uppercase tracking-[0.14em] text-[color:var(--muted-ink)]">
-                Delivery
+                {DELIVERY_METHOD_LABEL[customer.deliveryMethod]}
               </h3>
               <div className="mt-3 space-y-1.5 text-sm text-[color:var(--muted-ink)]">
-                <div>{customer.address}</div>
-                <div>
-                  {customer.city}
-                  {customer.state ? `, ${customer.state}` : ''} {customer.zipCode}
-                </div>
-                <div className="spec tabular-nums text-[color:var(--ink)]">
-                  Starts {new Date(customer.rentalStartDate).toLocaleDateString()}
+                {customer.deliveryMethod === 'delivery' ? (
+                  <div>
+                    <span className="text-[color:var(--ink)]">Event address</span>
+                    <br />
+                    {formatEventAddress(customer)}
+                    {customer.eventAddressSameAsHome ? ' (same as home)' : ''}
+                  </div>
+                ) : (
+                  <div>Customer collects and returns. No delivery run.</div>
+                )}
+                <div className="spec pt-1.5 tabular-nums text-[color:var(--ink)]">
+                  {bookingDateLabel(customer)}: {formatBookingDates(customer)}
                 </div>
               </div>
             </div>
@@ -392,7 +492,11 @@ function OrderDetail({ order, onClose }: { order: Order; onClose: () => void }) 
             <div className="flex justify-between gap-4">
               <dt className="text-[color:var(--muted-ink)]">Delivery</dt>
               <dd className="text-right text-xs text-[color:var(--muted-ink)]">
-                {pricing.shipping > 0 ? formatMoney(pricing.shipping) : DELIVERY_NOTE}
+                {pricing.shipping > 0
+                  ? formatMoney(pricing.shipping)
+                  : customer.deliveryMethod === 'pickup'
+                    ? CUSTOMER_PICKUP_NOTE
+                    : DELIVERY_NOTE}
               </dd>
             </div>
             {/* Legacy orders placed before tax was dropped still carry a value. */}
@@ -407,10 +511,14 @@ function OrderDetail({ order, onClose }: { order: Order; onClose: () => void }) 
               <dd className="spec tabular-nums">{formatMoney(pricing.total)}</dd>
             </div>
             <div className="flex justify-between gap-4 pt-1 text-xs text-[color:var(--brand-deep)]">
-              <dt>Commitment fee to collect</dt>
-              <dd className="spec tabular-nums">{formatMoney(COMMITMENT_FEE)}</dd>
+              <dt>{SECURITY_DEPOSIT_LABEL} to collect</dt>
+              <dd className="spec tabular-nums">{formatMoney(SECURITY_DEPOSIT)}</dd>
             </div>
           </dl>
+
+          <p className="ml-auto max-w-xs text-xs leading-relaxed text-[color:var(--muted-ink)]">
+            {SECURITY_DEPOSIT_NOTE}
+          </p>
 
           <div className="flex flex-wrap gap-2 border-t border-[color:var(--hairline)] pt-5">
             <a
@@ -429,6 +537,15 @@ function OrderDetail({ order, onClose }: { order: Order; onClose: () => void }) 
               <Mail className="h-4 w-4" />
               Email
             </a>
+            <button
+              type="button"
+              onClick={onDelete}
+              disabled={deleting}
+              className="ml-auto inline-flex items-center gap-2 rounded-full border border-[color:var(--destructive)]/30 px-4 py-2.5 text-sm font-medium text-[color:var(--destructive)] transition-colors hover:bg-[#fdf3f2] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Trash2 className="h-4 w-4" />
+              {deleting ? 'Deleting…' : 'Delete order'}
+            </button>
           </div>
         </div>
       </div>

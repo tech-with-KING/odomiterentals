@@ -48,7 +48,7 @@ export function AboutSection({ image }: AboutSectionProps) {
               className="grid h-10 w-10 place-items-center rounded-full"
               style={{ backgroundColor: 'var(--brand-soft)' }}
             >
-              <Star size={18} className="fill-[color:var(--brand)] text-[color:var(--brand)]" />
+              <Star size={18} className="fill-[color:var(--brand-deep)] text-[color:var(--brand-deep)]" />
             </div>
             <div>
               <div className="font-serif text-lg font-semibold text-[color:var(--ink)]">4.9 ★</div>

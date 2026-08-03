@@ -11,8 +11,8 @@ import { ADMIN_NAV, activeNavItem } from '@/components/admin/nav';
  *
  * The public site is warm paper; the admin inverts it — a dark ink rail so it
  * is never mistaken for a customer-facing page. Desktop gets a fixed rail,
- * mobile gets a bottom tab bar (four destinations fit, so there is no drawer
- * to open and nothing hidden behind a hamburger).
+ * mobile gets a tab bar pinned under the topbar (four destinations fit, so
+ * there is no drawer to open and nothing hidden behind a hamburger).
  */
 export function AdminSidebar() {
   const pathname = usePathname();
@@ -79,30 +79,41 @@ export function AdminSidebar() {
           </Link>
         </div>
       </aside>
-
-      {/* Mobile tab bar. pb-safe keeps it clear of the iOS home indicator. */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[color:var(--ink)] pb-[env(safe-area-inset-bottom)] lg:hidden">
-        <ul className="grid grid-cols-4">
-          {ADMIN_NAV.map((item) => {
-            const isActive = active?.href === item.href;
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  aria-current={isActive ? 'page' : undefined}
-                  className={cn(
-                    'flex flex-col items-center gap-1 py-2.5 text-[10px] font-medium transition-colors',
-                    isActive ? 'text-[color:var(--brand)]' : 'text-white/50'
-                  )}
-                >
-                  <item.icon className="h-[18px] w-[18px]" aria-hidden="true" />
-                  {item.short}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
     </>
+  );
+}
+
+/**
+ * Mobile tab bar. Sticks directly beneath the topbar (h-16), so the nav stays
+ * reachable as the page scrolls. Rendered as the topbar's sibling in the admin
+ * layout rather than from AdminSidebar, so the two stack in document order.
+ */
+export function AdminMobileNav() {
+  const pathname = usePathname();
+  const active = activeNavItem(pathname);
+
+  return (
+    <nav className="sticky top-16 z-20 border-b border-white/10 bg-[color:var(--ink)] lg:hidden">
+      <ul className="grid grid-cols-4">
+        {ADMIN_NAV.map((item) => {
+          const isActive = active?.href === item.href;
+          return (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                aria-current={isActive ? 'page' : undefined}
+                className={cn(
+                  'flex flex-col items-center gap-1 py-2.5 text-[10px] font-medium transition-colors',
+                  isActive ? 'text-[color:var(--brand)]' : 'text-white/50'
+                )}
+              >
+                <item.icon className="h-[18px] w-[18px]" aria-hidden="true" />
+                {item.short}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
   );
 }

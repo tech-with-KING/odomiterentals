@@ -6,7 +6,25 @@ import {
   escapeHtml,
   paragraph,
 } from '@/lib/email';
-import { COMMITMENT_FEE, DELIVERY_NOTE, formatPrice } from '@/lib/pricing';
+import {
+  CUSTOMER_PICKUP_NOTE,
+  DELIVERY_NOTE,
+  RENTAL_POLICY_PATH,
+  SECURITY_DEPOSIT,
+  SECURITY_DEPOSIT_LABEL,
+  SECURITY_DEPOSIT_NOTE,
+  formatPrice,
+} from '@/lib/pricing';
+import { SITE_URL } from '@/lib/app-url';
+import {
+  DELIVERY_METHOD_LABEL,
+  bookingDateLabel,
+  formatBookingDates,
+  formatEventAddress,
+  formatHomeAddress,
+  normalizeCustomerInfo,
+  type CustomerInfo,
+} from '@/lib/booking';
 
 /**
  * The order confirmation and business notification emails.
@@ -34,18 +52,7 @@ export interface OrderItem {
 }
 
 export interface OrderData {
-  customerInfo: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    address: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    rentalStartDate: string;
-    specialInstructions: string;
-  };
+  customerInfo: CustomerInfo;
   items: OrderItem[];
   pricing: {
     subtotal: number;
@@ -61,21 +68,28 @@ const money = formatPrice;
 
 const THUMB = 72;
 
-/**
- * "Friday, August 14, 2026" rather than "2026-08-14".
- * Parsed as UTC noon so a date-only string cannot slip a day either way.
- */
-function formatRentalDate(value: string) {
-  const date = new Date(`${value}T12:00:00Z`);
-  if (Number.isNaN(date.getTime())) return value;
+const POLICY_URL = `${SITE_URL}${RENTAL_POLICY_PATH}`;
 
-  return date.toLocaleDateString('en-US', {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-    timeZone: 'UTC',
-  });
+/** The deposit callout, worded identically in every email that shows it. */
+function depositCallout(extra: string) {
+  return calloutBox(`
+    <div style="font-size:15px;font-weight:600;color:${BRAND.ink};margin-bottom:6px;">$${SECURITY_DEPOSIT} ${SECURITY_DEPOSIT_LABEL}</div>
+    <div style="font-size:14px;line-height:1.6;color:${BRAND.mutedInk};">
+      ${SECURITY_DEPOSIT_NOTE}
+    </div>
+    <div style="font-size:14px;line-height:1.6;color:${BRAND.mutedInk};margin-top:8px;">
+      ${extra}
+    </div>
+  `);
+}
+
+/** The one link to the full terms, for the bottom of a customer email. */
+function policyLine() {
+  return `<p style="margin:0 0 24px;font-size:13px;line-height:1.6;color:${BRAND.mutedInk};">
+    Every booking is covered by our
+    <a href="${POLICY_URL}" style="color:${BRAND.goldDeep};text-decoration:underline;">Rental Policy</a>
+    — deposits, damage, linen care, pickup times and late returns.
+  </p>`;
 }
 
 /** Product thumbnail, or a neutral tile when an item has no image. */
@@ -133,6 +147,7 @@ export function renderItems(items: OrderItem[]) {
 
 export function renderOrderSummary(orderData: OrderData) {
   const { items, pricing } = orderData;
+  const isDelivery = normalizeCustomerInfo(orderData.customerInfo).deliveryMethod === 'delivery';
 
   return `
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px;border-collapse:collapse;">
@@ -145,35 +160,65 @@ export function renderOrderSummary(orderData: OrderData) {
       </tr>
       <tr>
         <td style="padding:6px 0;font-size:14px;color:${BRAND.mutedInk};">Delivery</td>
-        <td style="padding:6px 0;text-align:right;font-size:14px;color:${BRAND.ink};">${DELIVERY_NOTE}</td>
+        <td style="padding:6px 0;text-align:right;font-size:14px;color:${BRAND.ink};">${isDelivery ? DELIVERY_NOTE : CUSTOMER_PICKUP_NOTE}</td>
       </tr>
       <tr>
         <td style="padding:12px 0 0;border-top:1px solid ${BRAND.hairline};font-size:16px;font-weight:600;color:${BRAND.ink};">Total</td>
         <td style="padding:12px 0 0;border-top:1px solid ${BRAND.hairline};text-align:right;font-size:18px;font-weight:600;color:${BRAND.gold};">${money(pricing.total)}</td>
       </tr>
     </table>
-    <p style="margin:0 0 24px;font-size:13px;color:${BRAND.mutedInk};">No tax is added. Delivery is quoted separately.</p>`;
+    <p style="margin:0 0 24px;font-size:13px;color:${BRAND.mutedInk};">No tax is added. ${
+      isDelivery
+        ? 'Delivery is quoted separately.'
+        : 'There is no delivery charge on customer pickups.'
+    }</p>`;
+}
+
+/**
+ * Everything the customer told us about the booking, in the order they'd check
+ * it: how it's handed over, where, when, and who to call. Shared by the
+ * confirmation email and the confirmation page so neither can drift.
+ */
+function bookingDetailRows(info: CustomerInfo): Array<[string, string]> {
+  const c = normalizeCustomerInfo(info);
+  const isDelivery = c.deliveryMethod === 'delivery';
+
+  const rows: Array<[string, string]> = [
+    ['Delivery method', escapeHtml(DELIVERY_METHOD_LABEL[c.deliveryMethod])],
+    [bookingDateLabel(c), escapeHtml(formatBookingDates(c))],
+    ['Your address', escapeHtml(formatHomeAddress(c))],
+  ];
+
+  // A pickup has no event address to drive to — it would only be noise.
+  if (isDelivery) {
+    rows.push([
+      'Event address',
+      escapeHtml(formatEventAddress(c)) +
+        (c.eventAddressSameAsHome
+          ? `<div style="font-size:13px;color:${BRAND.mutedInk};">Same as your home address</div>`
+          : ''),
+    ]);
+  }
+
+  rows.push(['Phone', escapeHtml(c.phone)]);
+  if (c.alternatePhone) rows.push(['Alternate phone', escapeHtml(c.alternatePhone)]);
+
+  return rows;
 }
 
 export function buildCustomerEmail(orderData: OrderData, orderId: string) {
-  const { customerInfo } = orderData;
+  const customerInfo = normalizeCustomerInfo(orderData.customerInfo);
   const shortId = orderId.slice(0, 8).toUpperCase();
-
-  const address = [
-    customerInfo.address,
-    [customerInfo.city, customerInfo.state].filter(Boolean).join(', '),
-    customerInfo.zipCode,
-  ]
-    .filter(Boolean)
-    .map(escapeHtml)
-    .join('<br>');
+  const isDelivery = customerInfo.deliveryMethod === 'delivery';
 
   return emailLayout({
     heading: `Thank you, ${escapeHtml(customerInfo.firstName)}.`,
     preheader: `We've received your rental booking #${shortId}.`,
     body: `
       ${paragraph(
-        "We've received your booking. We'll contact you to confirm availability, agree the delivery charge, and arrange the commitment fee. Nothing is charged online."
+        `We've received your booking. We'll contact you to confirm availability, ${
+          isDelivery ? 'agree the delivery charge, ' : 'arrange your pickup time, '
+        }and arrange the refundable security deposit. Nothing is charged online.`
       )}
 
       ${calloutBox(`
@@ -182,21 +227,14 @@ export function buildCustomerEmail(orderData: OrderData, orderId: string) {
       `)}
 
       <h2 style="margin:28px 0 14px;font-size:16px;font-weight:600;color:${BRAND.ink};">What you booked</h2>
-      ${renderOrderSummary(orderData)}
+      ${renderOrderSummary({ ...orderData, customerInfo })}
 
-      ${calloutBox(`
-        <div style="font-size:15px;font-weight:600;color:${BRAND.ink};margin-bottom:6px;">A $${COMMITMENT_FEE} commitment fee secures your booking</div>
-        <div style="font-size:14px;line-height:1.6;color:${BRAND.mutedInk};">
-          It is not charged now. We'll arrange it with you when we call to confirm.
-        </div>
-      `)}
+      ${depositCallout("It is not charged now. We'll arrange it with you when we call to confirm.")}
 
-      <h2 style="margin:28px 0 12px;font-size:16px;font-weight:600;color:${BRAND.ink};">Delivery details</h2>
-      ${detailRows([
-        ['Rental start date', escapeHtml(formatRentalDate(customerInfo.rentalStartDate))],
-        ['Delivery address', address],
-        ['Phone', escapeHtml(customerInfo.phone)],
-      ])}
+      <h2 style="margin:28px 0 12px;font-size:16px;font-weight:600;color:${BRAND.ink};">Booking details</h2>
+      ${detailRows(bookingDetailRows(customerInfo))}
+
+      ${policyLine()}
 
       ${
         customerInfo.specialInstructions
@@ -236,8 +274,9 @@ function checklistItem(text: string) {
  * the confirmation call is short and delivery day goes smoothly.
  */
 export function buildFollowUpEmail(orderData: OrderData, orderId: string) {
-  const { customerInfo } = orderData;
+  const customerInfo = normalizeCustomerInfo(orderData.customerInfo);
   const shortId = orderId.slice(0, 8).toUpperCase();
+  const isDelivery = customerInfo.deliveryMethod === 'delivery';
 
   return emailLayout({
     heading: `What happens next, ${escapeHtml(customerInfo.firstName)}.`,
@@ -249,18 +288,33 @@ export function buildFollowUpEmail(orderData: OrderData, orderId: string) {
 
       <h2 style="margin:28px 0 16px;font-size:16px;font-weight:600;color:${BRAND.ink};">On the confirmation call</h2>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-        ${step(1, 'We confirm availability', `We check every item on your list is free for ${escapeHtml(formatRentalDate(customerInfo.rentalStartDate))}.`)}
-        ${step(2, 'We agree the delivery charge', 'Based on your address and the time you need everything on site. No delivery cost was added at checkout.')}
-        ${step(3, `We arrange the $${COMMITMENT_FEE} commitment fee`, 'This secures your date. Nothing was charged online.')}
+        ${step(1, 'We confirm availability', `We check every item on your list is free for ${escapeHtml(formatBookingDates(customerInfo))}.`)}
+        ${
+          isDelivery
+            ? step(2, 'We agree the delivery charge', 'Based on your event address and the time you need everything on site. No delivery cost was added at checkout.')
+            : step(2, 'We confirm your pickup time', 'Customer pickups begin after 5:00 PM the day before your event, subject to inventory.')
+        }
+        ${step(3, `We arrange the $${SECURITY_DEPOSIT} ${SECURITY_DEPOSIT_LABEL.toLowerCase()}`, `${SECURITY_DEPOSIT_NOTE} Nothing was charged online.`)}
       </table>
 
-      <h2 style="margin:8px 0 16px;font-size:16px;font-weight:600;color:${BRAND.ink};">Before we arrive</h2>
+      <h2 style="margin:8px 0 16px;font-size:16px;font-weight:600;color:${BRAND.ink};">${
+        isDelivery ? 'Before we arrive' : 'Before you collect'
+      }</h2>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px;">
-        ${checklistItem('Clear a path to the setup area — gates, stairs, and somewhere to park the van.')}
-        ${checklistItem('Have the space empty before we get there. Setup is much faster on a clear site.')}
-        ${checklistItem('For tents, we need level ground and about two feet of clearance around the footprint. Tell us about sprinklers or buried lines before we stake anything.')}
-        ${checklistItem('Someone over 18 needs to be on site to receive the delivery.')}
+        ${
+          isDelivery
+            ? `${checklistItem('Clear a path to the setup area at least 5 feet wide — gates, stairs, and somewhere to park the van.')}
+               ${checklistItem('Have the space empty before we get there. Setup is much faster on a clear site.')}
+               ${checklistItem('For tents, we need level ground and about two feet of clearance around the footprint. Tell us about sprinklers or buried lines before we stake anything.')}
+               ${checklistItem('Someone over 18 needs to be on site to receive the delivery. Our drivers wait a maximum of 15 minutes.')}`
+            : `${checklistItem('Bring a valid government-issued photo ID. We need it before releasing any items.')}
+               ${checklistItem('Bring a vehicle big enough for everything on your list, and someone to help load.')}
+               ${checklistItem('Return linens dry and unwashed. Washing them yourself can damage them.')}
+               ${checklistItem('Items are due back by 10:00 AM the day after your event.')}`
+        }
       </table>
+
+      ${policyLine()}
 
       ${calloutBox(`
         <div style="font-size:14px;line-height:1.6;color:${BRAND.ink};">
@@ -274,7 +328,8 @@ export function buildFollowUpEmail(orderData: OrderData, orderId: string) {
 }
 
 export function buildBusinessEmail(orderData: OrderData, orderId: string, whatsappUrl: string) {
-  const { customerInfo, pricing } = orderData;
+  const customerInfo = normalizeCustomerInfo(orderData.customerInfo);
+  const { pricing } = orderData;
   const shortId = orderId.slice(0, 8).toUpperCase();
 
   return emailLayout({
@@ -285,16 +340,7 @@ export function buildBusinessEmail(orderData: OrderData, orderId: string, whatsa
         ['Booking', `#${shortId}`],
         ['Customer', escapeHtml(`${customerInfo.firstName} ${customerInfo.lastName}`)],
         ['Email', escapeHtml(customerInfo.email)],
-        ['Phone', escapeHtml(customerInfo.phone)],
-        ['Rental start', escapeHtml(formatRentalDate(customerInfo.rentalStartDate))],
-        [
-          'Address',
-          escapeHtml(
-            [customerInfo.address, customerInfo.city, customerInfo.state, customerInfo.zipCode]
-              .filter(Boolean)
-              .join(', ')
-          ),
-        ],
+        ...bookingDetailRows(customerInfo),
       ])}
 
       <div style="margin:0 0 24px;">
@@ -302,12 +348,18 @@ export function buildBusinessEmail(orderData: OrderData, orderId: string, whatsa
       </div>
 
       <h2 style="margin:0 0 14px;font-size:16px;font-weight:600;color:${BRAND.ink};">Items to prepare</h2>
-      ${renderOrderSummary(orderData)}
+      ${renderOrderSummary({ ...orderData, customerInfo })}
 
       ${calloutBox(`
         <div style="font-size:14px;color:${BRAND.ink};">
-          Collect the <strong>$${COMMITMENT_FEE} commitment fee</strong> and agree the delivery
-          charge on the confirmation call.
+          Collect the <strong>$${SECURITY_DEPOSIT} ${SECURITY_DEPOSIT_LABEL}</strong> ${
+            customerInfo.deliveryMethod === 'delivery'
+              ? 'and agree the delivery charge '
+              : 'and confirm the pickup time '
+          }on the confirmation call.
+        </div>
+        <div style="font-size:13px;line-height:1.6;color:${BRAND.mutedInk};margin-top:6px;">
+          ${SECURITY_DEPOSIT_NOTE}
         </div>
       `)}
 
@@ -322,19 +374,27 @@ export function buildBusinessEmail(orderData: OrderData, orderId: string, whatsa
 }
 
 export function generateWhatsAppMessage(orderData: OrderData, orderId: string) {
-  const { customerInfo, items, pricing } = orderData;
+  const { items, pricing } = orderData;
+  const customerInfo = normalizeCustomerInfo(orderData.customerInfo);
+  const isDelivery = customerInfo.deliveryMethod === 'delivery';
 
   let message = `🛍️ *NEW BOOKING* - #${orderId.slice(0, 8).toUpperCase()}\n\n`;
   message += `👤 *Customer Details:*\n`;
   message += `Name: ${customerInfo.firstName} ${customerInfo.lastName}\n`;
   message += `📧 Email: ${customerInfo.email}\n`;
   message += `📱 Phone: ${customerInfo.phone}\n`;
-  message += `📍 Address: ${customerInfo.address}, ${customerInfo.city}\n`;
+  if (customerInfo.alternatePhone) {
+    message += `📱 Alternate: ${customerInfo.alternatePhone}\n`;
+  }
+  message += `🚚 ${DELIVERY_METHOD_LABEL[customerInfo.deliveryMethod]}\n`;
+  message += `📍 Customer Address: ${formatHomeAddress(customerInfo)}\n`;
 
-  if (customerInfo.state) message += `State: ${customerInfo.state}\n`;
-  if (customerInfo.zipCode) message += `ZIP: ${customerInfo.zipCode}\n`;
+  if (isDelivery) {
+    message += `📍 Event Address: ${formatEventAddress(customerInfo)}`;
+    message += customerInfo.eventAddressSameAsHome ? ` (same as home)\n` : `\n`;
+  }
 
-  message += `📅 Rental Start: ${customerInfo.rentalStartDate}\n\n`;
+  message += `📅 ${bookingDateLabel(customerInfo)}: ${formatBookingDates(customerInfo)}\n\n`;
 
   message += `🛒 *Items:*\n`;
   items.forEach((item, index) => {
@@ -345,9 +405,10 @@ export function generateWhatsAppMessage(orderData: OrderData, orderId: string) {
 
   message += `💰 *Totals:*\n`;
   message += `Rental items: ${money(pricing.subtotal)}\n`;
-  message += `Delivery: ${DELIVERY_NOTE}\n`;
+  message += `Delivery: ${isDelivery ? DELIVERY_NOTE : CUSTOMER_PICKUP_NOTE}\n`;
   message += `*Total: ${money(pricing.total)}*\n`;
-  message += `Commitment fee to collect: $${COMMITMENT_FEE}\n\n`;
+  message += `${SECURITY_DEPOSIT_LABEL} to collect: $${SECURITY_DEPOSIT}\n`;
+  message += `(${SECURITY_DEPOSIT_NOTE})\n\n`;
 
   if (customerInfo.specialInstructions) {
     message += `📝 *Special Instructions:*\n${customerInfo.specialInstructions}\n\n`;

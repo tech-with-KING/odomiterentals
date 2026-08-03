@@ -65,7 +65,7 @@ function ReviewCard({ review }: { review: (typeof REVIEWS)[number] }) {
 
       <div className="mt-4 flex gap-0.5" aria-label={`${review.rating} out of 5 stars`}>
         {Array.from({ length: review.rating }).map((_, i) => (
-          <Star key={i} size={15} className="fill-[color:var(--brand)] text-[color:var(--brand)]" />
+          <Star key={i} size={15} className="fill-[color:var(--brand-deep)] text-[color:var(--brand-deep)]" />
         ))}
       </div>
 
@@ -80,7 +80,7 @@ function ReviewCard({ review }: { review: (typeof REVIEWS)[number] }) {
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
-        className="mt-3 self-start text-sm font-medium text-[color:var(--brand)] hover:text-[color:var(--brand-deep)]"
+        className="mt-3 self-start text-sm font-medium text-[color:var(--brand-deep)] hover:text-[color:var(--ink)]"
       >
         {expanded ? 'Read less' : 'Read more'}
       </button>

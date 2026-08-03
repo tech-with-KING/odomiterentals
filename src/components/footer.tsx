@@ -3,13 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Facebook, Instagram, Mail, Phone } from 'lucide-react';
+import { RENTAL_POLICY_PATH } from '@/lib/pricing';
 
 const QUICK_LINKS = [
-  { label: 'About Us', href: '/about' },
-  { label: 'Our Services', href: '/#services' },
-  { label: 'Catalogue', href: '/shop' },
-  { label: 'Get Quote', href: '/quote' },
-  { label: 'Get In Touch', href: '/contact' },
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Rentals', href: '/shop' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'Rental Policy', href: RENTAL_POLICY_PATH },
 ];
 
 const SERVICE_AREAS = [
@@ -28,8 +29,11 @@ export default function Footer() {
 
   return (
     <footer id="contact" className="bg-[color:var(--ink)] text-white/80">
-      <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-10 px-6 py-16 md:grid-cols-4 md:gap-8">
-        <div>
+      {/* Two columns on phones: Quick Links beside Service Areas, so the
+          footer is one screen rather than a long scroll. The brand blurb and
+          contact details keep the full width. */}
+      <div className="mx-auto grid max-w-[1280px] grid-cols-2 gap-x-6 gap-y-10 px-6 py-16 md:grid-cols-4 md:gap-8">
+        <div className="col-span-2 md:col-span-1">
           <div className="font-serif text-2xl text-white">Odomite Rentals</div>
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/60">
             Your trusted event rental for all your party needs. Family-owned, New Jersey based.
@@ -73,6 +77,17 @@ export default function Footer() {
 
         <div>
           <h4 className="mb-4 text-xs font-medium uppercase tracking-[0.18em] text-white/50">
+            Service Areas
+          </h4>
+          <ul className="space-y-2 text-sm">
+            {SERVICE_AREAS.map((area) => (
+              <li key={area}>{area}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="col-span-2 md:col-span-1">
+          <h4 className="mb-4 text-xs font-medium uppercase tracking-[0.18em] text-white/50">
             Contact Information
           </h4>
           <ul className="space-y-3 text-sm">
@@ -94,17 +109,6 @@ export default function Footer() {
                 +1 (862) 230-6639
               </a>
             </li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="mb-4 text-xs font-medium uppercase tracking-[0.18em] text-white/50">
-            Service Areas
-          </h4>
-          <ul className="space-y-2 text-sm">
-            {SERVICE_AREAS.map((area) => (
-              <li key={area}>{area}</li>
-            ))}
           </ul>
         </div>
       </div>

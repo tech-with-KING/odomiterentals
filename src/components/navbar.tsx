@@ -11,6 +11,7 @@ import { useAuth } from '@/context/auth';
 import { useAdminCheck } from '@/context/admin';
 import { useCart } from '@/context/cart';
 import { fetchCategories } from '@/lib/catalogue';
+import { RENTAL_POLICY_PATH } from '@/lib/pricing';
 
 const NAV_LINKS = [
   { name: 'Home', href: '/' },
@@ -96,13 +97,21 @@ function MobileNav({ onWhite }: { onWhite: boolean }) {
                   key={category.id}
                   href={`/shop/cartegory/${category.slug}`}
                   onClick={close}
-                  className="block rounded-md px-3 py-2 text-sm text-[color:var(--muted-ink)] transition-colors hover:text-[color:var(--brand)]"
+                  className="block rounded-md px-3 py-2 text-sm text-[color:var(--muted-ink)] transition-colors hover:text-[color:var(--brand-deep)]"
                 >
                   {category.name}
                 </Link>
               ))}
             </div>
           ) : null}
+
+          <Link
+            href={RENTAL_POLICY_PATH}
+            onClick={close}
+            className="rounded-lg px-3 py-3 text-base font-medium text-[color:var(--ink)] transition-colors hover:bg-[color:var(--brand-soft)]"
+          >
+            Rental Policy
+          </Link>
 
           <Link
             href="/quote"
@@ -122,7 +131,7 @@ function MobileNav({ onWhite }: { onWhite: boolean }) {
                 <Link
                   href="/admin"
                   onClick={close}
-                  className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium text-[color:var(--brand)] transition-colors hover:bg-[color:var(--brand-soft)]"
+                  className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium text-[color:var(--brand-deep)] transition-colors hover:bg-[color:var(--brand-soft)]"
                 >
                   <Shield size={16} />
                   Admin Dashboard
@@ -157,7 +166,7 @@ function MobileNav({ onWhite }: { onWhite: boolean }) {
                 trigger={
                   <button
                     type="button"
-                    className="w-full rounded-full border border-[color:var(--brand)] px-4 py-2.5 text-sm font-medium text-[color:var(--brand)] transition-colors hover:bg-[color:var(--brand)] hover:text-white"
+                    className="w-full rounded-full border border-[color:var(--brand)] px-4 py-2.5 text-sm font-medium text-[color:var(--brand-deep)] transition-colors hover:bg-[color:var(--brand)] hover:text-white"
                   >
                     Sign In
                   </button>
@@ -239,7 +248,9 @@ export default function Header() {
               <Link
                 key={link.name}
                 href={link.href}
-                className="transition-colors hover:text-[color:var(--brand)]"
+                className={`transition-colors ${
+                  onWhite ? 'hover:text-[color:var(--brand-deep)]' : 'hover:text-[color:var(--brand)]'
+                }`}
               >
                 {link.name}
               </Link>
@@ -282,7 +293,7 @@ export default function Header() {
                 aria-label="Admin dashboard"
                 className={`hidden h-10 w-10 place-items-center rounded-full transition-colors md:grid ${
                   onWhite
-                    ? 'text-[color:var(--brand)] hover:bg-[color:var(--muted)]'
+                    ? 'text-[color:var(--brand-deep)] hover:bg-[color:var(--muted)]'
                     : 'text-white hover:bg-white/10'
                 }`}
               >
@@ -308,7 +319,7 @@ export default function Header() {
                       type="button"
                       className={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
                         onWhite
-                          ? 'text-[color:var(--ink)] hover:text-[color:var(--brand)]'
+                          ? 'text-[color:var(--ink)] hover:text-[color:var(--brand-deep)]'
                           : 'text-white/90 hover:text-white'
                       }`}
                     >

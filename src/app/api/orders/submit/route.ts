@@ -3,10 +3,10 @@ import { supabaseAdmin } from '@/lib/supabase-admin'
 import { getAppBaseUrl } from '@/lib/app-url'
 import { BUSINESS_EMAIL, sendEmail } from '@/lib/email'
 import { formatPrice } from '@/lib/pricing'
+import { customerInfoToOrderRow, normalizeCustomerInfo } from '@/lib/booking'
 import {
   buildBusinessEmail,
   buildCustomerEmail,
-  buildFollowUpEmail,
   generateWhatsAppMessage,
   type OrderData,
 } from '@/lib/order-emails'
@@ -35,15 +35,28 @@ async function notificationRecipients(): Promise<string[]> {
 
 export async function POST(request: NextRequest) {
   try {
-    const orderData: OrderData = await request.json()
+    const submitted: OrderData = await request.json()
 
-    // Validate required fields
-    const { customerInfo, items, pricing } = orderData
+    // The browser's validation is a courtesy; this is the one that counts.
+    // Normalizing first means a booking posted without the newer fields still
+    // lands as a valid single-date delivery rather than being rejected.
+    const customerInfo = normalizeCustomerInfo(submitted.customerInfo)
+    const orderData: OrderData = { ...submitted, customerInfo }
+    const { items, pricing } = orderData
+
     if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.email ||
-        !customerInfo.phone || !customerInfo.address || !customerInfo.rentalStartDate ||
-        !items.length) {
+        !customerInfo.phone || !customerInfo.address || !customerInfo.city ||
+        !customerInfo.rentalStartDate || !items.length) {
       return NextResponse.json(
         { error: 'Missing required fields' },
+        { status: 400 }
+      )
+    }
+
+    if (customerInfo.bookingDateMode === 'range' &&
+        customerInfo.rentalEndDate < customerInfo.rentalStartDate) {
+      return NextResponse.json(
+        { error: 'The end date cannot be before the start date' },
         { status: 400 }
       )
     }
@@ -53,16 +66,7 @@ export async function POST(request: NextRequest) {
       .from('orders')
       .insert({
         user_id: orderData.userId && orderData.userId !== 'guest' ? orderData.userId : null,
-        first_name: customerInfo.firstName,
-        last_name: customerInfo.lastName,
-        email: customerInfo.email,
-        phone: customerInfo.phone,
-        address: customerInfo.address,
-        city: customerInfo.city,
-        state: customerInfo.state,
-        zip_code: customerInfo.zipCode,
-        rental_start_date: customerInfo.rentalStartDate,
-        special_instructions: customerInfo.specialInstructions,
+        ...customerInfoToOrderRow(customerInfo),
         subtotal: pricing.subtotal,
         shipping: pricing.shipping,
         taxes: pricing.taxes,
@@ -123,18 +127,6 @@ export async function POST(request: NextRequest) {
       }),
     ])
 
-    // The prep email follows the confirmation, so the two land in that order.
-    const followUpEmail = await sendEmail({
-      to: customerInfo.email,
-      subject: `What happens next — booking #${shortId}`,
-      html: buildFollowUpEmail(orderData, orderId),
-      replyTo: BUSINESS_EMAIL,
-    })
-
-    if (!followUpEmail.sent) {
-      console.error('Follow-up email failed:', followUpEmail.error)
-    }
-
     if (!customerEmail.sent) {
       console.error('Customer confirmation email failed:', customerEmail.error)
     }
@@ -174,7 +166,6 @@ export async function POST(request: NextRequest) {
       emailSent: {
         customer: customerEmail.sent,
         business: businessEmail.sent,
-        followUp: followUpEmail.sent,
       },
       message: 'Order submitted successfully'
     })

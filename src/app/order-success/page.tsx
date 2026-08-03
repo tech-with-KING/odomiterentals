@@ -2,11 +2,28 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Check, Home, Mail, MessageCircle, ShoppingBag } from 'lucide-react';
+import { Check, FileText, Home, Mail, MessageCircle, ShoppingBag } from 'lucide-react';
+import {
+  RENTAL_POLICY_PATH,
+  SECURITY_DEPOSIT,
+  SECURITY_DEPOSIT_LABEL,
+  SECURITY_DEPOSIT_NOTE,
+} from '@/lib/pricing';
+import {
+  DELIVERY_METHOD_LABEL,
+  bookingDateLabel,
+  formatBookingDates,
+  formatEventAddress,
+  formatHomeAddress,
+  normalizeCustomerInfo,
+  type CustomerInfo,
+} from '@/lib/booking';
 
 interface LastOrder {
   orderId: string | null;
   emailSent: boolean;
+  /** Absent for a booking placed before the confirmation page echoed details. */
+  customerInfo?: Partial<CustomerInfo>;
 }
 
 export default function OrderSuccessPage() {
@@ -26,21 +43,45 @@ export default function OrderSuccessPage() {
     return () => window.clearTimeout(timer);
   }, []);
 
-  // Only promise an email when one actually went out.
+  const booking = order?.customerInfo ? normalizeCustomerInfo(order.customerInfo) : null;
+  const isDelivery = booking?.deliveryMethod !== 'pickup';
+
   const steps = [
     {
       title: 'We confirm availability',
       body: "We'll contact you to check everything on your list is free for your date.",
     },
+    isDelivery
+      ? {
+          title: 'We agree delivery',
+          body: 'Delivery is quoted on that call, based on where and when you need it.',
+        }
+      : {
+          title: 'We confirm your pickup time',
+          body: 'Pickups begin after 5:00 PM the day before your event, subject to inventory.',
+        },
     {
-      title: 'We agree delivery',
-      body: 'Delivery is quoted on that call, based on where and when you need it.',
-    },
-    {
-      title: 'A $50 commitment fee secures it',
-      body: "Arranged when we speak. Nothing was charged online.",
+      title: `A $${SECURITY_DEPOSIT} ${SECURITY_DEPOSIT_LABEL.toLowerCase()} secures it`,
+      body: 'Arranged when we speak. Nothing was charged online.',
     },
   ];
+
+  // Only shown when we actually have the booking to echo back.
+  const details: Array<[string, string]> = (booking
+    ? ([
+        ['Delivery method', DELIVERY_METHOD_LABEL[booking.deliveryMethod]],
+        [bookingDateLabel(booking), formatBookingDates(booking)],
+        ['Your address', formatHomeAddress(booking)],
+        ...(isDelivery
+          ? ([['Event address', formatEventAddress(booking)]] as Array<[string, string]>)
+          : []),
+        ['Phone', booking.phone],
+        ...(booking.alternatePhone
+          ? ([['Alternate phone', booking.alternatePhone]] as Array<[string, string]>)
+          : []),
+      ] as Array<[string, string]>)
+    : []
+  ).filter(([, value]) => Boolean(value));
 
   return (
     <div className="bg-[color:var(--background)] py-20 md:py-28">
@@ -78,6 +119,29 @@ export default function OrderSuccessPage() {
             </div>
           ) : null}
         </div>
+
+        {details.length > 0 ? (
+          <div className="mt-10 rounded-2xl border border-[color:var(--hairline)] bg-[color:var(--surface)] p-8">
+            <h2 className="font-serif text-xl">Your booking</h2>
+            <dl className="mt-5 divide-y divide-[color:var(--hairline)] text-sm">
+              {details.map(([label, value]) => (
+                <div key={label} className="flex flex-col gap-1 py-3 sm:flex-row sm:gap-6">
+                  <dt className="shrink-0 text-[color:var(--muted-ink)] sm:w-44">{label}</dt>
+                  <dd className="text-[color:var(--ink)]">{value}</dd>
+                </div>
+              ))}
+            </dl>
+
+            <div className="mt-5 rounded-xl border border-[color:var(--brand)]/30 bg-[color:var(--brand-soft)] p-5">
+              <p className="text-sm font-semibold text-[color:var(--ink)]">
+                ${SECURITY_DEPOSIT} {SECURITY_DEPOSIT_LABEL}
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-[color:var(--muted-ink)]">
+                {SECURITY_DEPOSIT_NOTE}
+              </p>
+            </div>
+          </div>
+        ) : null}
 
         <div className="mt-10 rounded-2xl border border-[color:var(--hairline)] bg-[color:var(--surface)] p-8">
           <h2 className="font-serif text-xl">What happens next?</h2>
@@ -135,6 +199,14 @@ export default function OrderSuccessPage() {
               Continue Shopping
             </Link>
           </div>
+
+          <Link
+            href={RENTAL_POLICY_PATH}
+            className="mt-5 inline-flex items-center gap-2 text-sm text-[color:var(--brand-deep)] hover:underline"
+          >
+            <FileText className="h-4 w-4" />
+            Read the Rental Policy
+          </Link>
         </div>
 
         <p className="mt-6 text-center text-xs text-[color:var(--muted-ink)]">
