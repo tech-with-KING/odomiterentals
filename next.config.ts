@@ -1,16 +1,14 @@
-// next.config.js
-module.exports = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-};
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
     eslint: {
     // This tells Next.js to ignore ESLint errors during builds
     ignoreDuringBuilds: true,
   },
   images: {
+    // Vercel's image optimization quota is exhausted (402 OPTIMIZED_IMAGE_REQUEST_PAYMENT_REQUIRED),
+    // so serve images directly from Supabase/Cloudinary instead of via /_next/image.
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -44,8 +42,6 @@ const nextConfig = {
       },
     ];
   },
-}
-
-module.exports = nextConfig
+};
 
 export default nextConfig;
